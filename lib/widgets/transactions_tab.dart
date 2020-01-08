@@ -1,17 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:hive/hive.dart';
-import 'package:intl/intl.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 import '../DB/app_state.dart';
 import '../Helpers/styling.dart';
+import './sort_by_category.dart';
 import '../DB/transactions.dart';
 import '../Screens/add_trans.dart';
 import '../Helpers/size_config.dart';
-import '../Screens/details_page.dart';
-import '../DB/initialize_HiveDB.dart';
-import '../Helpers/remove_dialog.dart';
 import '../widgets/sort_by_trans.dart';
 
 class UserTransactionsTab extends StatelessWidget {
@@ -22,81 +19,6 @@ class UserTransactionsTab extends StatelessWidget {
 
   List<Trans> get _extractedTrans {
     return transactions['transactions'];
-  }
-
-  Widget buildCard(BuildContext context, Trans trans) {
-    return InkWell(
-      onTap: () {
-        Navigator.of(context).push(MaterialPageRoute(
-          fullscreenDialog: true,
-          builder: (_) => DetailsPage(
-            amount: trans.amount,
-            category: trans.category,
-            date: trans.dateTime,
-            deleteFunction: () => removeDialog(
-              title: 'Remove this Transaction?',
-              context: context,
-            ).then((isAccepted) {
-              if (isAccepted != null && isAccepted) {
-                Hive.box(H.transactions.box())
-                    .get(H.transactions.str())
-                    .deleteTrans(trans.id);
-                Navigator.of(context).pop();
-              }
-            }),
-            descripstion: trans.description,
-            isDeposit: trans.isDeposit,
-          ),
-        ));
-      },
-      onLongPress: () => removeDialog(
-        title: 'Remove this Transaction?',
-        context: context,
-      ).then((isAccepted) {
-        if (isAccepted != null && isAccepted)
-          Hive.box(H.transactions.box())
-              .get(H.transactions.str())
-              .deleteTrans(trans.id);
-      }),
-      borderRadius: tenCBorder,
-      child: Card(
-        margin:
-            EdgeInsets.symmetric(horizontal: SizeConfig.isPortrait ? 0 : 100),
-        shape: RoundedRectangleBorder(borderRadius: tenCBorder),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Padding(
-              padding: EdgeInsets.all(2 * SizeConfig.heightMultiplier),
-              child: Text(
-                '${trans.category}',
-                style: Theme.of(context).textTheme.title,
-              ),
-            ),
-            Divider(),
-            Padding(
-              padding: EdgeInsets.all(1 * SizeConfig.heightMultiplier),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  Text(
-                    '${DateFormat('D/M/y').format(trans.dateTime)}',
-                    style: Theme.of(context).textTheme.subhead,
-                  ),
-                  Text(
-                    '${trans.amount} \$',
-                    style: TextStyle(
-                      color: trans.isDeposit ? Colors.green : Colors.red,
-                      fontSize: 2.5 * SizeConfig.textMultiplier,
-                    ),
-                  )
-                ],
-              ),
-            )
-          ],
-        ),
-      ),
-    );
   }
 
   @override
@@ -196,18 +118,7 @@ class UserTransactionsTab extends StatelessWidget {
                             );
                           // if (selected.filter == PopMenuItem.ByCat)
                           return SliverToBoxAdapter(
-                            child: Column(
-                              children: _extractedTrans.map(
-                                (ex) {
-                                  _extractedTrans.sort((a, b) =>
-                                      a.category.compareTo(b.category));
-                                  return Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: buildCard(context, ex),
-                                  );
-                                },
-                              ).toList(),
-                            ),
+                            child: ByCategory(_extractedTrans),
                           );
                         },
                       );

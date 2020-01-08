@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:hive/hive.dart';
 import 'package:intl/intl.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 
 import '../DB/bills.dart';
 import '../DB/transactions.dart';
@@ -68,12 +68,7 @@ Widget buildRecurringTransWidget() {
       final Transactions _transactions = transBox.get(H.transactions.str());
       final rTList = _transactions.recurringTransList;
       return rTList == null || rTList.isEmpty
-          ? Container(
-              padding: EdgeInsets.all(10),
-              child: Center(
-                child: Text(''),
-              ),
-            )
+          ? Container()
           : Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
@@ -146,11 +141,7 @@ Widget buildFutureTransWidget() {
       final Transactions _transactions = transBox.get(H.transactions.str());
       final fTList = _transactions.futureTransList;
       return fTList == null || fTList.isEmpty
-          ? Center(
-              child: Text(
-                '',
-              ),
-            )
+          ? Container()
           : Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
@@ -222,7 +213,7 @@ Widget buildBillsWidget() {
       final Bills bills = billsBox.get(H.bills.str());
       final bList = bills.bills;
       return bList == null || bList.isEmpty
-          ? Text('')
+          ? Container()
           : Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
