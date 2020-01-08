@@ -7,6 +7,7 @@ This is a very simple app(at the moment) and it's all about self expenses and ma
 I will add more Features in the future for the sake of learning.
 
 My accounts:
+
 Telegram & IG: @bilal_rad
 
 linkedIn: bilal raad
