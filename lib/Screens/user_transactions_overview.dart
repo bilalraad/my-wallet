@@ -10,21 +10,22 @@ import '../Helpers/get_monthly_data.dart';
 import '../widgets/transactions_tab.dart';
 
 List<int> getAvailableIndex() {
-  var currentMonthIndex = DateTime.now().month - 1; // 0..11
+  //This will make sure to display the last 4 months of the last year
+  var monthsIndex = DateTime.now().month +4; 
 
   List<int> index = [];
 
-  for (int i = 0; i < 12; i++) {
-    if (i <= currentMonthIndex) index.add(i);
+  for (int i = 0; i < monthsIndex; i++) {
+    index.add(i);
   }
+
   return index;
 }
 
 class UserTransactionsOverView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    var currentMonthIndex = DateTime.now().month - 1;
-    final index = getAvailableIndex();
+    var currentMonthIndex = DateTime.now().month +3;
 
     final transactions = Hive.box(H.transactions.box())
         .get(H.transactions.str()) as Transactions;
@@ -32,10 +33,12 @@ class UserTransactionsOverView extends StatelessWidget {
     final List<Trans> _translist = transactions.transList;
 
     final _monthlyGroubedTransValues = getMonthlyData(_translist);
+    final index = getAvailableIndex().reversed.toList();
+
 
     return DefaultTabController(
-      initialIndex: currentMonthIndex ,
-      length: currentMonthIndex + 2,
+      initialIndex: currentMonthIndex,
+      length: currentMonthIndex+2,
       child: Scaffold(
         appBar: AppBar(
           bottom: TabBar(
@@ -71,8 +74,8 @@ class UserTransactionsOverView extends StatelessWidget {
           actions: <Widget>[
             PopupMenuButton(
               onSelected: (PopMenuItem selectedItem) {
-                final appState =
-                    Hive.box(H.appState.box()).get(H.appState.str()) as AppState;
+                final appState = Hive.box(H.appState.box())
+                    .get(H.appState.str()) as AppState;
                 appState.changeFilter(selectedItem);
               },
               icon: Icon(Icons.more_vert),
@@ -105,6 +108,7 @@ class UserTransactionsOverView extends StatelessWidget {
           ],
         ),
         drawer: AppDrawer(),
+      
       ),
     );
   }

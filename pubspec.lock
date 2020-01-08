@@ -195,6 +195,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.9.1"
+  flutter_speed_dial:
+    dependency: "direct main"
+    description:
+      name: flutter_speed_dial
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.2.5"
   flutter_test:
     dependency: "direct dev"
     description: flutter
@@ -527,13 +534,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.1.6"
-  unicorndial:
-    dependency: "direct main"
-    description:
-      name: unicorndial
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.1.5"
   uuid:
     dependency: "direct main"
     description:

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:hive/hive.dart';
 import 'package:intl/intl.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:unicorndial/unicorndial.dart';
 
 import '../DB/app_state.dart';
 import '../Helpers/styling.dart';
@@ -216,40 +216,31 @@ class UserTransactionsTab extends StatelessWidget {
                 ),
               ],
             ),
-      floatingActionButton: UnicornDialer(
-        parentButtonBackground: Theme.of(context).accentColor,
-        orientation: UnicornOrientation.VERTICAL,
-        parentButton: Icon(Icons.add),
-        childButtons: [
-          UnicornButton(
-            hasLabel: true,
-            labelText: 'Deposit',
+      floatingActionButton: SpeedDial(
+        child: Icon(Icons.add),
+        animatedIcon: AnimatedIcons.menu_close,
+        onOpen: () {},
+        backgroundColor: Theme.of(context).accentColor,
+        children: [
+          SpeedDialChild(
+            label: 'Withdrawal',
             labelBackgroundColor: Theme.of(context).canvasColor,
-            currentButton: FloatingActionButton(
-              heroTag: null,
-              mini: true,
-              onPressed: () {
-                Navigator.of(context).pushNamed(AddTransactions.routName,
-                    arguments: true /*IsDeposit*/);
-              },
-              child: Icon(Icons.arrow_upward),
-              backgroundColor: Colors.green,
-            ),
+            child: Icon(Icons.arrow_downward),
+            backgroundColor: Colors.red,
+            onTap: () {
+              Navigator.of(context).pushNamed(AddTransactions.routName,
+                  arguments: false /*IsDeposit*/);
+            },
           ),
-          UnicornButton(
-            hasLabel: true,
-            labelText: 'withdrawal',
+          SpeedDialChild(
+            label: 'Deposit',
             labelBackgroundColor: Theme.of(context).canvasColor,
-            currentButton: FloatingActionButton(
-              heroTag: null,
-              mini: true,
-              onPressed: () {
-                Navigator.of(context).pushNamed(AddTransactions.routName,
-                    arguments: false /*IsNotDeposit*/);
-              },
-              child: Icon(Icons.arrow_downward),
-              backgroundColor: Colors.red,
-            ),
+            child: Icon(Icons.arrow_upward),
+            backgroundColor: Colors.green,
+            onTap: () {
+              Navigator.of(context).pushNamed(AddTransactions.routName,
+                  arguments: true /*IsDeposit*/);
+            },
           ),
         ],
       ),

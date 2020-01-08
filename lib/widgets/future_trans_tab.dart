@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:hive/hive.dart';
 import 'package:intl/intl.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:unicorndial/unicorndial.dart';
 
 import '../DB/bills.dart';
 import '../DB/transactions.dart';
@@ -32,39 +32,28 @@ class FutureTransactionsTap extends StatelessWidget {
           ],
         ),
       ),
-      floatingActionButton: UnicornDialer(
-        parentButtonBackground: Colors.cyan,
-        orientation: UnicornOrientation.VERTICAL,
-        parentButton: Icon(Icons.add),
-        childButtons: [
-          UnicornButton(
-            hasLabel: true,
-            currentButton: FloatingActionButton(
-              heroTag: null,
-              mini: true,
-              onPressed: () {
-                Navigator.of(context).pushNamed(AddBill.routName);
-              },
-              child: Icon(Icons.receipt),
-              backgroundColor: Colors.blue[800],
-            ),
-            labelText: 'Add Bill',
+      floatingActionButton: SpeedDial(
+        child: Icon(Icons.add),
+        animatedIcon: AnimatedIcons.menu_close,
+        backgroundColor: Colors.cyan,
+        children: [
+          SpeedDialChild(
+            label: 'Add Bill',
             labelBackgroundColor: Theme.of(context).canvasColor,
+            child: Icon(Icons.arrow_downward),
+            backgroundColor: Colors.blue[800],
+            onTap: () {
+              Navigator.of(context).pushNamed(AddBill.routName);
+            },
           ),
-          UnicornButton(
-            hasLabel: true,
-            currentButton: FloatingActionButton(
-              heroTag: null,
-              mini: true,
-              onPressed: () {
-                Navigator.of(context)
-                    .pushNamed(AddRecurringTransaction.routName);
-              },
-              child: Icon(Icons.refresh),
-              backgroundColor: Colors.green[600],
-            ),
-            labelText: 'Add recurring transaction',
+          SpeedDialChild(
+            label: 'Add recurring transaction',
             labelBackgroundColor: Theme.of(context).canvasColor,
+            child: Icon(Icons.arrow_upward),
+            backgroundColor: Colors.green[600],
+            onTap: () {
+              Navigator.of(context).pushNamed(AddRecurringTransaction.routName);
+            },
           ),
         ],
       ),

@@ -60,7 +60,7 @@ Future<void> initHive() async {
     final futureTransList = trans.futureTransList;
     final recurringTransList = trans.recurringTransList;
 
-    // this check is nessesary to reset the timer because if 
+    // This check is nessesary to reset the timer because if 
     // the app was killed in the backround the timer will Stop 
     // if we need the timer to proceed we have to do it in the cloud (not localy)
     if (futureTransList != null && futureTransList.isNotEmpty) {
