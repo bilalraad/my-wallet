@@ -1,13 +1,14 @@
 ﻿# mywallet
 
 This app was made as a task to 'code for Iraq' community
-also this my very first completed app (I mean it's ready for first release 'I think😆') so you might get confused with my strange flow. I also really want to get your feedback and comments ❤.
+also this my very first real app so you might get confused with my strange flow. I also really want to get your feedback and comments ❤.
 
 This is a very simple app(at the moment) and it's all about self expenses and managing your money it's not for power users. you just can add or remove money from your wallet and you also can set Bills or Recurring transactions like if you have a salary, you also can set future transaction that happens only one time.
 I will add more Features in the future for the sake of learning.
 
 My accounts:
 Telegram & IG: @bilal_rad
+
 linkedIn: bilal raad
 
 # Notes:
