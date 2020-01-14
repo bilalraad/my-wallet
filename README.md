@@ -9,13 +9,16 @@ I will add more Features in the future for the sake of learning.
 My accounts:
 
 Telegram & IG: @bilal_rad
+
 gmail: bilal52040@gmail.come
+
 CFI email: bilal.raad@codeforiraq.org
+
 linkedIn: bilal raad
 
 # Notes:
 
-1- I use Hive to store all the data Locally in the device for more info. about Hive see: https://pub.dev/packages/hive .
+1- I use Hive to store all the data Locally in the device for more information about Hive see: https://pub.dev/packages/hive .
 
 2 - For State management, I also Use Hive or in other words I used "WatchBoxBuilder" witch provided with Hive package.
 
