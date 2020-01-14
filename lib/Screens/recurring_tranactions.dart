@@ -6,16 +6,17 @@ import 'package:intl/intl.dart';
 import './details_page.dart';
 import '../DB/transactions.dart';
 import '../Helpers/styling.dart';
+import '../routes/router.gr.dart';
 import '../widgets/app_drawer.dart';
 import '../DB/initialize_HiveDB.dart';
 import '../Helpers/remove_dialog.dart';
-import '../Screens/add_recurring_trans.dart';
+import '../Helpers/app_localizations.dart';
 
 class RecurringTransactions extends StatelessWidget {
-  static const routName = '/recurring-transactions';
-
   @override
   Widget build(BuildContext context) {
+    final translate = AppLocalizations.of(context).translate;
+
     return WatchBoxBuilder(
       box: Hive.box(H.transactions.box()),
       builder: (context, transactionsBox) {
@@ -24,11 +25,12 @@ class RecurringTransactions extends StatelessWidget {
         final rTList = _transactions.recurringTransList;
         return Scaffold(
           appBar: AppBar(
-            title: Text('Recurring Transactions'),
+            title: Text(translate('Recurring Transactions')),
           ),
           body: rTList == null || rTList.isEmpty
               ? Center(
-                  child: Text('You didn\'t set any Recurring transactions'),
+                  child: Text(
+                      translate('You didn\'t set any Recurring transactions')),
                 )
               : Padding(
                   padding: const EdgeInsets.all(12.0),
@@ -37,7 +39,7 @@ class RecurringTransactions extends StatelessWidget {
                     itemBuilder: (BuildContext context, int i) {
                       final endingDate =
                           rTList[i].costumeBill.endingDate == null
-                              ? 'Forever'
+                              ? translate('Forever')
                               : DateFormat.yMd()
                                   .format(rTList[i].costumeBill.endingDate);
                       return InkWell(
@@ -49,7 +51,8 @@ class RecurringTransactions extends StatelessWidget {
                               category: rTList[i].costumeBill.category,
                               date: rTList[i].costumeBill.startingDate,
                               deleteFunction: () => removeDialog(
-                                title: 'Remove this recurring transaction?',
+                                title: translate(
+                                    'Remove this recurring transaction?'),
                                 context: context,
                               ).then((isAccepted) {
                                 if (isAccepted != null && isAccepted) {
@@ -65,7 +68,8 @@ class RecurringTransactions extends StatelessWidget {
                         },
                         onLongPress: () {
                           removeDialog(
-                            title: 'Remove this recurring transaction?',
+                            title:
+                                translate('Remove this recurring transaction?'),
                             context: context,
                           ).then((isAccepted) {
                             if (isAccepted != null && isAccepted)
@@ -91,13 +95,13 @@ class RecurringTransactions extends StatelessWidget {
                                       MainAxisAlignment.spaceEvenly,
                                   children: <Widget>[
                                     Text(
-                                      'Category: ${rTList[i].costumeBill.category.toUpperCase()}',
+                                      '${translate("Category")}: ${translate(rTList[i].costumeBill.category).toUpperCase()}',
                                     ),
                                     Text(
                                       '|',
                                     ),
                                     Text(
-                                      'Type: ${rTList[i].costumeBill.billType.toString().substring(9)}',
+                                      '${translate("Type")}: ${translate(rTList[i].costumeBill.billType.toString())}',
                                     ),
                                   ],
                                 ),
@@ -109,20 +113,20 @@ class RecurringTransactions extends StatelessWidget {
                                         rTList[i].costumeBill.endingDate.hour ==
                                             DateTime.now().hour
                                     ? Text(
-                                        'Expired',
+                                        translate('Expired'),
                                       )
                                     : Row(
                                         mainAxisAlignment:
                                             MainAxisAlignment.spaceEvenly,
                                         children: <Widget>[
                                           Text(
-                                            'From: ${DateFormat.yMd().format(rTList[i].costumeBill.startingDate)}',
+                                            '${translate("From")}: ${DateFormat.yMd().format(rTList[i].costumeBill.startingDate)}',
                                           ),
                                           SizedBox(
                                             width: 10,
                                           ),
                                           Text(
-                                            'To: $endingDate',
+                                            '${translate("To")}: $endingDate',
                                           ),
                                         ],
                                       ),
@@ -136,8 +140,8 @@ class RecurringTransactions extends StatelessWidget {
                 ),
           drawer: AppDrawer(),
           floatingActionButton: FloatingActionButton(
-            onPressed: () => Navigator.of(context)
-                .pushNamed(AddRecurringTransaction.routName),
+            onPressed: () =>
+                Router.navigator.pushNamed(Router.addRecurringTransaction),
             child: Icon(Icons.add),
           ),
         );

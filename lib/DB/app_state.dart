@@ -17,7 +17,7 @@ enum PopMenuItem {
   ByTrans,
 }
 
-final _appState = Hive.box('appStateBox').get('appState') as AppState;
+final _appState = Hive.box(H.appState.box()).get(H.appState.str()) as AppState;
 
 @HiveType()
 class AppState extends HiveObject {
@@ -67,7 +67,7 @@ class AppState extends HiveObject {
 
   void changeFilter(PopMenuItem newFilter) {
     _appState.filter = newFilter;
-    Hive.box('appStateBox').put(1, _appState.filter );
+    Hive.box(H.appState.box()).put(1, _appState.filter );
     _appState.save();
   }
 }

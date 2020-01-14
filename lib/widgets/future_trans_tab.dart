@@ -2,16 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:intl/intl.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 
 import '../DB/bills.dart';
 import '../DB/transactions.dart';
 import '../Helpers/styling.dart';
-import '../Screens/add_bill.dart';
+import '../routes/router.gr.dart';
+import '../Helpers/size_config.dart';
 import '../DB/initialize_HiveDB.dart';
 import '../Screens/details_page.dart';
 import '../Helpers/remove_dialog.dart';
-import '../Screens/add_recurring_trans.dart';
+import '../Helpers/app_localizations.dart';
 
 final _textStyle = TextStyle(
   fontSize: 16,
@@ -19,6 +19,91 @@ final _textStyle = TextStyle(
 );
 
 class FutureTransactionsTap extends StatelessWidget {
+  void _showModalBottomSheet(
+    BuildContext context,
+  ) {
+    final translate = AppLocalizations.of(context).translate;
+
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.transparent,
+      builder: (ctx) {
+        return Container(
+          height: SizeConfig.heightMultiplier * 25,
+          decoration: BoxDecoration(
+            color: Colors.amber,
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(20),
+              topRight: Radius.circular(20),
+            ),
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: <Widget>[
+              RaisedButton(
+                color: Colors.amber,
+                elevation: 0,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(100)),
+                child: Column(
+                  // direction: Axis.vertical,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Icon(
+                      Icons.receipt,
+                      size: 70,
+                      color: Colors.blue[800],
+                    ),
+                    SizedBox(
+                      height: 20,
+                      child: Text(
+                        translate('Add Bill'),
+                        maxLines: 2,
+                      ),
+                    )
+                  ],
+                ),
+                onPressed: () {
+                  Router.navigator
+                      .pushNamed(Router.addBill)
+                      .then((_) => Navigator.of(context).pop());
+                },
+              ),
+              RaisedButton(
+                color: Colors.amber,
+                elevation: 0,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(100)),
+                onPressed: () {
+                  Router.navigator
+                      .pushNamed(Router.addRecurringTransaction)
+                      .then((_) => Navigator.of(context).pop());
+                },
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Icon(
+                      Icons.refresh,
+                      size: 70,
+                      color: Colors.green[600],
+                    ),
+                    SizedBox(
+                      height: 20,
+                      child: Text(
+                        translate('Add recurring transaction'),
+                        softWrap: true,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -32,30 +117,11 @@ class FutureTransactionsTap extends StatelessWidget {
           ],
         ),
       ),
-      floatingActionButton: SpeedDial(
-        child: Icon(Icons.add),
-        animatedIcon: AnimatedIcons.menu_close,
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      floatingActionButton: FloatingActionButton(
         backgroundColor: Colors.cyan,
-        children: [
-          SpeedDialChild(
-            label: 'Add Bill',
-            labelBackgroundColor: Theme.of(context).canvasColor,
-            child: Icon(Icons.arrow_downward),
-            backgroundColor: Colors.blue[800],
-            onTap: () {
-              Navigator.of(context).pushNamed(AddBill.routName);
-            },
-          ),
-          SpeedDialChild(
-            label: 'Add recurring transaction',
-            labelBackgroundColor: Theme.of(context).canvasColor,
-            child: Icon(Icons.arrow_upward),
-            backgroundColor: Colors.green[600],
-            onTap: () {
-              Navigator.of(context).pushNamed(AddRecurringTransaction.routName);
-            },
-          ),
-        ],
+        child: Icon(Icons.add),
+        onPressed: () => _showModalBottomSheet(context),
       ),
     );
   }
@@ -75,7 +141,8 @@ Widget buildRecurringTransWidget() {
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Text(
-                    'Recurring Transactions',
+                    AppLocalizations.of(context)
+                        .translate('Recurring Transactions'),
                     style: _textStyle,
                   ),
                 ),
@@ -117,7 +184,7 @@ Widget buildRecurringTransWidget() {
                         isDeposit: rT.isDeposit,
                         function: () {
                           removeDialog(
-                            title: 'remove This recurring transaction?',
+                            title: 'Remove this recurring transaction?',
                             context: context,
                           ).then((isAccepted) {
                             if (isAccepted != null && isAccepted)
@@ -148,7 +215,8 @@ Widget buildFutureTransWidget() {
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Text(
-                    'Future Transactions',
+                    AppLocalizations.of(context)
+                        .translate('Future Transactions'),
                     style: _textStyle,
                   ),
                 ),
@@ -167,7 +235,7 @@ Widget buildFutureTransWidget() {
                               category: fT.costumeBill.category,
                               date: fT.costumeBill.startingDate,
                               deleteFunction: () => removeDialog(
-                                title: 'Remove this Future transaction?',
+                                title: 'Remove this future transaction?',
                                 context: context,
                               ).then((isAccepted) {
                                 if (isAccepted != null && isAccepted) {
@@ -210,6 +278,7 @@ Widget buildBillsWidget() {
   return WatchBoxBuilder(
     box: Hive.box(H.bills.box()),
     builder: (context, billsBox) {
+      final translate = AppLocalizations.of(context).translate;
       final Bills bills = billsBox.get(H.bills.str());
       final bList = bills.bills;
       return bList == null || bList.isEmpty
@@ -220,7 +289,7 @@ Widget buildBillsWidget() {
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Text(
-                    'Bills',
+                    translate('Bills'),
                     style: _textStyle,
                   ),
                 ),
@@ -241,7 +310,7 @@ Widget buildBillsWidget() {
                               category: bL.category,
                               date: bL.startingDate,
                               deleteFunction: () => removeDialog(
-                                title: 'Remove this bill?',
+                                title: translate('Remove this bill?'),
                                 context: context,
                               ).then((isAccepted) {
                                 if (isAccepted != null && isAccepted) {
@@ -263,7 +332,7 @@ Widget buildBillsWidget() {
                           isDeposit: false,
                           function: () {
                             removeDialog(
-                              title: 'Remove this Bill?',
+                              title: translate('Remove this Bill?'),
                               context: context,
                             ).then((isAccepted) {
                               if (isAccepted != null && isAccepted)
@@ -299,6 +368,8 @@ class ListTileItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final translate = AppLocalizations.of(context).translate;
+
     return ListTile(
       contentPadding: EdgeInsets.all(10),
       leading: Container(
@@ -313,7 +384,7 @@ class ListTileItem extends StatelessWidget {
               color: Theme.of(context).accentColor,
             )),
         child: Text(
-          category,
+          translate(category),
           textAlign: TextAlign.center,
         ),
       ),
@@ -330,12 +401,14 @@ class ListTileItem extends StatelessWidget {
             padding: const EdgeInsets.only(bottom: 5),
             child: Text(
               isDeposit
-                  ? 'This will add $amount to your wallet at $date.'
-                  : 'This will cut $amount from your wallet at $date.',
+                  ? '${translate("This will add")} $amount ${translate("to your wallet at")} $date.'
+                  : '${translate("This will cut")} $amount ${translate("from your wallet at")} $date.',
               softWrap: true,
             ),
           ),
-          Text(description.isEmpty ? '' : 'Description: $description'),
+          Text(description.isEmpty
+              ? ''
+              : '${translate("Description")}: $description'),
         ],
       ),
       trailing: IconButton(

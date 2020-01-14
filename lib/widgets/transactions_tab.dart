@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
@@ -7,9 +6,11 @@ import '../DB/app_state.dart';
 import '../Helpers/styling.dart';
 import './sort_by_category.dart';
 import '../DB/transactions.dart';
-import '../Screens/add_trans.dart';
+import '../routes/router.gr.dart';
 import '../Helpers/size_config.dart';
+import '../DB/initialize_HiveDB.dart';
 import '../widgets/sort_by_trans.dart';
+import '../Helpers/app_localizations.dart';
 
 class UserTransactionsTab extends StatelessWidget {
   final Map<String, Object> transactions;
@@ -21,12 +22,87 @@ class UserTransactionsTab extends StatelessWidget {
     return transactions['transactions'];
   }
 
+  void _showModalBottomSheet(
+    BuildContext context,
+  ) {
+    final translate = AppLocalizations.of(context).translate;
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.transparent,
+      builder: (ctx) {
+        return Container(
+          height: SizeConfig.heightMultiplier * 25,
+          decoration: BoxDecoration(
+            color: Colors.amber,
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(20),
+              topRight: Radius.circular(20),
+            ),
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: <Widget>[
+              RaisedButton(
+                color: Colors.amber,
+                elevation: 0,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(100)),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: <Widget>[
+                    Icon(
+                      Icons.arrow_downward,
+                      size: 70,
+                      color: Colors.red,
+                    ),
+                    Text(translate('Withdrawal'))
+                  ],
+                ),
+                onPressed: () {
+                  Router.navigator
+                      .pushNamed(Router.addTransactions,
+                          arguments: false /*IsNotDeposit*/)
+                      .then((_) => Navigator.of(context).pop());
+                },
+              ),
+              RaisedButton(
+                color: Colors.amber,
+                elevation: 0,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(100)),
+                onPressed: () {
+                  Router.navigator
+                      .pushNamed(Router.addTransactions,
+                          arguments: true /*IsDeposit*/)
+                      .then((_) => Navigator.of(context).pop());
+                },
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: <Widget>[
+                    Icon(
+                      Icons.arrow_upward,
+                      size: 70,
+                      color: Colors.green,
+                    ),
+                    Text(translate('Deposit')),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
+    final translate = AppLocalizations.of(context).translate;
+
     return Scaffold(
       body: _extractedTrans == null || _extractedTrans.isEmpty
           ? Center(
-              child: Text('There is no Transactions here'),
+              child: Text(translate('There is no Transactions here')),
             )
           : CustomScrollView(
               slivers: <Widget>[
@@ -49,8 +125,9 @@ class UserTransactionsTab extends StatelessWidget {
                             Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: Text(
-                                'Overview',
-                                style: TextStyle(fontSize: 25),
+                                translate('Overview'),
+                                style: TextStyle(
+                                    fontSize: SizeConfig.textMultiplier * 2.5),
                               ),
                             ),
                             Divider(
@@ -62,7 +139,7 @@ class UserTransactionsTab extends StatelessWidget {
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: <Widget>[
                                 Text(
-                                  'Inflow  ',
+                                  translate('InFlow'),
                                   style: TextStyle(
                                     fontSize: 15,
                                   ),
@@ -77,7 +154,7 @@ class UserTransactionsTab extends StatelessWidget {
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: <Widget>[
                                 Text(
-                                  'Outflow',
+                                  translate('OutFlow'),
                                   style: TextStyle(fontSize: 15),
                                 ),
                                 Text(
@@ -91,10 +168,16 @@ class UserTransactionsTab extends StatelessWidget {
                               indent: 20 * SizeConfig.widthMultiplier,
                               endIndent: 20 * SizeConfig.widthMultiplier,
                             ),
-                            Padding(
-                              padding: EdgeInsets.only(left: 150),
-                              child: Text(
-                                transactions['amount'].toString(),
+                            Expanded(
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                children: <Widget>[
+                                  Text(translate('Total')),
+                                  Text(
+                                    transactions['amount'].toString(),
+                                  ),
+                                ],
                               ),
                             ),
                           ],
@@ -109,9 +192,10 @@ class UserTransactionsTab extends StatelessWidget {
                   sliver: SliverLayoutBuilder(
                     builder: (context, constrains) {
                       return WatchBoxBuilder(
-                        box: Hive.box('appStateBox'),
+                        box: Hive.box(H.appState.box()),
                         builder: (context, box) {
-                          final appState = box.get('appState') as AppState;
+                          final appState =
+                              box.get(H.appState.str()) as AppState;
                           if (appState.filter == PopMenuItem.ByTrans)
                             return SliverToBoxAdapter(
                               child: ByTransactionType(_extractedTrans),
@@ -127,33 +211,9 @@ class UserTransactionsTab extends StatelessWidget {
                 ),
               ],
             ),
-      floatingActionButton: SpeedDial(
+      floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
-        animatedIcon: AnimatedIcons.menu_close,
-        onOpen: () {},
-        backgroundColor: Theme.of(context).accentColor,
-        children: [
-          SpeedDialChild(
-            label: 'Withdrawal',
-            labelBackgroundColor: Theme.of(context).canvasColor,
-            child: Icon(Icons.arrow_downward),
-            backgroundColor: Colors.red,
-            onTap: () {
-              Navigator.of(context).pushNamed(AddTransactions.routName,
-                  arguments: false /*IsDeposit*/);
-            },
-          ),
-          SpeedDialChild(
-            label: 'Deposit',
-            labelBackgroundColor: Theme.of(context).canvasColor,
-            child: Icon(Icons.arrow_upward),
-            backgroundColor: Colors.green,
-            onTap: () {
-              Navigator.of(context).pushNamed(AddTransactions.routName,
-                  arguments: true /*IsDeposit*/);
-            },
-          ),
-        ],
+        onPressed: () => _showModalBottomSheet(context),
       ),
     );
   }

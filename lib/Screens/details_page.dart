@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 import '../Helpers/size_config.dart';
+import '../Helpers/app_localizations.dart';
 
 
 //this is a generic details Page
@@ -24,6 +25,8 @@ class DetailsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final translate = AppLocalizations.of(context).translate;
+
     return Scaffold(
       appBar: AppBar(
         actions: <Widget>[
@@ -51,7 +54,7 @@ class DetailsPage extends StatelessWidget {
                   width: SizeConfig.heightMultiplier * 5,
                 ),
                 Text(
-                  '$category',
+                  '${translate(category)}',
                   style: TextStyle(
                     fontSize: 26,
                     fontWeight: FontWeight.w300,
@@ -91,7 +94,7 @@ class DetailsPage extends StatelessWidget {
                 ),
                 Text(
                   date == DateTime.now()
-                      ? 'Today'
+                      ? translate('Today')
                       : DateFormat('EEEE, dd/MM/y ').format(date),
                   style: TextStyle(
                     fontSize: 18,
@@ -107,7 +110,7 @@ class DetailsPage extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.only(bottom: 8),
                 child: Text(
-                  'Notes:',
+                  '${translate('Notes')}:',
                   style: TextStyle(
                     fontSize: 26,
                   ),

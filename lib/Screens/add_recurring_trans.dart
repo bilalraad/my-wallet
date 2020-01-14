@@ -9,11 +9,11 @@ import '../Helpers/styling.dart';
 import '../DB/initialize_HiveDB.dart';
 import '../widgets/show_overlay.dart';
 import '../widgets/date_time_picker.dart';
+import '../Helpers/app_localizations.dart';
 import '../widgets/select_category_widget.dart';
 import '../widgets/costume_text_form_field.dart';
 
 class AddRecurringTransaction extends StatefulWidget {
-  static const routName = '/add-Recurring-Transaction';
 
   @override
   _AddRecurringTransactionState createState() =>
@@ -33,6 +33,7 @@ class _AddRecurringTransactionState extends State<AddRecurringTransaction> {
   String _category = '';
   String _dropdownValue = 'Income';
   bool _isDeposit = true;
+  
 
   @override
   void dispose() {
@@ -100,10 +101,12 @@ class _AddRecurringTransactionState extends State<AddRecurringTransaction> {
 
   @override
   Widget build(BuildContext context) {
+    final translate = AppLocalizations.of(context).translate;
+
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'Add Recurring Transaction',
+          translate('Add recurring transaction'),
           softWrap: true,
         ),
         actions: <Widget>[
@@ -146,7 +149,7 @@ class _AddRecurringTransactionState extends State<AddRecurringTransaction> {
                       .map<DropdownMenuItem<String>>((String value) {
                     return DropdownMenuItem<String>(
                       value: value,
-                      child: Text(value),
+                      child: Text(translate(value)),
                     );
                   }).toList(),
                 ),
@@ -186,7 +189,7 @@ class _AddRecurringTransactionState extends State<AddRecurringTransaction> {
                     (BillType value) {
                       return DropdownMenuItem<BillType>(
                         value: value,
-                        child: Text(value.toString().substring(9)),
+                        child: Text(translate(value.toString())),
                       );
                     },
                   ).toList(),
@@ -194,7 +197,6 @@ class _AddRecurringTransactionState extends State<AddRecurringTransaction> {
                 Column(
                   children: <Widget>[
                     DateTimePicker(
-                      context: context,
                       date: _startingDate,
                       setPickedDate: setPickedDate,
                     ),
@@ -202,7 +204,7 @@ class _AddRecurringTransactionState extends State<AddRecurringTransaction> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
                         Text(
-                          'Repeat every ',
+                          translate('Repeat every'),
                           style: TextStyle(fontSize: 15),
                         ),
                         Padding(
@@ -218,7 +220,7 @@ class _AddRecurringTransactionState extends State<AddRecurringTransaction> {
                               decoration: InputDecoration(),
                               validator: (val) {
                                 if (double.tryParse(val) == null)
-                                  return 'enter number';
+                                  return translate('enter number');
 
                                 return null;
                               },
@@ -226,7 +228,7 @@ class _AddRecurringTransactionState extends State<AddRecurringTransaction> {
                           ),
                         ),
                         Text(
-                          getnNameOfBillType(_billType),
+                          translate(getnNameOfBillType(_billType)),
                           style: TextStyle(fontSize: 15),
                         )
                       ],
@@ -253,14 +255,13 @@ class _AddRecurringTransactionState extends State<AddRecurringTransaction> {
                     (RepeatType value) {
                       return DropdownMenuItem<RepeatType>(
                         value: value,
-                        child: Text(value.toString().substring(11)),
+                        child: Text(translate(value.toString())),
                       );
                     },
                   ).toList(),
                 ),
                 _repeatType != RepeatType.Forever
                     ? DateTimePicker(
-                        context: context,
                         date: _startingDate,
                         setPickedDate: setPickedDate,
                         isEndingDate: true,

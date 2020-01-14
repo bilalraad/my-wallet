@@ -1,4 +1,4 @@
-name: transactions
+name: mywallet
 description: A new Flutter project.
 
 # The following defines the version and build number for your application.
@@ -19,9 +19,8 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  intl: ^0.15.8
+  intl: ^0.16.0
   path_provider: ^1.5.0
-  flutter_speed_dial: ^1.2.5
   day_night_switch: ^0.0.2+1
   hive: ^1.2.0
   hive_flutter: ^0.2.1
@@ -29,6 +28,9 @@ dependencies:
   uuid: ^1.0.3
   google_fonts: ^0.2.0
   flutter_local_notifications: ^0.9.1
+  auto_route: ^0.2.1
+  flutter_localizations:
+    sdk: flutter 
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -39,6 +41,7 @@ dev_dependencies:
     sdk: flutter
   hive_generator: ^0.5.1
   build_runner:
+  auto_route_generator: ^0.2.1+3
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -53,6 +56,8 @@ flutter:
   assets:
     - assets/code_for_iraq.png
     - assets/gears.png
+    - lang/en.json
+    - lang/ar.json
 
   #  - images/a_dot_ham.jpeg
   # An image asset can refer to one or more resolution-specific "variants", see

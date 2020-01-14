@@ -8,6 +8,7 @@ import '../Helpers/size_config.dart';
 import '../Screens/details_page.dart';
 import '../DB/initialize_HiveDB.dart';
 import '../Helpers/remove_dialog.dart';
+import '../Helpers/app_localizations.dart';
 
 class ByTransactionType extends StatelessWidget {
   final List<Trans> _trans;
@@ -45,6 +46,8 @@ class CardItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final translate = AppLocalizations.of(context).translate;
+
     return trans.isEmpty
         ? Container()
         : Card(
@@ -57,7 +60,7 @@ class CardItem extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.all(10.0),
                   child: Text(
-                    title,
+                    translate(title),
                     style: Theme.of(context).textTheme.title,
                   ),
                 ),
@@ -84,7 +87,6 @@ class CardItem extends StatelessWidget {
                                         .get(H.transactions.str())
                                         .deleteTrans(t.id);
                                     Navigator.of(context).pop();
-                                    // Navigator.of(context).pop();
                                   }
                                 }),
                                 descripstion: t.description,
@@ -110,7 +112,7 @@ class CardItem extends StatelessWidget {
                               Container(
                                 width: 105,
                                 child: Text(
-                                  t.category,
+                                  translate(t.category),
                                   style: Theme.of(context)
                                       .textTheme
                                       .title
@@ -141,7 +143,7 @@ class CardItem extends StatelessWidget {
                         ),
                       );
                     },
-                  ).toList(),
+                  ).toList().reversed.toList(),
                 ),
               ],
             ),

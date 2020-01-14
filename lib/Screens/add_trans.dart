@@ -9,11 +9,15 @@ import '../DB/transactions.dart';
 import '../Helpers/size_config.dart';
 import '../widgets/show_overlay.dart';
 import '../DB/initialize_HiveDB.dart';
+import '../Helpers/app_localizations.dart';
 import '../widgets/select_category_widget.dart';
 import '../widgets/costume_text_form_field.dart';
 
 class AddTransactions extends StatefulWidget {
-  static const routName = '/Add-transactions';
+
+  final bool isDeposit;
+
+  const AddTransactions({@required this.isDeposit});
   @override
   _AddTransactionsState createState() => _AddTransactionsState();
 }
@@ -24,8 +28,6 @@ class _AddTransactionsState extends State<AddTransactions> {
   final _descriptionController = TextEditingController();
 
   DateTime _pickedDate = DateTime.now();
-  bool _isInit = false; // to prevent didChangeDependencies from running multiple times
-  bool _isDeposit = false;
   String _category = '';
 
   @override
@@ -35,15 +37,6 @@ class _AddTransactionsState extends State<AddTransactions> {
     super.dispose();
   }
 
-  @override
-  void didChangeDependencies() {
-    if (!_isInit) {
-      bool isDepositArg = ModalRoute.of(context).settings.arguments;
-      _isDeposit = isDepositArg;
-    }
-    _isInit = true;
-    super.didChangeDependencies();
-  }
 
   void _onSelectedCategory(String catName) {
     _category = catName;
@@ -59,37 +52,37 @@ class _AddTransactionsState extends State<AddTransactions> {
         .total as double;
 
     final _amount = double.parse(_amountController.text);
+    final translate = AppLocalizations.of(context).translate;
 
     if (_category.isEmpty) {
       showOverlay(context: context, text: "Please select category");
       return;
     }
 
-    if (!_isDeposit) {
+    if (!widget.isDeposit) {
       if (_total < _amount) {
         showDialog(
           context: context,
           builder: (BuildContext context) => AlertDialog(
-            content: Text('Do you want to proceed?'),
+            content: Text(translate('Do you want to proceed')),
             title: Text(
-              _total == 0
+              translate(_total == 0
                   ? 'There\'s no money in your wallet'
-                  : 'There\'s no enough money in your wallet',
+                  : 'There\'s no enough money in your wallet'),
             ),
             actions: <Widget>[
               FlatButton(
-                child: Text('No'),
+                child: Text(translate('No')),
                 onPressed: () {
                   _navigator.pop();
                 },
               ),
               FlatButton(
-                child: Text('Yes'),
+                child: Text(translate('Yes')),
                 onPressed: () {
                   addTrans(_amount);
                   _navigator.pop();
                   _navigator.pop();
-
                 },
               ),
             ],
@@ -109,11 +102,10 @@ class _AddTransactionsState extends State<AddTransactions> {
     final Transactions transactions =
         Hive.box(H.transactions.box()).get(H.transactions.str());
 
-        
     if (DateTime.now().isBefore(_pickedDate)) {
       final _newFutureTrans = FutureTransaction(
         id: Uuid().v4(),
-        isDeposit: _isDeposit,
+        isDeposit: widget.isDeposit,
         isrecurring: false,
         costumeBill: Bill(
           amount: _amount,
@@ -130,7 +122,7 @@ class _AddTransactionsState extends State<AddTransactions> {
       transactions.addFutureTrans(_newFutureTrans);
     } else {
       final valueOfSaving = _amount.getValueOfSaving();
-      if (_isDeposit) {
+      if (widget.isDeposit) {
         _amount -= valueOfSaving;
         valueOfSaving.addToSavingTotal();
       }
@@ -140,7 +132,7 @@ class _AddTransactionsState extends State<AddTransactions> {
         dateTime: _pickedDate,
         id: Uuid().v4(),
         description: _descriptionController.text,
-        isDeposit: _isDeposit,
+        isDeposit: widget.isDeposit,
       );
       await transactions.addTrans(_newTransData);
     }
@@ -148,14 +140,16 @@ class _AddTransactionsState extends State<AddTransactions> {
 
   @override
   Widget build(BuildContext context) {
+    final translate = AppLocalizations.of(context).translate;
+
     return Scaffold(
       appBar: AppBar(
         title: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            Text('Add transaction'),
+            Text(translate('Add transaction')),
             Text(
-              _isDeposit ? 'Desposit' : 'Withdrawal',
+              translate(widget.isDeposit ? 'Deposit' : 'Withdrawal'),
               style: TextStyle(
                 fontSize: 14,
                 color: Theme.of(context).accentColor,
@@ -191,7 +185,7 @@ class _AddTransactionsState extends State<AddTransactions> {
                     ),
                     SelectCategoryWidget(
                       categoryName: _category,
-                      isIncome: _isDeposit,
+                      isIncome: widget.isDeposit,
                       onSelectedCategory: _onSelectedCategory,
                     ),
                     SizedBox(
@@ -207,7 +201,7 @@ class _AddTransactionsState extends State<AddTransactions> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
                         Text(
-                          'Choose date:',
+                          '${translate('Choose date')}:',
                           style: TextStyle(
                               fontSize: 3 * SizeConfig.textMultiplier),
                         ),
@@ -218,7 +212,7 @@ class _AddTransactionsState extends State<AddTransactions> {
                           icon: Icon(Icons.calendar_today),
                           label: Text(
                             _pickedDate.day == DateTime.now().day
-                                ? 'Today'
+                                ? translate('Today')
                                 : DateFormat.yMd().format(_pickedDate),
                           ),
                           color: Theme.of(context).accentColor,
@@ -230,12 +224,12 @@ class _AddTransactionsState extends State<AddTransactions> {
                               lastDate: DateTime(2021),
                             ).then(
                               (pickedValue) {
-                                if(pickedValue!=null)
-                                setState(
-                                  () {
-                                    _pickedDate = pickedValue;
-                                  },
-                                );
+                                if (pickedValue != null)
+                                  setState(
+                                    () {
+                                      _pickedDate = pickedValue;
+                                    },
+                                  );
                               },
                             );
                           },

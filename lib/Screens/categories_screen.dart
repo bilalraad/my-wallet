@@ -4,20 +4,21 @@ import 'package:hive_flutter/hive_flutter.dart';
 
 import '../DB/categories.dart';
 import '../Helpers/styling.dart';
+import '../routes/router.gr.dart';
 import '../widgets/app_drawer.dart';
 import '../Helpers/size_config.dart';
 import '../DB/initialize_HiveDB.dart';
-import '../Screens/add_category.dart';
 import '../Helpers/remove_dialog.dart';
+import '../Helpers/app_localizations.dart';
 
 class CategoriesScreen extends StatelessWidget {
-  static const routName = '/Add-category';
 
   @override
   Widget build(BuildContext context) {
+    final translate = AppLocalizations.of(context).translate;
     return Scaffold(
       appBar: AppBar(
-        title: Text('Categories'),
+        title: Text(translate('Categories')),
       ),
       body: WatchBoxBuilder(
           box: Hive.box(H.categories.box()),
@@ -35,7 +36,7 @@ class CategoriesScreen extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Text(
-                      'Income',
+                      translate('Income'),
                       style: TextStyle(color: Theme.of(context).primaryColor),
                     ),
                   ),
@@ -46,7 +47,7 @@ class CategoriesScreen extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Text(
-                      'Expense',
+                      translate('Expense'),
                       style: TextStyle(color: Theme.of(context).primaryColor),
                     ),
                   ),
@@ -62,8 +63,7 @@ class CategoriesScreen extends StatelessWidget {
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
         onPressed: () {
-          Navigator.of(context)
-              .push(MaterialPageRoute(builder: (ctx) => AddCategory()));
+          Router.navigator.pushNamed(Router.addCategory);
         },
         backgroundColor: Theme.of(context).accentColor,
       ),
@@ -83,7 +83,8 @@ class CategoryListWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final categories =
-        Hive.box('categoriesBox').get('categories') as Categories;
+        Hive.box(H.categories.box()).get(H.categories.str()) as Categories;
+    final translate = AppLocalizations.of(context).translate;
 
     return Column(
       children: categoryList.map((category) {
@@ -98,12 +99,12 @@ class CategoryListWidget extends StatelessWidget {
               child: Padding(
                 padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 8),
                 child: Text(
-                  '${category.title}',
+                  '${translate(category.title)}',
                   style: Theme.of(context).textTheme.title,
                 ),
               ),
               onLongPress: () => removeDialog(
-                title: 'Remove this Category?',
+                title: translate('Remove this Category?'),
                 context: context,
               ).then(
                 (isAccepted) {
@@ -132,12 +133,12 @@ class CategoryListWidget extends StatelessWidget {
                             padding: const EdgeInsets.symmetric(
                                 vertical: 6, horizontal: 5),
                             child: Text(
-                              sub,
+                              '${translate(sub)}',
                               style: Theme.of(context).textTheme.subhead,
                             ),
                           ),
                           onLongPress: () => removeDialog(
-                            title: 'Remove this sub Category?',
+                            title: translate('Remove this sub Category?'),
                             context: context,
                           ).then(
                             (isAccepted) {

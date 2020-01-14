@@ -135,7 +135,7 @@ class Transactions with HiveObject {
   }
 
   void deleteTrans(String id) {
-    final _trans = transList.firstWhere((t) => t.id == id);
+    final _trans = _transactions.transList.firstWhere((t) => t.id == id);
 
     if (_trans.isDeposit) {
       _transactions.total == null

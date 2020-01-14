@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 
+import './initialize_HiveDB.dart';
+
 part 'categories.g.dart';
 
 // category model
@@ -20,7 +22,7 @@ class Category {
   });
 }
 
-final Categories _categories = Hive.box('categoriesBox').get('categories');
+final Categories _categories = Hive.box(H.categories.box()).get(H.categories.str());
 
 @HiveType()
 class Categories extends HiveObject {
@@ -52,7 +54,7 @@ class Categories extends HiveObject {
     Category(
       id: 'food',
       title: 'Food',
-      subCats: ['Resturans', 'Cafe'],
+      subCats: ['Resturants', 'Cafe'],
     ),
     Category(
       id: 'bills',
@@ -60,8 +62,8 @@ class Categories extends HiveObject {
       subCats: ['Phone', 'Electricity'],
     ),
     Category(
-      id: 'transportation',
-      title: 'shoping',
+      id: 'shoping',
+      title: 'Shoping',
       subCats: ['Clothing'],
     ),
     Category(
@@ -76,7 +78,7 @@ class Categories extends HiveObject {
     ),
     Category(
       id: 'donations',
-      title: 'donations',
+      title: 'Donations',
       subCats: ['Charity', 'Zakat'],
     ),
     Category(
@@ -134,8 +136,8 @@ class Categories extends HiveObject {
       }
     }
 
-    Hive.box('categoriesBox').put(0, incomeList);
-    Hive.box('categoriesBox').put(1, expenseList);
+    Hive.box(H.categories.box()).put(0, incomeList);
+    Hive.box(H.categories.box()).put(1, expenseList);
     _categories.save();
   }
 
@@ -172,8 +174,8 @@ class Categories extends HiveObject {
       }
     }
 
-    Hive.box('categoriesBox').put(0, incomeList);
-    Hive.box('categoriesBox').put(1, expenseList);
+    Hive.box(H.categories.box()).put(0, incomeList);
+    Hive.box(H.categories.box()).put(1, expenseList);
     _categories.save();
   }
 }

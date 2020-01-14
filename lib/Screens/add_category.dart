@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
-import 'package:transactions/Helpers/size_config.dart';
 
 import '../Helpers/styling.dart';
+import '../Helpers/size_config.dart';
+import '../DB/initialize_HiveDB.dart';
+import '../Helpers/app_localizations.dart';
 import '../widgets/select_category_widget.dart';
 
 class AddCategory extends StatefulWidget {
@@ -30,9 +32,11 @@ class _AddCategoryState extends State<AddCategory> {
 
   @override
   Widget build(BuildContext context) {
+    final translate = AppLocalizations.of(context).translate;
+
     return Scaffold(
       appBar: AppBar(
-        title: Text('Add Category'),
+        title: Text(translate('Add Category')),
         actions: <Widget>[
           IconButton(
             icon: Icon(Icons.save),
@@ -46,7 +50,7 @@ class _AddCategoryState extends State<AddCategory> {
                 return;
               }
 
-              Hive.box('categoriesBox').get('categories').addCategory(
+              Hive.box(H.categories.box()).get(H.categories.str()).addCategory(
                     _catNameController.text,
                     _parentCatName,
                     isIncomeList,
@@ -67,8 +71,8 @@ class _AddCategoryState extends State<AddCategory> {
               width: SizeConfig.isPortrait ? double.infinity : 400,
               child: TextFormField(
                 decoration: InputDecoration(
-                  labelText: 'Category Name',
-                  errorText: _isvalidate ? null : 'please enter name',
+                  labelText: translate('Category Name'),
+                  errorText: _isvalidate ? null : translate('please enter name'),
                   labelStyle: TextStyle(color: Theme.of(context).primaryColor),
                   focusedErrorBorder: inputBorder.copyWith(
                       borderSide: BorderSide(color: Colors.red)),
@@ -105,7 +109,7 @@ class _AddCategoryState extends State<AddCategory> {
                   .map<DropdownMenuItem<String>>((String value) {
                 return DropdownMenuItem<String>(
                   value: value,
-                  child: Text(value),
+                  child: Text(translate(value)),
                 );
               }).toList(),
             ),
@@ -115,7 +119,7 @@ class _AddCategoryState extends State<AddCategory> {
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: Text(
-                '*Optional',
+                '*${translate("Optional")}',
                 style: TextStyle(color: Colors.green),
               ),
             ),

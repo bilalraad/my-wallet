@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 import '../Helpers/size_config.dart';
+import '../Helpers/app_localizations.dart';
 
 showOverlay({BuildContext context, @required String text}) async {
   OverlayState overlayState = Overlay.of(context);
@@ -20,7 +21,7 @@ showOverlay({BuildContext context, @required String text}) async {
         width: SizeConfig.widthMultiplier * 55,
         child: FittedBox(
           child: Text(
-            text,
+            AppLocalizations.of(context).translate(text),
             style: TextStyle(
               decorationColor: Color(1),
               color: Colors.grey,

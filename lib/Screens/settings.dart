@@ -4,17 +4,21 @@ import 'package:hive/hive.dart';
 import '../DB/app_state.dart';
 import '../widgets/app_drawer.dart';
 import '../DB/initialize_HiveDB.dart';
+import '../Helpers/app_localizations.dart';
 
 class Settings extends StatelessWidget {
-  static const routName = '/settings';
 
   @override
   Widget build(BuildContext context) {
+    final translate = AppLocalizations.of(context).translate;
+
     final appState =
         Hive.box(H.appState.box()).get(H.appState.str()) as AppState;
     return Scaffold(
       drawer: AppDrawer(),
-      appBar: AppBar(),
+      appBar: AppBar(
+        title: Text(translate('Settings')),
+      ),
       body: Container(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -24,7 +28,7 @@ class Settings extends StatelessWidget {
               child: Row(
                 children: <Widget>[
                   Text(
-                    'Percentage of saving',
+                    translate('Percentage of saving'),
                     style: TextStyle(fontSize: 20),
                   ),
                   Spacer(),
@@ -41,7 +45,8 @@ class Settings extends StatelessWidget {
                           StrutStyle(forceStrutHeight: true, height: 2.3),
                       autovalidate: true,
                       validator: (v) {
-                        if (double.tryParse(v) == null) return 'enter number';
+                        if (double.tryParse(v) == null)
+                          return translate('enter number');
                         return null;
                       },
                       onFieldSubmitted: (v) {
@@ -62,7 +67,8 @@ class Settings extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: Text(
-                'NOTE: This will cut ${appState.percentageOfSaving.toStringAsFixed(0)}% on every new deposit\nand add it to your savings',
+                translate(
+                    '${translate('NOTE: This will cut')} ${appState.percentageOfSaving.toStringAsFixed(0)}% ${translate("from every new deposit and add it to your savings")}'),
                 style: TextStyle(fontSize: 15, color: Colors.purple),
               ),
             ),
@@ -75,11 +81,11 @@ class Settings extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
                   Text(
-                    'Total savings:   ${appState.totalSavingAmount.toStringAsFixed(1)}',
+                    '${translate("Total savings")}:   ${appState.totalSavingAmount.toStringAsFixed(1)}',
                     style: TextStyle(fontSize: 20),
                   ),
                   RaisedButton(
-                    child: Text('Retrieve'),
+                    child: Text(translate('Retrieve')),
                     color: Theme.of(context).accentColor,
                     textColor: Theme.of(context).primaryColor,
                     onPressed: appState.totalSavingAmount == 0.0

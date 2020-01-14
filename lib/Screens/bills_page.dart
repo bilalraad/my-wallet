@@ -4,33 +4,35 @@ import 'package:intl/intl.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
-import './add_bill.dart';
 import '../DB/bills.dart';
 import './details_page.dart';
 import '../Helpers/styling.dart';
+import '../routes/router.gr.dart';
 import '../widgets/app_drawer.dart';
+import '../DB/initialize_HiveDB.dart';
 import '../Helpers/remove_dialog.dart';
+import '../Helpers/app_localizations.dart';
 
 class BillsPage extends StatelessWidget {
-  static const routName = '/bills-page';
-
   @override
   Widget build(BuildContext context) {
     final _textStyle = GoogleFonts.poppins(
       fontSize: 18,
     );
+
+    final translate = AppLocalizations.of(context).translate;
     return WatchBoxBuilder(
-      box: Hive.box('billsBox'),
+      box: Hive.box(H.bills.box()),
       builder: (context, billsBox) {
-        final bills = billsBox.get('bills') as Bills;
+        final bills = billsBox.get(H.bills.str()) as Bills;
 
         return Scaffold(
           appBar: AppBar(
-            title: Text('Bills'),
+            title: Text(translate('Bills')),
           ),
           body: bills == null || bills.bills.isEmpty
               ? Center(
-                  child: Text('You didn\'t set any bills'),
+                  child: Text(translate('You didn\'t set any bills')),
                 )
               : Padding(
                   padding: const EdgeInsets.all(12.0),
@@ -38,7 +40,7 @@ class BillsPage extends StatelessWidget {
                     itemCount: bills.bills.length,
                     itemBuilder: (BuildContext context, int i) {
                       final endingDate = bills.bills[i].endingDate == null
-                          ? 'Forever'
+                          ? translate('Forever')
                           : DateFormat.yMd().format(bills.bills[i].endingDate);
                       return InkWell(
                         onTap: () {
@@ -49,7 +51,7 @@ class BillsPage extends StatelessWidget {
                               category: bills.bills[i].category,
                               date: bills.bills[i].startingDate,
                               deleteFunction: () => removeDialog(
-                                title: 'Remove this bill?',
+                                title: translate('Remove this bill?'),
                                 context: context,
                               ).then((isAccepted) {
                                 if (isAccepted != null && isAccepted) {
@@ -65,7 +67,7 @@ class BillsPage extends StatelessWidget {
                         },
                         onLongPress: () {
                           removeDialog(
-                            title: 'Remove this bill?',
+                            title: translate('Remove this bill?'),
                             context: context,
                           ).then((isAccepted) {
                             if (isAccepted != null && isAccepted)
@@ -92,7 +94,7 @@ class BillsPage extends StatelessWidget {
                                       MainAxisAlignment.spaceEvenly,
                                   children: <Widget>[
                                     Text(
-                                      'Category: ${bills.bills[i].category.toUpperCase()}',
+                                      '${translate("Category")}: ${translate(bills.bills[i].category).toUpperCase()}',
                                       style: _textStyle,
                                     ),
                                     Text(
@@ -100,7 +102,7 @@ class BillsPage extends StatelessWidget {
                                       style: _textStyle.copyWith(fontSize: 15),
                                     ),
                                     Text(
-                                      'Type: ${bills.bills[i].billType.toString().substring(9)}',
+                                      '${translate('Type')}: ${translate(bills.bills[i].billType.toString())}',
                                       style: _textStyle,
                                     ),
                                   ],
@@ -112,7 +114,7 @@ class BillsPage extends StatelessWidget {
                                         bills.bills[i].endingDate.hour ==
                                             DateTime.now().hour
                                     ? Text(
-                                        'Expired',
+                                        translate('Expired'),
                                         style: _textStyle,
                                       )
                                     : Row(
@@ -120,14 +122,14 @@ class BillsPage extends StatelessWidget {
                                             MainAxisAlignment.spaceEvenly,
                                         children: <Widget>[
                                           Text(
-                                            'From: ${DateFormat.yMd().format(bills.bills[i].startingDate)}',
+                                            '${translate("From")}: ${DateFormat.yMd().format(bills.bills[i].startingDate)}',
                                             style: _textStyle,
                                           ),
                                           SizedBox(
                                             width: 10,
                                           ),
                                           Text(
-                                            'To: $endingDate',
+                                            '${translate("To")}: $endingDate',
                                             style: _textStyle,
                                           ),
                                         ],
@@ -144,7 +146,7 @@ class BillsPage extends StatelessWidget {
           floatingActionButton: FloatingActionButton(
             child: Icon(Icons.add),
             onPressed: () {
-              Navigator.of(context).pushNamed(AddBill.routName);
+              Router.navigator.pushNamed(Router.addBill);
             },
           ),
         );

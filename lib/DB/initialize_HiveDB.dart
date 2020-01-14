@@ -51,8 +51,6 @@ Future<void> initHive() async {
     appModeBox.put(H.appState.str(), AppState());
   }
 
-    
-
   if (transactionsBox.get(H.transactions.str()) == null) {
     transactionsBox.put(H.transactions.str(), Transactions());
   } else {
@@ -92,10 +90,10 @@ Future<void> initHive() async {
   }
 
 
-  if (billsBox.get('bills') == null) {
-    billsBox.put('bills', Bills());
+  if (billsBox.get(H.bills.str()) == null) {
+    billsBox.put(H.bills.str(), Bills());
   } else {
-    final bills = billsBox.get('bills') as Bills;
+    final bills = billsBox.get(H.bills.str()) as Bills;
 
     for (int i = 0; i < bills.bills.length; i++) {
       timersList.add(
@@ -109,8 +107,9 @@ Future<void> initHive() async {
       );
     }
   }
+    categoriesBox.put(H.categories.str(), Categories());
 
-  if (categoriesBox.get('categories') == null) {
-    categoriesBox.put('categories', Categories());
+  if (categoriesBox.get(H.categories.str()) == null) {
+    categoriesBox.put(H.categories.str(), Categories());
   }
 }

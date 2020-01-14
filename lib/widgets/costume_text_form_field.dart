@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:transactions/Helpers/size_config.dart';
 
 import '../Helpers/styling.dart';
+import '../Helpers/size_config.dart';
+import '../Helpers/app_localizations.dart';
 
 final costumInputDecoration = InputDecoration(
   border: InputBorder.none,
@@ -23,16 +24,20 @@ class AmountTextFormField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final translate = AppLocalizations.of(context).translate;
+
     return Container(
       width: SizeConfig.isPortrait ? double.infinity : 400,
       child: TextFormField(
-        decoration: costumInputDecoration.copyWith(labelText: 'Amount'),
+        decoration:
+            costumInputDecoration.copyWith(labelText: translate('Amount')),
         keyboardType: TextInputType.number,
         controller: _amountController,
         validator: (val) {
-          if (double.tryParse(val) == null) return 'Please enter number';
+          if (double.tryParse(val) == null)
+            return translate('Please enter number');
           if (double.parse(val) <= 0)
-            return 'Please chose bigger number than $val';
+            return '${translate("Please chose bigger number than")} $val';
           return null;
         },
       ),
@@ -49,10 +54,13 @@ class DescriptionTextFormField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final translate = AppLocalizations.of(context).translate;
+
     return Container(
       width: SizeConfig.isPortrait ? double.infinity : 400,
       child: TextFormField(
-        decoration: costumInputDecoration.copyWith(labelText: 'Notes'),
+        decoration:
+            costumInputDecoration.copyWith(labelText: translate('Notes')),
         controller: _descriptionController,
         maxLength: 50,
         maxLines: 2,

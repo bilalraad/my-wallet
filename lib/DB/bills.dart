@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 
 import '../Helpers/my_timer_class.dart';
+import 'initialize_HiveDB.dart';
 
 part 'bills.g.dart';
 
@@ -54,7 +55,7 @@ class Bill {
   });
 }
 
-final _bills = Hive.box('billsBox').get('bills') as Bills;
+final _bills = Hive.box(H.bills.box()).get(H.bills.str()) as Bills;
 
 
 @HiveType()
@@ -76,7 +77,7 @@ class Bills extends HiveObject {
     );
 
     bills.add(newBill);
-    Hive.box('billsBox').put(0, bills);
+    Hive.box(H.bills.box()).put(0, bills);
     _bills.save();
     print('addbill');
   }
@@ -88,7 +89,7 @@ class Bills extends HiveObject {
     timerObject.timer.cancel();
 
     bills.remove(bill);
-    Hive.box('billsBox').put(0, bills);
+    Hive.box(H.bills.box()).put(0, bills);
     _bills.save();
   }
 }

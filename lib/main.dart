@@ -1,25 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:hive_flutter/hive_flutter.dart';
 import 'package:hive/hive.dart';
+import 'package:hive_flutter/hive_flutter.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 
 import './DB/app_state.dart';
 import './Helpers/styling.dart';
-import './Screens/add_bill.dart';
-import './Screens/settings.dart';
-import './Screens/add_trans.dart';
-import './Screens/bills_page.dart';
+import './routes/router.gr.dart';
 import './Helpers/size_config.dart';
 import './Screens/intro_screen.dart';
 import './DB/initialize_HiveDB.dart';
-import './Screens/categories_screen.dart';
-import './Screens/add_recurring_trans.dart';
-import './Helpers/notificationsPlugin.dart';
-import './Screens/recurring_tranactions.dart';
+import './Helpers/app_localizations.dart';
 import './Screens/user_transactions_overview.dart';
 
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-
+  // WidgetsFlutterBinding.ensureInitialized();
 
   runApp(MyWallet());
 }
@@ -34,7 +28,6 @@ class _MyWalletState extends State<MyWallet> {
 
   @override
   void initState() {
-  NotificationsPlugin();
     initHive().then((_) {
       setState(() {
         isLoading = false;
@@ -69,24 +62,41 @@ class _MyWalletState extends State<MyWallet> {
                         theme: appMode.isDark
                             ? AppTheme.darkTheme
                             : AppTheme.lightTheme,
+
+                        // List all of the app's supported locales here
+                        supportedLocales: [
+                          Locale('en', 'US'),
+                          Locale('ar'),
+                        ],
+                        // These delegates make sure that the localization data for the proper language is loaded
+                        localizationsDelegates: [
+                          // A class which loads the translations from JSON files
+                          AppLocalizations.delegate,
+                          // Built-in localization of basic text for Material widgets
+                          GlobalMaterialLocalizations.delegate,
+                          // Built-in localization for text direction LTR/RTL
+                          GlobalWidgetsLocalizations.delegate,
+                        ],
+                        // Returns a locale which will be used by the app
+                        localeResolutionCallback: (locale, supportedLocales) {
+                          // Check if the current device locale is supported
+                          for (var supportedLocale in supportedLocales) {
+                            if (supportedLocale.languageCode ==
+                                locale.languageCode) {
+                              return supportedLocale;
+                            }
+                          }
+                          // If the locale of the device is not supported, use the first one
+                          // from the list (English, in this case).
+                          return supportedLocales.first;
+                        },
                         home: appState.firstTime
                             ? IntroductionPage()
-                            : WatchBoxBuilder(
-                                box: Hive.box(H.transactions.box()),
-                                builder: (context, _) =>
-                                    UserTransactionsOverView(),
-                              ),
-                        routes: {
-                          AddTransactions.routName: (_) => AddTransactions(),
-                          CategoriesScreen.routName: (_) => CategoriesScreen(),
-                          BillsPage.routName: (_) => BillsPage(),
-                          RecurringTransactions.routName: (_) =>
-                              RecurringTransactions(),
-                          Settings.routName: (_) => Settings(),
-                          AddBill.routName: (_) => AddBill(),
-                          AddRecurringTransaction.routName: (_) =>
-                              AddRecurringTransaction(),
-                        },
+                            : UserTransactionsOverView(),
+
+                        onGenerateRoute: Router.onGenerateRoute,
+
+                        navigatorKey: Router.navigatorKey,
                       );
                     },
                   );

@@ -5,7 +5,9 @@ import 'package:uuid/uuid.dart';
 import '../DB/bills.dart';
 import '../Helpers/styling.dart';
 import '../widgets/show_overlay.dart';
+import '../DB/initialize_HiveDB.dart';
 import '../widgets/date_time_picker.dart';
+import '../Helpers/app_localizations.dart';
 import '../widgets/select_category_widget.dart';
 import '../widgets/costume_text_form_field.dart';
 
@@ -15,7 +17,6 @@ enum RepeatType {
 }
 
 class AddBill extends StatefulWidget {
-  static const routName = '/add-bill';
   @override
   _AddBillState createState() => _AddBillState();
 }
@@ -63,7 +64,7 @@ class _AddBillState extends State<AddBill> {
   }
 
   void _submit() {
-    final _bills = Hive.box('billsBox').get('bills') as Bills;
+    final _bills = Hive.box(H.bills.box()).get(H.bills.str()) as Bills;
 
     if (!_form.currentState.validate()) return;
 
@@ -99,9 +100,10 @@ class _AddBillState extends State<AddBill> {
 
   @override
   Widget build(BuildContext context) {
+    final translate = AppLocalizations.of(context).translate;
     return Scaffold(
       appBar: AppBar(
-        title: Text('Add Bill'),
+        title: Text(translate('Add Bill')),
         actions: <Widget>[
           IconButton(
             icon: Icon(Icons.check),
@@ -131,7 +133,8 @@ class _AddBillState extends State<AddBill> {
                 DescriptionTextFormField(
                   descriptionController: _descriptionController,
                 ),
-                DropdownButton<BillType>(//To select Bill type
+                DropdownButton<BillType>(
+                  //To select Bill type
                   value: _billType,
                   icon: Icon(Icons.arrow_drop_down),
                   iconSize: 24,
@@ -153,7 +156,7 @@ class _AddBillState extends State<AddBill> {
                     (BillType value) {
                       return DropdownMenuItem<BillType>(
                         value: value,
-                        child: Text(value.toString().substring(9)),
+                        child: Text(translate(value.toString())),
                       );
                     },
                   ).toList(),
@@ -161,7 +164,6 @@ class _AddBillState extends State<AddBill> {
                 Column(
                   children: <Widget>[
                     DateTimePicker(
-                      context: context,
                       date: _startingDate,
                       setPickedDate: setPickedDate,
                     ),
@@ -169,7 +171,7 @@ class _AddBillState extends State<AddBill> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
                         Text(
-                          'Repeat every ',
+                          translate('Repeat every'),
                           style: TextStyle(fontSize: 15),
                         ),
                         Padding(
@@ -191,7 +193,7 @@ class _AddBillState extends State<AddBill> {
                           ),
                         ),
                         Text(
-                          getnNameOfBillType(_billType),
+                          translate(getnNameOfBillType(_billType)),
                           style: TextStyle(fontSize: 15),
                         )
                       ],
@@ -218,14 +220,13 @@ class _AddBillState extends State<AddBill> {
                     (RepeatType value) {
                       return DropdownMenuItem<RepeatType>(
                         value: value,
-                        child: Text(value.toString().substring(11)),
+                        child: Text(translate(value.toString())),
                       );
                     },
                   ).toList(),
                 ),
                 _repeatType != RepeatType.Forever
                     ? DateTimePicker(
-                        context: context,
                         date: _endingDate,
                         setPickedDate: setPickedDate,
                         isEndingDate: true,

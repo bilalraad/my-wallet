@@ -4,12 +4,10 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:day_night_switch/day_night_switch.dart';
 
 import '../DB/app_state.dart';
-import '../Screens/settings.dart';
-import '../Screens/bills_page.dart';
+import '../routes/router.gr.dart';
 import '../Helpers/size_config.dart';
 import '../DB/initialize_HiveDB.dart';
-import '../Screens/categories_screen.dart';
-import '../Screens/recurring_tranactions.dart';
+import '../Helpers/app_localizations.dart';
 
 class AppDrawer extends StatelessWidget {
   @override
@@ -30,22 +28,22 @@ class AppDrawer extends StatelessWidget {
             DrawerBotton(
               lable: 'Home',
               icon: Icons.home,
-              routName: '/',
+              routeName: Router.userTransactionsOverView,
             ),
             DrawerBotton(
               lable: 'Categories',
               icon: Icons.category,
-              routName: CategoriesScreen.routName,
+              routeName: Router.categoriesScreen,
             ),
             DrawerBotton(
               lable: 'Bills',
               icon: Icons.receipt,
-              routName: BillsPage.routName,
+              routeName: Router.billsPage,
             ),
             DrawerBotton(
               lable: 'Recurring Transactions',
               icon: Icons.refresh,
-              routName: RecurringTransactions.routName,
+              routeName: Router.recurringTransactions,
             ),
             Divider(),
             DayNightSwitchWidget(),
@@ -60,7 +58,7 @@ class AppDrawer extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
                         Text(
-                          'your savings',
+                          AppLocalizations.of(context).translate('YourSavings'),
                           style: TextStyle(fontSize: 16),
                         ),
                         Text(
@@ -75,7 +73,12 @@ class AppDrawer extends StatelessWidget {
             DrawerBotton(
               lable: 'Settings',
               icon: Icons.settings,
-              routName: Settings.routName,
+              routeName: Router.settings,
+            ),
+            DrawerBotton(
+              lable: 'Info',
+              icon: Icons.info_outline,
+              routeName: Router.infoSceen,
             ),
             SizedBox(
               height: 10,
@@ -104,7 +107,7 @@ class _DayNightSwitchWidgetState extends State<DayNightSwitchWidget> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
           Text(
-            " App Theme",
+            "App Theme",
             style: TextStyle(fontSize: 16),
           ),
           FittedBox(
@@ -126,13 +129,13 @@ class _DayNightSwitchWidgetState extends State<DayNightSwitchWidget> {
 
 class DrawerBotton extends StatelessWidget {
   const DrawerBotton({
-    this.routName,
+    this.routeName,
     this.lable,
     this.icon,
   });
 
   final String lable;
-  final String routName;
+  final String routeName;
   final IconData icon;
 
   @override
@@ -143,7 +146,7 @@ class DrawerBotton extends StatelessWidget {
           topRight: Radius.circular(20),
         ),
         focusColor: Colors.amber,
-        onTap: () => Navigator.of(context).pushReplacementNamed(routName),
+        onTap: () => Router.navigator.pushReplacementNamed(routeName),
         child: Padding(
           padding: const EdgeInsets.all(8.0),
           child: Row(
@@ -157,7 +160,7 @@ class DrawerBotton extends StatelessWidget {
                 width: 10,
               ),
               Text(
-                lable,
+                AppLocalizations.of(context).translate(lable),
                 style: TextStyle(fontSize: 18),
               ),
             ],

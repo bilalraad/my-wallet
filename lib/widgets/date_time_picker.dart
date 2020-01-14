@@ -2,15 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 import '../Helpers/size_config.dart';
+import '../Helpers/app_localizations.dart';
 
 class DateTimePicker extends StatelessWidget {
-  final BuildContext context;
   final DateTime date;
   final bool isEndingDate;
   final Function setPickedDate;
 
   const DateTimePicker({
-    this.context,
     this.date,
     this.isEndingDate = false,
     this.setPickedDate,
@@ -18,12 +17,14 @@ class DateTimePicker extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final translate = AppLocalizations.of(context).translate;
+
     return Container(
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           Text(
-            !isEndingDate ? 'From' : 'Until',
+            translate(!isEndingDate ? 'From' : 'Until'),
             style: TextStyle(fontSize: 3 * SizeConfig.textMultiplier),
           ),
           SizedBox(
@@ -33,9 +34,9 @@ class DateTimePicker extends StatelessWidget {
             icon: Icon(Icons.calendar_today),
             label: Text(
               date == null
-                  ? 'Forever'
+                  ? translate('Forever')
                   : date.day == DateTime.now().day
-                      ? 'Today'
+                      ? translate('Today')
                       : '${DateFormat.yMd().format(date)}',
             ),
             color: Theme.of(context).accentColor,

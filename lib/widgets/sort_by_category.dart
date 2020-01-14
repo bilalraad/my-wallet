@@ -8,14 +8,17 @@ import '../Helpers/size_config.dart';
 import '../DB/initialize_HiveDB.dart';
 import '../Screens/details_page.dart';
 import '../Helpers/remove_dialog.dart';
+import '../Helpers/app_localizations.dart';
 
 class ByCategory extends StatelessWidget {
   final List<Trans> extractedTrans;
 
   const ByCategory(this.extractedTrans);
-
+  
   @override
   Widget build(BuildContext context) {
+    final translate = AppLocalizations.of(context).translate;
+
     return Container(
       child: Column(
         children: extractedTrans.map(
@@ -32,7 +35,7 @@ class ByCategory extends StatelessWidget {
                       category: ex.category,
                       date: ex.dateTime,
                       deleteFunction: () => removeDialog(
-                        title: 'Remove this Transaction?',
+                        title:'Remove this Transaction?',
                         context: context,
                       ).then((isAccepted) {
                         if (isAccepted != null && isAccepted) {
@@ -68,7 +71,7 @@ class ByCategory extends StatelessWidget {
                         padding:
                             EdgeInsets.all(2 * SizeConfig.heightMultiplier),
                         child: Text(
-                          '${ex.category}',
+                          '${translate(ex.category)}',
                           style: Theme.of(context).textTheme.title,
                         ),
                       ),

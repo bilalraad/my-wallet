@@ -11,6 +11,8 @@ import '../DB/transactions.dart';
 import '../widgets/app_drawer.dart';
 import '../Helpers/size_config.dart';
 import '../DB/initialize_HiveDB.dart';
+import '../Helpers/app_localizations.dart';
+import '../widgets/costume_text_form_field.dart';
 import '../Screens/user_transactions_overview.dart';
 
 final AppState appState = Hive.box(H.appState.box()).get(H.appState.str());
@@ -23,7 +25,6 @@ enum Worktype {
 }
 
 class IntroductionPage extends StatefulWidget {
-  const IntroductionPage({Key key}) : super(key: key);
 
   @override
   _IntroductionPageState createState() => _IntroductionPageState();
@@ -38,12 +39,12 @@ class _IntroductionPageState extends State<IntroductionPage> {
   final textFormFieldKey = GlobalKey<FormState>();
 
   List<PageViewModel> pages() {
+    final translate = AppLocalizations.of(context).translate;
     return [
       //this has been folded up
       PageViewModel(
-        // title: 'hello',
         titleWidget: Text(
-          'Hello',
+          translate('Hello'),
           style: TextStyle(
             fontSize: 30,
           ),
@@ -56,7 +57,8 @@ class _IntroductionPageState extends State<IntroductionPage> {
         )),
         // body: 'lnlkl',
         bodyWidget: Text(
-          'This app was devloped as a task\nto Code for Iraq community',
+          translate(
+              'This app was devloped as a task\nto Code for Iraq community'),
           textAlign: TextAlign.center,
           style: TextStyle(fontSize: 18),
         ),
@@ -65,7 +67,7 @@ class _IntroductionPageState extends State<IntroductionPage> {
         titleWidget: Padding(
           padding: EdgeInsets.only(top: SizeConfig.isPortrait ? 0.0 : 70.0),
           child: Text(
-            'Let\'s set your App',
+            translate('Let\'s set your App'),
             style: TextStyle(
               fontSize: 30,
             ),
@@ -88,7 +90,7 @@ class _IntroductionPageState extends State<IntroductionPage> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
                   Text(
-                    'you work as',
+                    translate('you work as'),
                     style: TextStyle(fontSize: 16),
                   ),
                   DropdownButton<Worktype>(
@@ -111,7 +113,7 @@ class _IntroductionPageState extends State<IntroductionPage> {
                       (Worktype value) {
                         return DropdownMenuItem<Worktype>(
                           value: value,
-                          child: Text(value.toString().substring(9)),
+                          child: Text(translate(value.toString())),
                         );
                       },
                     ).toList(),
@@ -126,7 +128,7 @@ class _IntroductionPageState extends State<IntroductionPage> {
                 child: Row(
                   children: <Widget>[
                     Text(
-                      'Do you wan\'t to set static income?',
+                      translate('Do you wan\'t to set static income?'),
                       style: TextStyle(fontSize: 16),
                     ),
                     Spacer(),
@@ -152,7 +154,7 @@ class _IntroductionPageState extends State<IntroductionPage> {
                 top: SizeConfig.isPortrait ? 100 : 0,
                 bottom: SizeConfig.isPortrait ? 50 : 10),
             child: Text(
-              'Almost Done',
+              translate('Almost Done'),
               style: TextStyle(
                 fontSize: 30,
               ),
@@ -165,7 +167,7 @@ class _IntroductionPageState extends State<IntroductionPage> {
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
                   Text(
-                    'Set static Income',
+                    translate('Set static Income'),
                     style: TextStyle(
                       fontSize: 19,
                     ),
@@ -183,34 +185,10 @@ class _IntroductionPageState extends State<IntroductionPage> {
                         width: 150,
                         height: 70,
                         child: Form(
-                          key: textFormFieldKey,
-                          child: TextFormField(
-                            decoration: InputDecoration(
-                              border: InputBorder.none,
-                              labelText: 'Amount',
-                              labelStyle: TextStyle(
-                                  color: Theme.of(context).primaryColor),
-                              focusedErrorBorder: inputBorder.copyWith(
-                                  borderSide: BorderSide(color: Colors.red)),
-                              errorBorder: inputBorder.copyWith(
-                                  borderSide: BorderSide(color: Colors.red)),
-                              enabledBorder: inputBorder,
-                              focusedBorder: inputBorder.copyWith(
-                                  borderSide: BorderSide(
-                                      color: Theme.of(context).accentColor)),
-                            ),
-                            keyboardType: TextInputType.number,
-                            // autovalidate: true,
-                            controller: _amountController,
-                            validator: (val) {
-                              if (double.tryParse(val) == null)
-                                return 'Please enter number';
-                              if (double.parse(val) <= 0)
-                                return 'Please chose bigger number than $val';
-                              return null;
-                            },
-                          ),
-                        ),
+                            key: textFormFieldKey,
+                            child: AmountTextFormField(
+                              amountController: _amountController,
+                            )),
                       ),
                       SizedBox(
                         width: 80,
@@ -239,7 +217,7 @@ class _IntroductionPageState extends State<IntroductionPage> {
                           (BillType value) {
                             return DropdownMenuItem<BillType>(
                               value: value,
-                              child: Text(value.toString().substring(9)),
+                              child: Text(translate(value.toString())),
                             );
                           },
                         ).toList(),
@@ -247,14 +225,14 @@ class _IntroductionPageState extends State<IntroductionPage> {
                     ],
                   ),
                   Text(
-                    'Starts from',
+                    translate('Starts from'),
                   ),
                   Container(
                     width: SizeConfig.widthMultiplier * 75,
                     child: RaisedButton(
                       color: Theme.of(context).primaryColor,
                       child: _startingDate.day == DateTime.now().day
-                          ? Text('Today')
+                          ? Text(translate('Today'))
                           : Text('${DateFormat.yMd().format(_startingDate)}'),
                       onPressed: () {
                         showDatePicker(
@@ -279,7 +257,7 @@ class _IntroductionPageState extends State<IntroductionPage> {
                     height: 10,
                   ),
                   Text(
-                    'NOTE: This will set your Salary as recurring Transaction, So you can cancle it when ever you want',
+                    translate('NOTE: This will set your Salary as recurring Transaction, So you can cancle it when ever you want'),
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       fontSize: 14,
@@ -295,7 +273,7 @@ class _IntroductionPageState extends State<IntroductionPage> {
         titleWidget: Padding(
           padding: const EdgeInsets.all(40.0),
           child: Text(
-            'Final Step',
+            translate('Final Step'),
             style: TextStyle(
               fontSize: 30,
             ),
@@ -309,7 +287,7 @@ class _IntroductionPageState extends State<IntroductionPage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   Text(
-                    'Percentage of saving',
+                    translate('Percentage of saving'),
                     style: TextStyle(fontSize: 18),
                   ),
                   SizedBox(
@@ -348,7 +326,7 @@ class _IntroductionPageState extends State<IntroductionPage> {
               ),
             ),
             Text(
-              'NOTE: This will cut ${appState.percentageOfSaving.toStringAsFixed(0)}% from every new deposit\nand add it to your savings',
+              ('${translate('NOTE: This will cut')} ${appState.percentageOfSaving.toStringAsFixed(0)}% ${translate("from every new deposit and add it to your savings")}'),
               style: TextStyle(color: Theme.of(context).accentColor),
             ),
           ],
@@ -383,8 +361,8 @@ class _IntroductionPageState extends State<IntroductionPage> {
         isrecurring: true,
         costumeBill: Bill(
           amount: _amount,
-          category: 'Salary',
-          description: 'This Is My salary',
+          category: AppLocalizations.of(context).translate('Salary'),
+          description: '',
           billType: BillType.FutureTrans,
           startingDate: _startingDate,
           endingDate: null,
@@ -413,7 +391,7 @@ class _IntroductionPageState extends State<IntroductionPage> {
       next: const Icon(Icons.navigate_next),
       globalBackgroundColor:
           appState.isDark ? Colors.black : AppTheme.appBackgroundColor,
-      done: Text('Done'),
+      done: Text(AppLocalizations.of(context).translate('Done')),
       onDone: _oneDone,
       pages: pages(),
     );
