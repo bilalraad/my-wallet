@@ -309,7 +309,7 @@ class _IntroductionPageState extends State<IntroductionPage> {
                         if (double.tryParse(v) == null) return 'enter number';
                         return null;
                       },
-                      onFieldSubmitted: (v) {
+                      onChanged: (v) {
                         if (double.tryParse(v) != null)
                           appState.changePercentageOfSaving(double.parse(v));
                         return;

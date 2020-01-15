@@ -49,7 +49,7 @@ class Settings extends StatelessWidget {
                           return translate('enter number');
                         return null;
                       },
-                      onFieldSubmitted: (v) {
+                      onChanged: (v) {
                         if (double.tryParse(v) != null)
                           appState.changePercentageOfSaving(double.parse(v));
                         return;
