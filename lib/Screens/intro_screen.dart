@@ -146,6 +146,69 @@ class _IntroductionPageState extends State<IntroductionPage> {
           ],
         ),
       ),
+      PageViewModel(
+        titleWidget: Padding(
+          padding: const EdgeInsets.all(40.0),
+          child: Text(
+            translate(setSalary ? 'Almost done' : 'Final Step'),
+            style: TextStyle(
+              fontSize: 30,
+            ),
+          ),
+        ),
+        bodyWidget: Column(
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.all(0.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Text(
+                    translate('Percentage of saving'),
+                    style: TextStyle(fontSize: 18),
+                  ),
+                  SizedBox(
+                    width: 30,
+                  ),
+                  SizedBox(
+                    width: 50,
+                    child: TextFormField(
+                      textAlign: TextAlign.center,
+                      decoration: InputDecoration(
+                          errorMaxLines: 2, errorStyle: TextStyle(fontSize: 8)),
+                      initialValue:
+                          appState.percentageOfSaving.toStringAsFixed(0),
+                      maxLength: 3,
+                      strutStyle:
+                          StrutStyle(forceStrutHeight: true, height: 2.3),
+                      autovalidate: true,
+                      validator: (v) {
+                        if (double.tryParse(v) == null) return 'enter number';
+                        return null;
+                      },
+                      onChanged: (v) {
+                        if (double.tryParse(v) != null)
+                          appState.changePercentageOfSaving(double.parse(v));
+                        return;
+                      },
+                      keyboardType: TextInputType.number,
+                    ),
+                  ),
+                  Text(
+                    '%',
+                    style: TextStyle(fontSize: 25),
+                  ),
+                  SizedBox(width: 20),
+                ],
+              ),
+            ),
+            Text(
+              ('${translate('NOTE: This will cut')} ${appState.percentageOfSaving.toStringAsFixed(0)}% ${translate("from every new deposit and add it to your savings")}'),
+              style: TextStyle(color: Theme.of(context).accentColor),
+            ),
+          ],
+        ),
+      ),
       if (setSalary && worktype != Worktype.None)
         PageViewModel(
           titleWidget: Container(
@@ -153,7 +216,7 @@ class _IntroductionPageState extends State<IntroductionPage> {
                 top: SizeConfig.isPortrait ? 100 : 0,
                 bottom: SizeConfig.isPortrait ? 50 : 10),
             child: Text(
-              translate('Almost Done'),
+              translate('Final Step'),
               style: TextStyle(
                 fontSize: 30,
               ),
@@ -269,69 +332,6 @@ class _IntroductionPageState extends State<IntroductionPage> {
             ],
           ),
         ),
-      PageViewModel(
-        titleWidget: Padding(
-          padding: const EdgeInsets.all(40.0),
-          child: Text(
-            translate('Final Step'),
-            style: TextStyle(
-              fontSize: 30,
-            ),
-          ),
-        ),
-        bodyWidget: Column(
-          children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.all(0.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Text(
-                    translate('Percentage of saving'),
-                    style: TextStyle(fontSize: 18),
-                  ),
-                  SizedBox(
-                    width: 30,
-                  ),
-                  SizedBox(
-                    width: 50,
-                    child: TextFormField(
-                      textAlign: TextAlign.center,
-                      decoration: InputDecoration(
-                          errorMaxLines: 2, errorStyle: TextStyle(fontSize: 8)),
-                      initialValue:
-                          appState.percentageOfSaving.toStringAsFixed(0),
-                      maxLength: 3,
-                      strutStyle:
-                          StrutStyle(forceStrutHeight: true, height: 2.3),
-                      autovalidate: true,
-                      validator: (v) {
-                        if (double.tryParse(v) == null) return 'enter number';
-                        return null;
-                      },
-                      onChanged: (v) {
-                        if (double.tryParse(v) != null)
-                          appState.changePercentageOfSaving(double.parse(v));
-                        return;
-                      },
-                      keyboardType: TextInputType.number,
-                    ),
-                  ),
-                  Text(
-                    '%',
-                    style: TextStyle(fontSize: 25),
-                  ),
-                  SizedBox(width: 20),
-                ],
-              ),
-            ),
-            Text(
-              ('${translate('NOTE: This will cut')} ${appState.percentageOfSaving.toStringAsFixed(0)}% ${translate("from every new deposit and add it to your savings")}'),
-              style: TextStyle(color: Theme.of(context).accentColor),
-            ),
-          ],
-        ),
-      ),
     ];
   }
 
@@ -361,7 +361,7 @@ class _IntroductionPageState extends State<IntroductionPage> {
         isrecurring: true,
         costumeBill: Bill(
           amount: _amount,
-          category: AppLocalizations.of(context).translate('Salary'),
+          category: 'Salary',
           description: '',
           billType: BillType.FutureTrans,
           startingDate: _startingDate,
