@@ -8,12 +8,12 @@ import '../DB/bills.dart';
 import '../DB/app_state.dart';
 import '../Helpers/styling.dart';
 import '../DB/transactions.dart';
+import '../routes/router.gr.dart';
 import '../widgets/app_drawer.dart';
 import '../Helpers/size_config.dart';
 import '../DB/initialize_HiveDB.dart';
 import '../Helpers/app_localizations.dart';
 import '../widgets/costume_text_form_field.dart';
-import '../Screens/user_transactions_overview.dart';
 
 final AppState appState = Hive.box(H.appState.box()).get(H.appState.str());
 
@@ -25,7 +25,6 @@ enum Worktype {
 }
 
 class IntroductionPage extends StatefulWidget {
-
   @override
   _IntroductionPageState createState() => _IntroductionPageState();
 }
@@ -257,7 +256,8 @@ class _IntroductionPageState extends State<IntroductionPage> {
                     height: 10,
                   ),
                   Text(
-                    translate('NOTE: This will set your Salary as recurring Transaction, So you can cancle it when ever you want'),
+                    translate(
+                        'NOTE: This will set your Salary as recurring Transaction, So you can cancle it when ever you want'),
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       fontSize: 14,
@@ -373,11 +373,7 @@ class _IntroductionPageState extends State<IntroductionPage> {
       );
       _transactions.addFutureTrans(_salaryRT);
     }
-    Navigator.of(context).pushReplacement(
-      MaterialPageRoute(
-        builder: (_) => UserTransactionsOverView(),
-      ),
-    );
+    Router.navigator.pushReplacementNamed(Router.userTransactionsOverView);
 
     appState.firstTime = false;
     Hive.box(H.appState.box()).put(4, appState.firstTime);

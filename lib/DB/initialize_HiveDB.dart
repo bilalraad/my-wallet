@@ -46,7 +46,6 @@ Future<void> initHive() async {
   final categoriesBox = await Hive.openBox(H.categories.box());
   final transactionsBox = await Hive.openBox(H.transactions.box());
 
-
   if (appModeBox.get(H.appState.str()) == null) {
     appModeBox.put(H.appState.str(), AppState());
   }
