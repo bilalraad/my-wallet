@@ -51,7 +51,7 @@ class AppState extends HiveObject {
   void changePercentageOfSaving(double newpercentage) {
     _appState.percentageOfSaving = newpercentage;
 
-    Hive.box(H.appState.box()).putAt(2, _appState.percentageOfSaving);
+    Hive.box(H.appState.box()).put(2, _appState.percentageOfSaving);
     _appState.save();
   }
 
