@@ -12,9 +12,7 @@ import './DB/initialize_HiveDB.dart';
 import './Helpers/app_localizations.dart';
 import './Screens/user_transactions_overview.dart';
 
-void main() async {
-  // WidgetsFlutterBinding.ensureInitialized();
-
+void main() {
   runApp(MyWallet());
 }
 
@@ -55,48 +53,54 @@ class _MyWalletState extends State<MyWallet> {
                 : WatchBoxBuilder(
                     box: Hive.box(H.appState.box()),
                     builder: (context, appStateBox) {
-                      final AppState appMode =
-                          appStateBox.get(H.appState.str());
-                      return MaterialApp(
-                        debugShowCheckedModeBanner: false,
-                        theme: appMode.isDark
-                            ? AppTheme.darkTheme
-                            : AppTheme.lightTheme,
+                      final appMode =
+                          appStateBox.get(H.appState.str()) as AppState;
 
-                        // List all of the app's supported locales here
-                        supportedLocales: [
-                          Locale('en', 'US'),
-                          Locale('ar'),
-                        ],
-                        // These delegates make sure that the localization data for the proper language is loaded
-                        localizationsDelegates: [
-                          // A class which loads the translations from JSON files
-                          AppLocalizations.delegate,
-                          // Built-in localization of basic text for Material widgets
-                          GlobalMaterialLocalizations.delegate,
-                          // Built-in localization for text direction LTR/RTL
-                          GlobalWidgetsLocalizations.delegate,
-                        ],
-                        // Returns a locale which will be used by the app
-                        localeResolutionCallback: (locale, supportedLocales) {
-                          // Check if the current device locale is supported
-                          for (var supportedLocale in supportedLocales) {
-                            if (supportedLocale.languageCode ==
-                                locale.languageCode) {
-                              return supportedLocale;
+                      return RestartWidget(
+                        child: MaterialApp(
+                          debugShowCheckedModeBanner: false,
+                          theme: appMode.isDark
+                              ? AppTheme.darkTheme
+                              : AppTheme.lightTheme,
+
+                          // List all of the app's supported locales here
+                          supportedLocales: const [
+                             Locale('en', 'US'),
+                             Locale('ar'),
+                          ],
+                          // These delegates make sure that the localization data for the proper language is loaded
+                          localizationsDelegates: [
+                            // A class which loads the translations from JSON files
+                            AppLocalizations.delegate,
+                            // Built-in localization of basic text for Material widgets
+                            GlobalMaterialLocalizations.delegate,
+                            // Built-in localization for text direction LTR/RTL
+                            GlobalWidgetsLocalizations.delegate,
+                          ],
+                          // Returns a locale which will be used by the app
+                          localeResolutionCallback: (locale, supportedLocales) {
+                            final Locale theLocale = appState.myLocale.isEmpty
+                                ? locale
+                                : Locale(appState.myLocale);
+                            // Check if the current device locale is supported
+                            for (var supportedLocale in supportedLocales) {
+                              if (supportedLocale.languageCode ==
+                                  locale.languageCode) {
+                                return theLocale;
+                              }
                             }
-                          }
-                          // If the locale of the device is not supported, use the first one
-                          // from the list (English, in this case).
-                          return supportedLocales.first;
-                        },
-                        home: appState.firstTime
-                            ? IntroductionPage()
-                            : UserTransactionsOverView(),
+                            // If the locale of the device is not supported, use the first one
+                            // from the list (English, in this case).
+                            return supportedLocales.first;
+                          },
+                          home: appState.firstTime
+                              ? IntroductionPage()
+                              : UserTransactionsOverView(),
 
-                        onGenerateRoute: Router.onGenerateRoute,
+                          onGenerateRoute: Router.onGenerateRoute,
 
-                        navigatorKey: Router.navigatorKey,
+                          navigatorKey: Router.navigatorKey,
+                        ),
                       );
                     },
                   );
@@ -110,15 +114,44 @@ class _MyWalletState extends State<MyWallet> {
 class LoadingScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return const MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: Scaffold(
-        body: Center(
-          child: Container(
-            child: CircularProgressIndicator(),
-          ),
+      home:  Scaffold(
+        body:  Center(
+          child:  CircularProgressIndicator(),
         ),
       ),
+    );
+  }
+}
+
+class RestartWidget extends StatefulWidget {
+ const RestartWidget({this.child});
+
+  final Widget child;
+
+  static void restartApp(BuildContext context) {
+    context.findAncestorStateOfType<_RestartWidgetState>().restartApp();
+  }
+
+  @override
+  _RestartWidgetState createState() => _RestartWidgetState();
+}
+
+class _RestartWidgetState extends State<RestartWidget> {
+  Key key = UniqueKey();
+
+  void restartApp() {
+    setState(() {
+      key = UniqueKey();
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return KeyedSubtree(
+      key: key,
+      child: widget.child,
     );
   }
 }

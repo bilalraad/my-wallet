@@ -6,8 +6,8 @@ import '../Helpers/size_config.dart';
 import '../Helpers/app_localizations.dart';
 
 showOverlay({BuildContext context, @required String text}) async {
-  OverlayState overlayState = Overlay.of(context);
-  OverlayEntry overlayEntry = OverlayEntry(
+  final OverlayState overlayState = Overlay.of(context);
+  final OverlayEntry overlayEntry = OverlayEntry(
     builder: (context) => Positioned(
       bottom: 30.0,
       left: SizeConfig.widthMultiplier * 25,
@@ -17,13 +17,13 @@ showOverlay({BuildContext context, @required String text}) async {
           borderRadius: BorderRadius.circular(30),
           color: Colors.grey.withOpacity(0.25),
         ),
-        padding: EdgeInsets.all(20),
+        padding: const EdgeInsets.all(20),
         width: SizeConfig.widthMultiplier * 55,
         child: FittedBox(
           child: Text(
             AppLocalizations.of(context).translate(text),
-            style: TextStyle(
-              decorationColor: Color(1),
+            style:const TextStyle(
+              decorationColor:  Color(0xFFFFFFFF),
               color: Colors.grey,
             ),
           ),
@@ -34,7 +34,7 @@ showOverlay({BuildContext context, @required String text}) async {
 
   overlayState.insert(overlayEntry);
 
-  await Future.delayed(Duration(seconds: 5));
+  await Future.delayed(const Duration(seconds: 5));
 
   overlayEntry.remove();
 }

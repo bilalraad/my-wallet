@@ -20,14 +20,14 @@ Future removeDialog({
       content: content.isEmpty ? null : Text(content),
       actions: <Widget>[
         FlatButton(
-          child: Text(translate('No')),
           onPressed: () => Navigator.of(context).pop(false),
+          child: Text(translate('No')),
         ),
         FlatButton(
-          child: Text(translate('Remove')),
           onPressed: () {
             Navigator.of(context).pop(true);
           },
+          child: Text(translate('Remove')),
         ),
       ],
     ),

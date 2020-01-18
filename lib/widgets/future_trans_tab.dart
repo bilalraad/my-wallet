@@ -30,7 +30,7 @@ class FutureTransactionsTap extends StatelessWidget {
       builder: (ctx) {
         return Container(
           height: SizeConfig.heightMultiplier * 25,
-          decoration: BoxDecoration(
+          decoration:const BoxDecoration(
             color: Colors.amber,
             borderRadius: BorderRadius.only(
               topLeft: Radius.circular(20),
@@ -45,6 +45,11 @@ class FutureTransactionsTap extends StatelessWidget {
                 elevation: 0,
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(100)),
+                onPressed: () {
+                  Router.navigator
+                      .pushNamed(Router.addBill)
+                      .then((_) => Navigator.of(context).pop());
+                },
                 child: Column(
                   // direction: Axis.vertical,
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -63,11 +68,6 @@ class FutureTransactionsTap extends StatelessWidget {
                     )
                   ],
                 ),
-                onPressed: () {
-                  Router.navigator
-                      .pushNamed(Router.addBill)
-                      .then((_) => Navigator.of(context).pop());
-                },
               ),
               RaisedButton(
                 color: Colors.amber,
@@ -120,8 +120,8 @@ class FutureTransactionsTap extends StatelessWidget {
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: FloatingActionButton(
         backgroundColor: Colors.cyan,
-        child: Icon(Icons.add),
         onPressed: () => _showModalBottomSheet(context),
+        child: Icon(Icons.add),
       ),
     );
   }
@@ -131,7 +131,7 @@ Widget buildRecurringTransWidget() {
   return WatchBoxBuilder(
     box: Hive.box(H.transactions.box()),
     builder: (context, transBox) {
-      final Transactions _transactions = transBox.get(H.transactions.str());
+      final  _transactions = transBox.get(H.transactions.str()) as Transactions;
       final rTList = _transactions.recurringTransList;
       return rTList == null || rTList.isEmpty
           ? Container()
@@ -165,7 +165,7 @@ Widget buildRecurringTransWidget() {
                               title: 'Remove this recurring transaction?',
                               context: context,
                             ).then((isAccepted) {
-                              if (isAccepted != null && isAccepted) {
+                              if (isAccepted != null && isAccepted as bool) {
                                 _transactions.removeFutureTrans(rT);
 
                                 Navigator.of(context).pop();
@@ -187,8 +187,9 @@ Widget buildRecurringTransWidget() {
                             title: 'Remove this recurring transaction?',
                             context: context,
                           ).then((isAccepted) {
-                            if (isAccepted != null && isAccepted)
+                            if (isAccepted != null && isAccepted as bool) {
                               _transactions.removeFutureTrans(rT);
+                            }
                           });
                         },
                       ),
@@ -205,7 +206,7 @@ Widget buildFutureTransWidget() {
   return WatchBoxBuilder(
     box: Hive.box(H.transactions.box()),
     builder: (context, transBox) {
-      final Transactions _transactions = transBox.get(H.transactions.str());
+      final  _transactions = transBox.get(H.transactions.str()) as Transactions;
       final fTList = _transactions.futureTransList;
       return fTList == null || fTList.isEmpty
           ? Container()
@@ -238,7 +239,7 @@ Widget buildFutureTransWidget() {
                                 title: 'Remove this future transaction?',
                                 context: context,
                               ).then((isAccepted) {
-                                if (isAccepted != null && isAccepted) {
+                                if (isAccepted != null && isAccepted as bool) {
                                   _transactions.removeFutureTrans(fT);
                                   Navigator.pop(context);
                                 }
@@ -259,8 +260,9 @@ Widget buildFutureTransWidget() {
                               title: 'Remove this future transaction?',
                               context: context,
                             ).then((isAccepted) {
-                              if (isAccepted != null && isAccepted)
+                              if (isAccepted != null && isAccepted as bool) {
                                 _transactions.removeFutureTrans(fT);
+                              }
                             });
                           },
                         ),
@@ -279,7 +281,7 @@ Widget buildBillsWidget() {
     box: Hive.box(H.bills.box()),
     builder: (context, billsBox) {
       final translate = AppLocalizations.of(context).translate;
-      final Bills bills = billsBox.get(H.bills.str());
+      final  bills = billsBox.get(H.bills.str()) as Bills;
       final bList = bills.bills;
       return bList == null || bList.isEmpty
           ? Container()
@@ -293,56 +295,55 @@ Widget buildBillsWidget() {
                     style: _textStyle,
                   ),
                 ),
-                Container(
-                  child: Column(
-                    children: bList.map((bL) {
-                      final date = DateFormat('EEEE d/M/yy').format(
-                        DateTime.now().add(
-                          Duration(days: bL.remainingDays),
-                        ),
-                      );
-                      return InkWell(
-                        onTap: () {
-                          Navigator.of(context).push(MaterialPageRoute(
-                            fullscreenDialog: true,
-                            builder: (_) => DetailsPage(
-                              amount: bL.amount,
-                              category: bL.category,
-                              date: bL.startingDate,
-                              deleteFunction: () => removeDialog(
-                                title: translate('Remove this bill?'),
-                                context: context,
-                              ).then((isAccepted) {
-                                if (isAccepted != null && isAccepted) {
-                                  bills.deleteBill(bL.id);
-
-                                  Navigator.of(context).pop();
-                                }
-                              }),
-                              descripstion: bL.description,
-                              isDeposit: false,
-                            ),
-                          ));
-                        },
-                        child: ListTileItem(
-                          amount: bL.amount,
-                          date: date,
-                          description: bL.description,
-                          category: bL.category,
-                          isDeposit: false,
-                          function: () {
-                            removeDialog(
-                              title: translate('Remove this Bill?'),
+                Column(
+                  children: bList.map((bL) {
+                    final date = DateFormat('EEEE d/M/yy').format(
+                      DateTime.now().add(
+                        Duration(days: bL.remainingDays),
+                      ),
+                    );
+                    return InkWell(
+                      onTap: () {
+                        Navigator.of(context).push(MaterialPageRoute(
+                          fullscreenDialog: true,
+                          builder: (_) => DetailsPage(
+                            amount: bL.amount,
+                            category: bL.category,
+                            date: bL.startingDate,
+                            deleteFunction: () => removeDialog(
+                              title: translate('Remove this bill?'),
                               context: context,
                             ).then((isAccepted) {
-                              if (isAccepted != null && isAccepted)
+                              if (isAccepted != null && isAccepted as bool) {
                                 bills.deleteBill(bL.id);
-                            });
-                          },
-                        ),
-                      );
-                    }).toList(),
-                  ),
+
+                                Navigator.of(context).pop();
+                              }
+                            }),
+                            descripstion: bL.description,
+                            isDeposit: false,
+                          ),
+                        ));
+                      },
+                      child: ListTileItem(
+                        amount: bL.amount,
+                        date: date,
+                        description: bL.description,
+                        category: bL.category,
+                        isDeposit: false,
+                        function: () {
+                          removeDialog(
+                            title: translate('Remove this Bill?'),
+                            context: context,
+                          ).then((isAccepted) {
+                            if (isAccepted != null && isAccepted as bool) {
+                              bills.deleteBill(bL.id);
+                            }
+                          });
+                        },
+                      ),
+                    );
+                  }).toList(),
                 ),
               ],
             );
@@ -371,10 +372,10 @@ class ListTileItem extends StatelessWidget {
     final translate = AppLocalizations.of(context).translate;
 
     return ListTile(
-      contentPadding: EdgeInsets.all(10),
+      contentPadding: const EdgeInsets.all(10),
       leading: Container(
         width: 90,
-        constraints: BoxConstraints(
+        constraints: const BoxConstraints(
           maxWidth: 105,
         ),
         padding: const EdgeInsets.all(15),
@@ -416,7 +417,7 @@ class ListTileItem extends StatelessWidget {
           Icons.delete,
           color: Colors.red,
         ),
-        onPressed: function,
+        onPressed:()=> function(),
       ),
     );
   }

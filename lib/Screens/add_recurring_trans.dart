@@ -14,7 +14,6 @@ import '../widgets/select_category_widget.dart';
 import '../widgets/costume_text_form_field.dart';
 
 class AddRecurringTransaction extends StatefulWidget {
-
   @override
   _AddRecurringTransactionState createState() =>
       _AddRecurringTransactionState();
@@ -33,7 +32,6 @@ class _AddRecurringTransactionState extends State<AddRecurringTransaction> {
   String _category = '';
   String _dropdownValue = 'Income';
   bool _isDeposit = true;
-  
 
   @override
   void dispose() {
@@ -49,7 +47,7 @@ class _AddRecurringTransactionState extends State<AddRecurringTransaction> {
     });
   }
 
-  void setPickedDate(bool isEndingDate, DateTime pickedDate) {
+  void setPickedDate({bool isEndingDate, DateTime pickedDate}) {
     setState(
       () {
         !isEndingDate ? _startingDate = pickedDate : _endingDate = pickedDate;
@@ -80,7 +78,7 @@ class _AddRecurringTransactionState extends State<AddRecurringTransaction> {
       _days = int.parse(_repeatNumberController.text) * 365;
     }
     final _newFT = FutureTransaction(
-      id: Uuid().v4(),
+      id: Uuid().v4().toString(),
       isDeposit: _isDeposit,
       isrecurring: true,
       costumeBill: Bill(
@@ -126,7 +124,7 @@ class _AddRecurringTransactionState extends State<AddRecurringTransaction> {
                 AmountTextFormField(
                   amountController: _amountController,
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 20,
                 ),
                 DropdownButton<String>(
@@ -153,7 +151,7 @@ class _AddRecurringTransactionState extends State<AddRecurringTransaction> {
                     );
                   }).toList(),
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 10,
                 ),
                 SelectCategoryWidget(
@@ -161,7 +159,7 @@ class _AddRecurringTransactionState extends State<AddRecurringTransaction> {
                   isIncome: _isDeposit,
                   onSelectedCategory: _onSelectedCategory,
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 40,
                 ),
                 DescriptionTextFormField(
@@ -205,7 +203,7 @@ class _AddRecurringTransactionState extends State<AddRecurringTransaction> {
                       children: <Widget>[
                         Text(
                           translate('Repeat every'),
-                          style: TextStyle(fontSize: 15),
+                          style: const TextStyle(fontSize: 15),
                         ),
                         Padding(
                           padding: const EdgeInsets.all(8.0),
@@ -216,11 +214,12 @@ class _AddRecurringTransactionState extends State<AddRecurringTransaction> {
                               controller: _repeatNumberController,
                               keyboardType: TextInputType.number,
                               maxLength: 1,
-                              style: TextStyle(fontSize: 17),
-                              decoration: InputDecoration(),
+                              style: const TextStyle(fontSize: 17),
+                              decoration: const InputDecoration(),
                               validator: (val) {
-                                if (double.tryParse(val) == null)
+                                if (double.tryParse(val) == null) {
                                   return translate('enter number');
+                                }
 
                                 return null;
                               },
@@ -229,7 +228,7 @@ class _AddRecurringTransactionState extends State<AddRecurringTransaction> {
                         ),
                         Text(
                           translate(getnNameOfBillType(_billType)),
-                          style: TextStyle(fontSize: 15),
+                          style: const TextStyle(fontSize: 15),
                         )
                       ],
                     ),
@@ -260,13 +259,14 @@ class _AddRecurringTransactionState extends State<AddRecurringTransaction> {
                     },
                   ).toList(),
                 ),
-                _repeatType != RepeatType.Forever
-                    ? DateTimePicker(
-                        date: _startingDate,
-                        setPickedDate: setPickedDate,
-                        isEndingDate: true,
-                      )
-                    : Container(),
+                if (_repeatType != RepeatType.Forever)
+                  DateTimePicker(
+                    date: _startingDate,
+                    setPickedDate: setPickedDate,
+                    isEndingDate: true,
+                  )
+                else
+                  Container(),
               ],
             ),
           ),

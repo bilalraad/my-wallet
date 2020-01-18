@@ -18,8 +18,8 @@ class MyTimerClass {
 
 List<MyTimerClass> timersList = [];
 
-final Transactions _tx =
-    Hive.box(H.transactions.box()).get(H.transactions.str());
+final _tx =
+    Hive.box(H.transactions.box()).get(H.transactions.str()) as Transactions;
 final _bills = Hive.box(H.bills.box()).get(H.bills.str()) as Bills;
 
 // this is a very mind blowing function that I ever write
@@ -39,16 +39,17 @@ Timer setTimer({
   int bIndex;
 
   if (futureTrans != null) {
-    if (futureTrans.isrecurring)
+    if (futureTrans.isrecurring) {
       rTIndex = _tx.recurringTransList
               .indexWhere((rt) => rt.id == futureTrans.id)
               .abs() -
           1;
+    }
   } else {
     bIndex = _bills.bills.indexWhere((b) => b.id == bill.id).abs() - 1;
   }
   return Timer.periodic(
-    Duration(days: 1),
+    const Duration(days: 1),
     (t) async {
       if (bill.startingDate.isAfter(DateTime.now())) {
         //DO Nothing
@@ -85,12 +86,12 @@ Timer setTimer({
           if (bill.endingDate == null) {
             isDeposit = checkIfIsDeposit(futureTrans);
           } else {
-            int _remainigDaysBeforEndingDate =
+            final int _remainigDaysBeforEndingDate =
                 DateTime.now().difference(bill.endingDate).inDays;
 
             if (_remainigDaysBeforEndingDate >= bill.days) {
               isDeposit = checkIfIsDeposit(futureTrans);
-            } else if (_remainigDaysBeforEndingDate < bill.days) {
+            } else if (_remainigDaysBeforEndingDate <= bill.days) {
               if (_remainigDaysBeforEndingDate == 0) {
                 t.cancel();
               } else {
@@ -106,13 +107,13 @@ Timer setTimer({
   );
 }
 
-void addNewTransAndNotify({
+Future<void> addNewTransAndNotify({
   bool isDeposit,
   Bill bill,
   String transId,
   String type,
-}) async {
-  var notifId = Random();
+})  async {
+  final notifId = Random();
 
   final _notificationPlugin = NotificationsPlugin();
 

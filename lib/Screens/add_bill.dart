@@ -35,7 +35,7 @@ class _AddBillState extends State<AddBill> {
     billType: null,
     category: '',
     endingDate: null,
-    id: Uuid().v4(),
+    id: Uuid().v4().toString(),
     startingDate: null,
     amount: null,
     days: null,
@@ -55,7 +55,7 @@ class _AddBillState extends State<AddBill> {
     _newBill = _newBill.updateBill(category: cat);
   }
 
-  void setPickedDate(bool isEndingDate, DateTime pickedDate) {
+  void setPickedDate({bool isEndingDate, DateTime pickedDate}) {
     setState(
       () {
         !isEndingDate ? _startingDate = pickedDate : _endingDate = pickedDate;
@@ -119,7 +119,7 @@ class _AddBillState extends State<AddBill> {
             child: Column(
               children: <Widget>[
                 AmountTextFormField(amountController: _amountController),
-                SizedBox(
+                const SizedBox(
                   height: 40,
                 ),
                 SelectCategoryWidget(
@@ -127,7 +127,7 @@ class _AddBillState extends State<AddBill> {
                   isIncome: false,
                   onSelectedCategory: _onSelectedCategory,
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 40,
                 ),
                 DescriptionTextFormField(
@@ -172,7 +172,7 @@ class _AddBillState extends State<AddBill> {
                       children: <Widget>[
                         Text(
                           translate('Repeat every'),
-                          style: TextStyle(fontSize: 15),
+                          style: const TextStyle(fontSize: 15),
                         ),
                         Padding(
                           padding: const EdgeInsets.all(8.0),
@@ -182,11 +182,12 @@ class _AddBillState extends State<AddBill> {
                               textAlign: TextAlign.center,
                               controller: _repeatNumberController,
                               keyboardType: TextInputType.number,
-                              style: TextStyle(fontSize: 17),
-                              decoration: InputDecoration(),
+                              style: const TextStyle(fontSize: 17),
+                              decoration: const InputDecoration(),
                               validator: (val) {
-                                if (double.tryParse(val) == null)
+                                if (double.tryParse(val) == null) {
                                   return 'Enter number';
+                                }
                                 return null;
                               },
                             ),
@@ -194,7 +195,7 @@ class _AddBillState extends State<AddBill> {
                         ),
                         Text(
                           translate(getnNameOfBillType(_billType)),
-                          style: TextStyle(fontSize: 15),
+                          style: const TextStyle(fontSize: 15),
                         )
                       ],
                     ),
@@ -225,13 +226,14 @@ class _AddBillState extends State<AddBill> {
                     },
                   ).toList(),
                 ),
-                _repeatType != RepeatType.Forever
-                    ? DateTimePicker(
-                        date: _endingDate,
-                        setPickedDate: setPickedDate,
-                        isEndingDate: true,
-                      )
-                    : Container(),
+                if (_repeatType != RepeatType.Forever)
+                  DateTimePicker(
+                    date: _endingDate,
+                    setPickedDate: setPickedDate,
+                    isEndingDate: true,
+                  )
+                else
+                  Container(),
               ],
             ),
           ),

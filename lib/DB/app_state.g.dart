@@ -44,13 +44,14 @@ class AppStateAdapter extends TypeAdapter<AppState> {
       ..filter = fields[1] as PopMenuItem
       ..percentageOfSaving = fields[2] as double
       ..totalSavingAmount = fields[3] as double
-      ..firstTime = fields[4] as bool;
+      ..firstTime = fields[4] as bool
+      ..myLocale = fields[5] as String;
   }
 
   @override
   void write(BinaryWriter writer, AppState obj) {
     writer
-      ..writeByte(5)
+      ..writeByte(6)
       ..writeByte(0)
       ..write(obj._isDark)
       ..writeByte(1)
@@ -60,6 +61,8 @@ class AppStateAdapter extends TypeAdapter<AppState> {
       ..writeByte(3)
       ..write(obj.totalSavingAmount)
       ..writeByte(4)
-      ..write(obj.firstTime);
+      ..write(obj.firstTime)
+      ..writeByte(5)
+      ..write(obj.myLocale);
   }
 }

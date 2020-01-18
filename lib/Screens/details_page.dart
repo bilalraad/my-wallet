@@ -34,13 +34,13 @@ class DetailsPage extends StatelessWidget {
             padding: const EdgeInsets.all(8.0),
             child: IconButton(
               icon: Icon(Icons.delete),
-              onPressed: deleteFunction,
+              onPressed: ()=> deleteFunction(),
             ),
           ),
         ],
       ),
       body: Container(
-        padding: EdgeInsets.only(left: 10, right: 10, top: 25),
+        padding: const EdgeInsets.only(left: 10, right: 10, top: 25),
         height: SizeConfig.heightMultiplier * 70,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -96,13 +96,13 @@ class DetailsPage extends StatelessWidget {
                   date == DateTime.now()
                       ? translate('Today')
                       : DateFormat('EEEE, dd/MM/y ').format(date),
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontSize: 18,
                   ),
                 ),
               ],
             ),
-            Divider(thickness: 3),
+            const Divider(thickness: 3),
             SizedBox(
               height: SizeConfig.heightMultiplier * 1,
             ),
@@ -111,14 +111,14 @@ class DetailsPage extends StatelessWidget {
                 padding: const EdgeInsets.only(bottom: 8),
                 child: Text(
                   '${translate('Notes')}:',
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontSize: 26,
                   ),
                 ),
               ),
             Text(
               descripstion,
-              style: TextStyle(fontSize: 20),
+              style: const TextStyle(fontSize: 20),
             ),
           ],
         ),

@@ -23,35 +23,39 @@ class SelectCategoryWidget extends StatelessWidget {
     return Container(
       alignment: Alignment.center,
       // padding: EdgeInsets.all(20),
-      decoration: BoxDecoration(),
+      decoration: const BoxDecoration(),
       height: 8 * SizeConfig.heightMultiplier,
       child: InkWell(
-          borderRadius: fifteenCBorder,
-          child: Container(
-            padding: EdgeInsets.symmetric(vertical: 10, horizontal: 30),
-            decoration: BoxDecoration(
-              border: Border.all(color: Theme.of(context).accentColor),
-              borderRadius: fifteenCBorder,
+        onTap: () => Router.navigator.pushNamed(
+          Router.categorySelect,
+          arguments: CategorySelectArguments(
+            isDeposit: isIncome,
+            isComingFromAddCat: isComingFromAddcategory,
+            onSelectedCategory: onSelectedCategory,
+          ),
+        ),
+        borderRadius: fifteenCBorder,
+        child: Container(
+          padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 30),
+          decoration: BoxDecoration(
+            border: Border.all(color: Theme.of(context).accentColor),
+            borderRadius: fifteenCBorder,
+          ),
+          child: Text(
+            AppLocalizations.of(context).translate(
+              categoryName == null || categoryName.isEmpty
+                  ? isComingFromAddcategory
+                      ? 'Parent Category'
+                      : 'Select Category'
+                  : categoryName,
             ),
-            child: Text(
-              AppLocalizations.of(context).translate(
-                  categoryName == null || categoryName.isEmpty
-                      ? isComingFromAddcategory
-                          ? 'Parent Category'
-                          : 'Select Category'
-                      : (categoryName)),
-              style: TextStyle(
-                fontSize: 4 * SizeConfig.textMultiplier,
-                color: Theme.of(context).primaryColor,
-              ),
+            style: TextStyle(
+              fontSize: 4 * SizeConfig.textMultiplier,
+              color: Theme.of(context).primaryColor,
             ),
           ),
-          onTap: () => Router.navigator.pushNamed(Router.categorySelect,
-              arguments: CategorySelectArguments(
-                isDeposit: isIncome,
-                isComingFromAddCat: isComingFromAddcategory,
-                onSelectedCategory: onSelectedCategory,
-              ))),
+        ),
+      ),
     );
   }
 }

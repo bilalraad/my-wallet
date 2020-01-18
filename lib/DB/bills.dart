@@ -57,7 +57,6 @@ class Bill {
 
 final _bills = Hive.box(H.bills.box()).get(H.bills.str()) as Bills;
 
-
 @HiveType()
 class Bills extends HiveObject {
   @HiveField(0)
@@ -79,7 +78,6 @@ class Bills extends HiveObject {
     bills.add(newBill);
     Hive.box(H.bills.box()).put(0, bills);
     _bills.save();
-    print('addbill');
   }
 
   void deleteBill(String billid) {
@@ -94,7 +92,7 @@ class Bills extends HiveObject {
   }
 }
 
-extension billExtensions on Bill {
+extension BillExtensions on Bill {
   Bill updateBill({
     String id,
     double amount,
@@ -106,16 +104,16 @@ extension billExtensions on Bill {
     int days,
     int remainingDays,
   }) {
-    Bill updatedBill = Bill(
-      billType: billType == null ? this.billType : billType,
-      category: category == null ? this.category : category,
-      amount: amount == null ? this.amount : amount,
-      id: id == null ? this.id : id,
-      startingDate: startingDate == null ? this.startingDate : startingDate,
-      endingDate: endingDate == null ? this.endingDate : endingDate,
-      description: description == null ? this.description : description,
-      days: days == null ? this.days : days,
-      remainingDays: remainingDays == null ? this.remainingDays : remainingDays,
+    final Bill updatedBill = Bill(
+      billType: billType ?? this.billType,
+      category: category ?? this.category,
+      amount: amount ?? this.amount,
+      id: id ?? this.id,
+      startingDate: startingDate ?? this.startingDate,
+      endingDate: endingDate ?? this.endingDate,
+      description: description ?? this.description,
+      days: days ?? this.days,
+      remainingDays: remainingDays ?? this.remainingDays,
     );
     return updatedBill;
   }

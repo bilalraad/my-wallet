@@ -22,7 +22,7 @@ class AppDrawer extends StatelessWidget {
               decoration: BoxDecoration(color: Theme.of(context).primaryColor),
               height: SizeConfig.isPortrait ? 130.0 : 50,
             ),
-            SizedBox(
+            const SizedBox(
               height: 20,
             ),
             DrawerBotton(
@@ -45,7 +45,7 @@ class AppDrawer extends StatelessWidget {
               icon: Icons.refresh,
               routeName: Router.recurringTransactions,
             ),
-            Divider(),
+            const Divider(),
             DayNightSwitchWidget(),
             WatchBoxBuilder(
                 box: Hive.box(H.appState.box()),
@@ -59,17 +59,17 @@ class AppDrawer extends StatelessWidget {
                       children: <Widget>[
                         Text(
                           AppLocalizations.of(context).translate('YourSavings'),
-                          style: TextStyle(fontSize: 16),
+                          style: const TextStyle(fontSize: 16),
                         ),
                         Text(
                           totalSaving.toStringAsFixed(1),
-                          style: TextStyle(fontSize: 16),
+                          style: const TextStyle(fontSize: 16),
                         ),
                       ],
                     ),
                   );
                 }),
-            Spacer(),
+            const Spacer(),
             DrawerBotton(
               lable: 'Settings',
               icon: Icons.settings,
@@ -80,7 +80,7 @@ class AppDrawer extends StatelessWidget {
               icon: Icons.info_outline,
               routeName: Router.infoSceen,
             ),
-            SizedBox(
+            const SizedBox(
               height: 10,
             )
           ],
@@ -98,7 +98,8 @@ class DayNightSwitchWidget extends StatefulWidget {
 class _DayNightSwitchWidgetState extends State<DayNightSwitchWidget> {
   @override
   Widget build(BuildContext context) {
-    final AppState appState = Hive.box(H.appState.box()).get(H.appState.str());
+    final appState =
+        Hive.box(H.appState.box()).get(H.appState.str()) as AppState;
 
     return Container(
       height: 18,
@@ -106,7 +107,7 @@ class _DayNightSwitchWidgetState extends State<DayNightSwitchWidget> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
-          Text(
+          const Text(
             "App Theme",
             style: TextStyle(fontSize: 16),
           ),
@@ -116,7 +117,7 @@ class _DayNightSwitchWidgetState extends State<DayNightSwitchWidget> {
               value: appState.isDark,
               onChanged: (val) {
                 setState(() {
-                  appState.setMode(val);
+                  appState.setMode(isDark: val);
                 });
               },
             ),
@@ -141,10 +142,15 @@ class DrawerBotton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-        borderRadius: BorderRadius.only(
-          bottomRight: Radius.circular(20),
-          topRight: Radius.circular(20),
-        ),
+        borderRadius: AppLocalizations.of(context).currentLang() == 'ar'
+            ? const BorderRadius.only(
+                bottomLeft: Radius.circular(20),
+                topLeft: Radius.circular(20),
+              )
+            : const BorderRadius.only(
+                bottomRight: Radius.circular(20),
+                topRight: Radius.circular(20),
+              ),
         focusColor: Colors.amber,
         onTap: () => Router.navigator.pushReplacementNamed(routeName),
         child: Padding(
@@ -156,12 +162,12 @@ class DrawerBotton extends StatelessWidget {
                 icon,
                 size: 25,
               ),
-              SizedBox(
+              const SizedBox(
                 width: 10,
               ),
               Text(
                 AppLocalizations.of(context).translate(lable),
-                style: TextStyle(fontSize: 18),
+                style: const TextStyle(fontSize: 18),
               ),
             ],
           ),

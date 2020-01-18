@@ -10,7 +10,7 @@ class CategorySelect extends StatelessWidget {
   final Function onSelectedCategory;
   final bool isDeposit;
   final bool isComingFromAddCat;
-  CategorySelect({
+  const CategorySelect({
     this.onSelectedCategory,
     this.isDeposit,
     this.isComingFromAddCat = false,
@@ -38,6 +38,10 @@ class CategorySelect extends StatelessWidget {
               children: <Widget>[
                 InkWell(
                   borderRadius: fifteenCBorder,
+                  onTap: () {
+                    onSelectedCategory(categoryList[i].title);
+                    Navigator.of(context).pop();
+                  },
                   child: Padding(
                     padding:
                         const EdgeInsets.symmetric(vertical: 6, horizontal: 8),
@@ -46,10 +50,6 @@ class CategorySelect extends StatelessWidget {
                       style: Theme.of(context).textTheme.title,
                     ),
                   ),
-                  onTap: () {
-                    onSelectedCategory(categoryList[i].title);
-                    Navigator.of(context).pop();
-                  },
                 ),
                 if (!isComingFromAddCat)
                   Padding(
@@ -61,6 +61,10 @@ class CategorySelect extends StatelessWidget {
                           : categoryList[i].subCats.map((sub) {
                               return InkWell(
                                 borderRadius: fifteenCBorder,
+                                onTap: () {
+                                  onSelectedCategory(sub);
+                                  Navigator.of(context).pop();
+                                },
                                 child: Padding(
                                   padding: const EdgeInsets.symmetric(
                                       vertical: 6, horizontal: 5),
@@ -69,15 +73,11 @@ class CategorySelect extends StatelessWidget {
                                     style: Theme.of(context).textTheme.subhead,
                                   ),
                                 ),
-                                onTap: () {
-                                  onSelectedCategory(sub);
-                                  Navigator.of(context).pop();
-                                },
                               );
                             }).toList(),
                     ),
                   ),
-                Divider(
+                const Divider(
                   thickness: 3,
                 ),
               ],

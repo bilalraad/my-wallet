@@ -13,9 +13,9 @@ import '../Helpers/app_localizations.dart';
 
 List<int> getAvailableIndex() {
   //This will make sure to display the last 4 months of the last year
-  var monthsIndex = DateTime.now().month + 4;
+  final monthsIndex = DateTime.now().month + 4;
 
-  List<int> index = [];
+  final List<int> index = [];
 
   for (int i = 0; i < monthsIndex; i++) {
     index.add(i);
@@ -27,7 +27,7 @@ List<int> getAvailableIndex() {
 class UserTransactionsOverView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    var currentMonthIndex = DateTime.now().month + 3;
+    final currentMonthIndex = DateTime.now().month + 3;
 
     final translate = AppLocalizations.of(context).translate;
     return WatchBoxBuilder(
@@ -49,11 +49,11 @@ class UserTransactionsOverView extends StatelessWidget {
                 bottom: TabBar(
                   isScrollable: true,
                   labelPadding:
-                      EdgeInsets.symmetric(horizontal: 30, vertical: 3),
+                      const EdgeInsets.symmetric(horizontal: 30, vertical: 3),
                   tabs: <Widget>[
                     for (final i in index)
                       Tab(
-                        text: translate(_monthlyGroubedTransValues[i]['month']),
+                        text: translate(_monthlyGroubedTransValues[i]['month'].toString()),
                       ),
                     Tab(
                       text: translate('FUTURE'),
@@ -66,14 +66,14 @@ class UserTransactionsOverView extends StatelessWidget {
                   children: <Widget>[
                     Text(
                       translate('Total'),
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontSize: 15,
                       ),
                       textAlign: TextAlign.start,
                     ),
                     Text(
                       '${transactions.total.toStringAsFixed(1)}\$',
-                      style: TextStyle(fontSize: 25),
+                      style: const TextStyle(fontSize: 25),
                     ),
                   ],
                 ),
@@ -87,18 +87,18 @@ class UserTransactionsOverView extends StatelessWidget {
                     icon: Icon(Icons.more_vert),
                     itemBuilder: (_) => [
                       PopupMenuItem(
+                        value: PopMenuItem.ByCat,
                         child: Text(
                           translate('View by category'),
-                          style: TextStyle(fontSize: 16),
+                          style: const TextStyle(fontSize: 16),
                         ),
-                        value: PopMenuItem.ByCat,
                       ),
                       PopupMenuItem(
+                        value: PopMenuItem.ByTrans,
                         child: Text(
                           translate('View by transaction'),
-                          style: TextStyle(fontSize: 16),
+                          style: const TextStyle(fontSize: 16),
                         ),
-                        value: PopMenuItem.ByTrans,
                       ),
                     ],
                   )

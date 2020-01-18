@@ -12,7 +12,7 @@ import '../Helpers/app_localizations.dart';
 
 class ByTransactionType extends StatelessWidget {
   final List<Trans> _trans;
-  ByTransactionType(this._trans);
+  const ByTransactionType(this._trans);
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +26,7 @@ class ByTransactionType extends StatelessWidget {
             trans: _inFlowList,
             title: 'InFlow',
           ),
-          SizedBox(
+          const SizedBox(
             height: 8,
           ),
           CardItem(
@@ -42,7 +42,7 @@ class ByTransactionType extends StatelessWidget {
 class CardItem extends StatelessWidget {
   final List<Trans> trans;
   final String title;
-  CardItem({this.trans, this.title});
+  const CardItem({this.trans, this.title});
 
   @override
   Widget build(BuildContext context) {
@@ -64,7 +64,7 @@ class CardItem extends StatelessWidget {
                     style: Theme.of(context).textTheme.title,
                   ),
                 ),
-                Divider(),
+                const Divider(),
                 Column(
                   children: trans.map(
                     (t) {
@@ -82,7 +82,7 @@ class CardItem extends StatelessWidget {
                                   title: 'Remove this Transaction?',
                                   context: context,
                                 ).then((isAccepted) {
-                                  if (isAccepted != null && isAccepted) {
+                                  if (isAccepted != null && isAccepted as bool) {
                                     Hive.box(H.transactions.box())
                                         .get(H.transactions.str())
                                         .deleteTrans(t.id);
@@ -99,10 +99,11 @@ class CardItem extends StatelessWidget {
                           title: 'Remove this Transaction?',
                           context: context,
                         ).then((isAccepted) {
-                          if (isAccepted != null && isAccepted)
+                          if (isAccepted != null && isAccepted as bool) {
                             Hive.box(H.transactions.box())
                                 .get(H.transactions.str())
                                 .deleteTrans(t.id);
+                          }
                         }),
                         child: Padding(
                           padding: const EdgeInsets.all(20.0),

@@ -14,12 +14,12 @@ import '../Helpers/app_localizations.dart';
 
 class UserTransactionsTab extends StatelessWidget {
   final Map<String, Object> transactions;
-  UserTransactionsTab(
+  const UserTransactionsTab(
     this.transactions,
   );
 
   List<Trans> get _extractedTrans {
-    return transactions['transactions'];
+    return transactions['transactions'] as List<Trans>;
   }
 
   void _showModalBottomSheet(
@@ -32,7 +32,7 @@ class UserTransactionsTab extends StatelessWidget {
       builder: (ctx) {
         return Container(
           height: SizeConfig.heightMultiplier * 25,
-          decoration: BoxDecoration(
+          decoration: const BoxDecoration(
             color: Colors.amber,
             borderRadius: BorderRadius.only(
               topLeft: Radius.circular(20),
@@ -47,6 +47,12 @@ class UserTransactionsTab extends StatelessWidget {
                 elevation: 0,
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(100)),
+                onPressed: () {
+                  Router.navigator
+                      .pushNamed(Router.addTransactions,
+                          arguments: false /*IsNotDeposit*/)
+                      .then((_) => Navigator.of(context).pop());
+                },
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: <Widget>[
@@ -58,12 +64,6 @@ class UserTransactionsTab extends StatelessWidget {
                     Text(translate('Withdrawal'))
                   ],
                 ),
-                onPressed: () {
-                  Router.navigator
-                      .pushNamed(Router.addTransactions,
-                          arguments: false /*IsNotDeposit*/)
-                      .then((_) => Navigator.of(context).pop());
-                },
               ),
               RaisedButton(
                 color: Colors.amber,
@@ -108,9 +108,11 @@ class UserTransactionsTab extends StatelessWidget {
               slivers: <Widget>[
                 //First sliver App Bar(Overview card)
                 SliverPadding(
-                  padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
                   sliver: SliverAppBar(
-                    backgroundColor: Color(1),
+                    shape: RoundedRectangleBorder(borderRadius: fifteenCBorder),
+                    backgroundColor: const Color(0x0000ffff),
                     expandedHeight: 148.0,
 
                     ///Properties of the App Bar when it is expanded
@@ -130,7 +132,7 @@ class UserTransactionsTab extends StatelessWidget {
                                     fontSize: SizeConfig.textMultiplier * 2.5),
                               ),
                             ),
-                            Divider(
+                            const Divider(
                               thickness: 2,
                               endIndent: 8,
                               indent: 8,
@@ -140,7 +142,7 @@ class UserTransactionsTab extends StatelessWidget {
                               children: <Widget>[
                                 Text(
                                   translate('InFlow'),
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                     fontSize: 15,
                                   ),
                                 ),
@@ -155,7 +157,7 @@ class UserTransactionsTab extends StatelessWidget {
                               children: <Widget>[
                                 Text(
                                   translate('OutFlow'),
-                                  style: TextStyle(fontSize: 15),
+                                  style: const TextStyle(fontSize: 15),
                                 ),
                                 Text(
                                   transactions['outFlow'].toString(),
@@ -188,7 +190,8 @@ class UserTransactionsTab extends StatelessWidget {
                 ),
                 // Transactions cards
                 SliverPadding(
-                  padding: EdgeInsets.only(left: 20, right: 20, bottom: 60),
+                  padding:
+                      const EdgeInsets.only(left: 20, right: 20, bottom: 60),
                   sliver: SliverLayoutBuilder(
                     builder: (context, constrains) {
                       return WatchBoxBuilder(
@@ -196,10 +199,11 @@ class UserTransactionsTab extends StatelessWidget {
                         builder: (context, box) {
                           final appState =
                               box.get(H.appState.str()) as AppState;
-                          if (appState.filter == PopMenuItem.ByTrans)
+                          if (appState.filter == PopMenuItem.ByTrans) {
                             return SliverToBoxAdapter(
                               child: ByTransactionType(_extractedTrans),
                             );
+                          }
                           // if (selected.filter == PopMenuItem.ByCat)
                           return SliverToBoxAdapter(
                             child: ByCategory(_extractedTrans),
@@ -212,8 +216,8 @@ class UserTransactionsTab extends StatelessWidget {
               ],
             ),
       floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.add),
         onPressed: () => _showModalBottomSheet(context),
+        child: Icon(Icons.add),
       ),
     );
   }

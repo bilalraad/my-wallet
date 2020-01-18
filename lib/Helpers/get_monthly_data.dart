@@ -21,7 +21,7 @@ List<Map<String, Object>> getMonthlyData(List<Trans> trans) {
       final _year =
           index >= currentMonth ? _currentYear - 1 : _currentYear;
 
-      List<Trans> _transByMonth = [];
+      final List<Trans> _transByMonth = [];
       var _totalSum = 0.0;
       var _inFlow = 0.0;
       var _outFlow = 0.0;

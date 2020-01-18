@@ -53,11 +53,8 @@ class FutureTransaction {
   });
 }
 
-final Transactions _transactions =
-    Hive.box(H.transactions.box()).get(H.transactions.str());
-
-
-
+final _transactions =
+    Hive.box(H.transactions.box()).get(H.transactions.str()) as Transactions;
 
 @HiveType()
 class Transactions with HiveObject {
@@ -139,8 +136,8 @@ class Transactions with HiveObject {
 
     if (_trans.isDeposit) {
       _transactions.total == null
-          ? total -= _trans.amount 
-          : total = _transactions.total - _trans.amount ;
+          ? total -= _trans.amount
+          : total = _transactions.total - _trans.amount;
     } else {
       _transactions.total == null
           ? total += _trans.amount
@@ -153,18 +150,18 @@ class Transactions with HiveObject {
   }
 }
 
-extension futureTransactiononextention on FutureTransaction {
+extension FutureTransExtention on FutureTransaction {
   FutureTransaction update({
     final String id,
     final bool isDeposit,
     final Bill costumeBill,
     final bool isrecurring,
   }) {
-    var updatedFT = FutureTransaction(
-      id: id == null ? this.id : id,
-      isDeposit: isDeposit == null ? this.isDeposit : isDeposit,
-      isrecurring: isrecurring == null ? this.isrecurring : isrecurring,
-      costumeBill: costumeBill == null ? this.costumeBill : costumeBill,
+    final updatedFT = FutureTransaction(
+      id: id ?? this.id,
+      isDeposit: isDeposit ?? this.isDeposit,
+      isrecurring: isrecurring ?? this.isrecurring,
+      costumeBill: costumeBill ?? this.costumeBill,
     );
     return updatedFT;
   }

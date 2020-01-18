@@ -61,11 +61,11 @@ class CategoriesScreen extends StatelessWidget {
           }),
       drawer: AppDrawer(),
       floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.add),
         onPressed: () {
           Router.navigator.pushNamed(Router.addCategory);
         },
         backgroundColor: Theme.of(context).accentColor,
+        child: Icon(Icons.add),
       ),
     );
   }
@@ -96,25 +96,26 @@ class CategoryListWidget extends StatelessWidget {
             //Name of the Main Category
             InkWell(
               borderRadius: fifteenCBorder,
+              onLongPress: () => removeDialog(
+                title: translate('Remove this Category?'),
+                context: context,
+              ).then(
+                (isAccepted) {
+                  if (isAccepted != null && isAccepted as bool) {
+                    categories.deleteCategory(
+                      categoryName: category.title,
+                      parentCategoryName: '',
+                      isIncome: isIncome,
+                    );
+                  }
+                },
+              ),
               child: Padding(
                 padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 8),
                 child: Text(
                   '${translate(category.title)}',
                   style: Theme.of(context).textTheme.title,
                 ),
-              ),
-              onLongPress: () => removeDialog(
-                title: translate('Remove this Category?'),
-                context: context,
-              ).then(
-                (isAccepted) {
-                  if (isAccepted != null && isAccepted)
-                    categories.deleteCategory(
-                      categoryName: category.title,
-                      parentCategoryName: '',
-                      isIncome: isIncome,
-                    );
-                },
               ),
             ),
             //names of subCategories
@@ -129,6 +130,20 @@ class CategoryListWidget extends StatelessWidget {
                     : category.subCats.map((sub) {
                         return InkWell(
                           borderRadius: fifteenCBorder,
+                          onLongPress: () => removeDialog(
+                            title: translate('Remove this sub Category?'),
+                            context: context,
+                          ).then(
+                            (isAccepted) {
+                              if (isAccepted != null && isAccepted as bool) {
+                                categories.deleteCategory(
+                                  categoryName: sub,
+                                  parentCategoryName: category.title,
+                                  isIncome: isIncome,
+                                );
+                              }
+                            },
+                          ),
                           child: Padding(
                             padding: const EdgeInsets.symmetric(
                                 vertical: 6, horizontal: 5),
@@ -137,24 +152,11 @@ class CategoryListWidget extends StatelessWidget {
                               style: Theme.of(context).textTheme.subhead,
                             ),
                           ),
-                          onLongPress: () => removeDialog(
-                            title: translate('Remove this sub Category?'),
-                            context: context,
-                          ).then(
-                            (isAccepted) {
-                              if (isAccepted != null && isAccepted)
-                                categories.deleteCategory(
-                                  categoryName: sub,
-                                  parentCategoryName: category.title,
-                                  isIncome: isIncome,
-                                );
-                            },
-                          ),
                         );
                       }).toList(),
               ),
             ),
-            Divider(
+            const Divider(
               thickness: 3,
             ),
           ],

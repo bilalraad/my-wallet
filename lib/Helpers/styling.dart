@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import '../DB/bills.dart';
 import './size_config.dart';
 
-final tenCBorder = BorderRadius.circular(10.0);
-final fifteenCBorder = BorderRadius.circular(15.0);
+final BorderRadius tenCBorder = BorderRadius.circular(10.0);
+final BorderRadius fifteenCBorder = BorderRadius.circular(15.0);
 final InputBorder inputBorder = OutlineInputBorder(
   borderRadius: tenCBorder,
   borderSide: BorderSide(color: Colors.grey),

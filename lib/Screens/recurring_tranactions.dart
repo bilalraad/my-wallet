@@ -55,7 +55,7 @@ class RecurringTransactions extends StatelessWidget {
                                     'Remove this recurring transaction?'),
                                 context: context,
                               ).then((isAccepted) {
-                                if (isAccepted != null && isAccepted) {
+                                if (isAccepted != null && isAccepted as bool) {
                                   _transactions.removeFutureTrans(rTList[i]);
 
                                   Navigator.of(context).pop();
@@ -72,8 +72,9 @@ class RecurringTransactions extends StatelessWidget {
                                 translate('Remove this recurring transaction?'),
                             context: context,
                           ).then((isAccepted) {
-                            if (isAccepted != null && isAccepted)
+                            if (isAccepted != null && isAccepted as bool) {
                               _transactions.removeFutureTrans(rTList[i]);
+                            }
                           });
                         },
                         child: Card(
@@ -97,7 +98,7 @@ class RecurringTransactions extends StatelessWidget {
                                     Text(
                                       '${translate("Category")}: ${translate(rTList[i].costumeBill.category).toUpperCase()}',
                                     ),
-                                    Text(
+                                    const Text(
                                       '|',
                                     ),
                                     Text(
@@ -122,7 +123,7 @@ class RecurringTransactions extends StatelessWidget {
                                           Text(
                                             '${translate("From")}: ${DateFormat.yMd().format(rTList[i].costumeBill.startingDate)}',
                                           ),
-                                          SizedBox(
+                                          const SizedBox(
                                             width: 10,
                                           ),
                                           Text(

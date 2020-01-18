@@ -22,28 +22,28 @@ class Category {
   });
 }
 
-final Categories _categories = Hive.box(H.categories.box()).get(H.categories.str());
+final  _categories = Hive.box(H.categories.box()).get(H.categories.str()) as Categories;
 
 @HiveType()
 class Categories extends HiveObject {
   @HiveField(0)
   List<Category> incomeList = [
-    Category(
+    const Category(
       id: 'salary',
       title: 'Salary',
       subCats: [],
     ),
-    Category(
+    const Category(
       id: 'gifts',
       title: 'Gifts',
       subCats: [],
     ),
-    Category(
+    const Category(
       id: 'selling',
       title: 'Selling',
       subCats: [],
     ),
-    Category(
+    const Category(
       id: 'others',
       title: 'Others',
       subCats: [],
@@ -51,58 +51,58 @@ class Categories extends HiveObject {
   ];
   @HiveField(1)
   List<Category> expenseList = [
-    Category(
+    const Category(
       id: 'food',
       title: 'Food',
       subCats: ['Resturants', 'Cafe'],
     ),
-    Category(
+    const Category(
       id: 'bills',
       title: 'Bills',
       subCats: ['Phone', 'Electricity'],
     ),
-    Category(
+    const Category(
       id: 'shoping',
       title: 'Shoping',
       subCats: ['Clothing'],
     ),
-    Category(
+    const Category(
       id: 'entertainment',
       title: 'Entertainment',
       subCats: ['Movies', 'Games'],
     ),
-    Category(
+    const Category(
       id: 'travel',
       title: 'Travel',
       subCats: [],
     ),
-    Category(
+    const Category(
       id: 'donations',
       title: 'Donations',
       subCats: ['Charity', 'Zakat'],
     ),
-    Category(
+    const Category(
       id: 'family',
       title: 'Family',
       subCats: ['Childrens', 'Home improvments'],
     ),
-    Category(
+    const Category(
       id: 'education',
       title: 'Education',
       subCats: ['Books'],
     ),
-    Category(
+    const Category(
       id: 'others',
       title: 'Others',
       subCats: [],
     ),
   ];
 
-  void addCategory([
+  void addCategory({
     String categoryName,
     String parentCategoryName = '',
     bool isIncome,
-  ]) {
+  }) {
     incomeList = _categories.incomeList;
     expenseList = _categories.expenseList;
     if (parentCategoryName.isEmpty) {

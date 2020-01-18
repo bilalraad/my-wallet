@@ -1,14 +1,14 @@
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 class NotificationsPlugin {
-  var _flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+  final _flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
 
   NotificationsPlugin() {
     _initailizeNotifications();
   }
 
   void _initailizeNotifications() {
-    final android = AndroidInitializationSettings('app_icon');
+    const android = AndroidInitializationSettings('app_icon');
     final iOS = IOSInitializationSettings(onDidReceiveLocalNotification: (
       id,
       title,
@@ -34,7 +34,7 @@ class NotificationsPlugin {
     String title,
     String description,
   }) async {
-    var androidPlatformChannelSpecifics = AndroidNotificationDetails(
+    final androidPlatformChannelSpecifics = AndroidNotificationDetails(
       'your channel id',
       'your channel name',
       'your channel description',
@@ -45,8 +45,8 @@ class NotificationsPlugin {
       playSound: true,
       visibility: NotificationVisibility.Public,
     );
-    var iOSPlatformChannelSpecifics = IOSNotificationDetails();
-    var platformChannelSpecifics = NotificationDetails(
+    final iOSPlatformChannelSpecifics = IOSNotificationDetails();
+    final platformChannelSpecifics = NotificationDetails(
       androidPlatformChannelSpecifics,
       iOSPlatformChannelSpecifics,
     );

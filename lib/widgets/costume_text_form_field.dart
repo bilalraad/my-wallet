@@ -4,15 +4,16 @@ import '../Helpers/styling.dart';
 import '../Helpers/size_config.dart';
 import '../Helpers/app_localizations.dart';
 
-final costumInputDecoration = InputDecoration(
+final InputDecoration costumInputDecoration = InputDecoration(
   border: InputBorder.none,
-  labelStyle: TextStyle(color: AppTheme.primaryColor),
+  labelStyle: const TextStyle(color: AppTheme.primaryColor),
   focusedErrorBorder:
-      inputBorder.copyWith(borderSide: BorderSide(color: Colors.red)),
-  errorBorder: inputBorder.copyWith(borderSide: BorderSide(color: Colors.red)),
+      inputBorder.copyWith(borderSide: const BorderSide(color: Colors.red)),
+  errorBorder:
+      inputBorder.copyWith(borderSide: const BorderSide(color: Colors.red)),
   enabledBorder: inputBorder,
-  focusedBorder:
-      inputBorder.copyWith(borderSide: BorderSide(color: AppTheme.accentColor)),
+  focusedBorder: inputBorder.copyWith(
+      borderSide: const BorderSide(color: AppTheme.accentColor)),
 );
 
 class AmountTextFormField extends StatelessWidget {
@@ -34,10 +35,12 @@ class AmountTextFormField extends StatelessWidget {
         keyboardType: TextInputType.number,
         controller: _amountController,
         validator: (val) {
-          if (double.tryParse(val) == null)
+          if (double.tryParse(val) == null) {
             return translate('Please enter number');
-          if (double.parse(val) <= 0)
+          }
+          if (double.parse(val) <= 0) {
             return '${translate("Please chose bigger number than")} $val';
+          }
           return null;
         },
       ),

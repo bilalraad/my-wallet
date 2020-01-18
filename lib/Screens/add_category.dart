@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
+import 'package:mywallet/DB/categories.dart';
 
 import '../Helpers/styling.dart';
 import '../Helpers/size_config.dart';
@@ -27,13 +28,14 @@ class _AddCategoryState extends State<AddCategory> {
   }
 
   void _onSelectedCategory(String parentCatName) {
-      _parentCatName = parentCatName;
+    _parentCatName = parentCatName;
   }
 
   @override
   Widget build(BuildContext context) {
     final translate = AppLocalizations.of(context).translate;
-
+    final _categories =
+        Hive.box(H.categories.box()).get(H.categories.str()) as Categories;
     return Scaffold(
       appBar: AppBar(
         title: Text(translate('Add Category')),
@@ -50,11 +52,11 @@ class _AddCategoryState extends State<AddCategory> {
                 return;
               }
 
-              Hive.box(H.categories.box()).get(H.categories.str()).addCategory(
-                    _catNameController.text,
-                    _parentCatName,
-                    isIncomeList,
-                  );
+              _categories.addCategory(
+                categoryName: _catNameController.text,
+                isIncome: isIncomeList,
+                parentCategoryName: _parentCatName,
+              );
               Navigator.of(context).pop();
             },
           ),
@@ -72,7 +74,8 @@ class _AddCategoryState extends State<AddCategory> {
               child: TextFormField(
                 decoration: InputDecoration(
                   labelText: translate('Category Name'),
-                  errorText: _isvalidate ? null : translate('please enter name'),
+                  errorText:
+                      _isvalidate ? null : translate('please enter name'),
                   labelStyle: TextStyle(color: Theme.of(context).primaryColor),
                   focusedErrorBorder: inputBorder.copyWith(
                       borderSide: BorderSide(color: Colors.red)),
@@ -86,7 +89,7 @@ class _AddCategoryState extends State<AddCategory> {
                 controller: _catNameController,
               ),
             ),
-            SizedBox(
+            const SizedBox(
               height: 12,
             ),
             DropdownButton<String>(
@@ -113,7 +116,7 @@ class _AddCategoryState extends State<AddCategory> {
                 );
               }).toList(),
             ),
-            SizedBox(
+            const SizedBox(
               height: 10,
             ),
             Padding(

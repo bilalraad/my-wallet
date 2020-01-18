@@ -118,5 +118,10 @@
   "Select Category": "Select Category",
   "Parent Category": "Parent Category",
   "To": "To",
-  "Yes":"Yes"
+  "Yes":"Yes",
+  "Change App Language": "Change App Language",
+  "Arabic": "Arabic",
+  "Info": "Info",
+  "Current language": "Current language",
+  "Change": "Change"
 }

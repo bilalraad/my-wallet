@@ -1,5 +1,5 @@
+import 'package:path_provider/path_provider.dart' as syspath;
 import 'package:hive/hive.dart';
-import 'package:path_provider/path_provider.dart' as sysPath;
 
 import './app_state.dart';
 import './bills.dart';
@@ -18,7 +18,6 @@ extension HiveBoxes on H {
   String str() {
     return this.toString().substring(2);
     //It will convert for ex. 'H.appSate' to 'appSate' and so on
-
   }
 
   String box() {
@@ -28,7 +27,7 @@ extension HiveBoxes on H {
 }
 
 Future<void> initHive() async {
-  final appDocumentDir = await sysPath.getApplicationDocumentsDirectory();
+  final appDocumentDir = await syspath.getApplicationDocumentsDirectory();
   Hive.init(appDocumentDir.path);
   Hive.registerAdapter(BillAdapter(), 8);
   Hive.registerAdapter(TransAdapter(), 2);
@@ -49,6 +48,7 @@ Future<void> initHive() async {
   if (appModeBox.get(H.appState.str()) == null) {
     appModeBox.put(H.appState.str(), AppState());
   }
+    appModeBox.put(H.appState.str(), AppState());
 
   if (transactionsBox.get(H.transactions.str()) == null) {
     transactionsBox.put(H.transactions.str(), Transactions());

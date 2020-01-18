@@ -14,7 +14,6 @@ import '../widgets/select_category_widget.dart';
 import '../widgets/costume_text_form_field.dart';
 
 class AddTransactions extends StatefulWidget {
-
   final bool isDeposit;
 
   const AddTransactions({@required this.isDeposit});
@@ -36,7 +35,6 @@ class _AddTransactionsState extends State<AddTransactions> {
     _descriptionController.dispose();
     super.dispose();
   }
-
 
   void _onSelectedCategory(String catName) {
     _category = catName;
@@ -72,18 +70,18 @@ class _AddTransactionsState extends State<AddTransactions> {
             ),
             actions: <Widget>[
               FlatButton(
-                child: Text(translate('No')),
                 onPressed: () {
                   _navigator.pop();
                 },
+                child: Text(translate('No')),
               ),
               FlatButton(
-                child: Text(translate('Yes')),
                 onPressed: () {
-                  addTrans(_amount);
+                  addTrans();
                   _navigator.pop();
                   _navigator.pop();
                 },
+                child: Text(translate('Yes')),
               ),
             ],
           ),
@@ -91,20 +89,19 @@ class _AddTransactionsState extends State<AddTransactions> {
         return;
       }
     }
-    addTrans(
-      _amount,
-    );
+    addTrans();
 
     _navigator.pop();
   }
 
-  void addTrans(double _amount) async {
-    final Transactions transactions =
-        Hive.box(H.transactions.box()).get(H.transactions.str());
+  Future<void> addTrans() async {
+    final transactions = Hive.box(H.transactions.box())
+        .get(H.transactions.str()) as Transactions;
+    double _amount = double.parse(_amountController.text);
 
     if (DateTime.now().isBefore(_pickedDate)) {
       final _newFutureTrans = FutureTransaction(
-        id: Uuid().v4(),
+        id: Uuid().v4().toString(),
         isDeposit: widget.isDeposit,
         isrecurring: false,
         costumeBill: Bill(
@@ -130,7 +127,7 @@ class _AddTransactionsState extends State<AddTransactions> {
         amount: _amount,
         category: _category,
         dateTime: _pickedDate,
-        id: Uuid().v4(),
+        id: Uuid().v4().toString(),
         description: _descriptionController.text,
         isDeposit: widget.isDeposit,
       );
@@ -224,12 +221,13 @@ class _AddTransactionsState extends State<AddTransactions> {
                               lastDate: DateTime(2021),
                             ).then(
                               (pickedValue) {
-                                if (pickedValue != null)
+                                if (pickedValue != null) {
                                   setState(
                                     () {
                                       _pickedDate = pickedValue;
                                     },
                                   );
+                                }
                               },
                             );
                           },

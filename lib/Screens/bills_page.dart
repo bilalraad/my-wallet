@@ -54,7 +54,7 @@ class BillsPage extends StatelessWidget {
                                 title: translate('Remove this bill?'),
                                 context: context,
                               ).then((isAccepted) {
-                                if (isAccepted != null && isAccepted) {
+                                if (isAccepted != null && isAccepted as bool) {
                                   bills.deleteBill(bills.bills[i].id);
 
                                   Navigator.of(context).pop();
@@ -70,8 +70,9 @@ class BillsPage extends StatelessWidget {
                             title: translate('Remove this bill?'),
                             context: context,
                           ).then((isAccepted) {
-                            if (isAccepted != null && isAccepted)
+                            if (isAccepted != null && isAccepted as bool) {
                               bills.deleteBill(bills.bills[i].id);
+                            }
                           });
                         },
                         child: Card(
@@ -125,7 +126,7 @@ class BillsPage extends StatelessWidget {
                                             '${translate("From")}: ${DateFormat.yMd().format(bills.bills[i].startingDate)}',
                                             style: _textStyle,
                                           ),
-                                          SizedBox(
+                                          const SizedBox(
                                             width: 10,
                                           ),
                                           Text(
@@ -144,10 +145,10 @@ class BillsPage extends StatelessWidget {
                 ),
           drawer: AppDrawer(),
           floatingActionButton: FloatingActionButton(
-            child: Icon(Icons.add),
             onPressed: () {
               Router.navigator.pushNamed(Router.addBill);
             },
+            child: Icon(Icons.add),
           ),
         );
       },

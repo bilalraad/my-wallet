@@ -15,7 +15,7 @@ import '../DB/initialize_HiveDB.dart';
 import '../Helpers/app_localizations.dart';
 import '../widgets/costume_text_form_field.dart';
 
-final AppState appState = Hive.box(H.appState.box()).get(H.appState.str());
+final AppState appState = Hive.box(H.appState.box()).get(H.appState.str()) as AppState;
 
 enum Worktype {
   Employ,
@@ -30,12 +30,12 @@ class IntroductionPage extends StatefulWidget {
 }
 
 class _IntroductionPageState extends State<IntroductionPage> {
-  var worktype = Worktype.None;
+  Worktype worktype = Worktype.None;
   bool setSalary = false;
   final _amountController = TextEditingController();
   var _startingDate = DateTime.now();
   var _billType = BillType.Monthly;
-  final textFormFieldKey = GlobalKey<FormState>();
+  final GlobalKey<FormState> textFormFieldKey = GlobalKey<FormState>();
 
   List<PageViewModel> pages() {
     final translate = AppLocalizations.of(context).translate;
@@ -44,7 +44,7 @@ class _IntroductionPageState extends State<IntroductionPage> {
       PageViewModel(
         titleWidget: Text(
           translate('Hello'),
-          style: TextStyle(
+          style: const TextStyle(
             fontSize: 30,
           ),
         ),
@@ -59,7 +59,7 @@ class _IntroductionPageState extends State<IntroductionPage> {
           translate(
               'This app was devloped as a task\nto Code for Iraq community'),
           textAlign: TextAlign.center,
-          style: TextStyle(fontSize: 18),
+          style: const TextStyle(fontSize: 18),
         ),
       ),
       PageViewModel(
@@ -67,7 +67,7 @@ class _IntroductionPageState extends State<IntroductionPage> {
           padding: EdgeInsets.only(top: SizeConfig.isPortrait ? 0.0 : 70.0),
           child: Text(
             translate('Let\'s set your App'),
-            style: TextStyle(
+            style: const TextStyle(
               fontSize: 30,
             ),
           ),
@@ -90,7 +90,7 @@ class _IntroductionPageState extends State<IntroductionPage> {
                 children: <Widget>[
                   Text(
                     translate('you work as'),
-                    style: TextStyle(fontSize: 16),
+                    style: const TextStyle(fontSize: 16),
                   ),
                   DropdownButton<Worktype>(
                     value: worktype,
@@ -128,9 +128,9 @@ class _IntroductionPageState extends State<IntroductionPage> {
                   children: <Widget>[
                     Text(
                       translate('Do you wan\'t to set static income?'),
-                      style: TextStyle(fontSize: 16),
+                      style: const TextStyle(fontSize: 16),
                     ),
-                    Spacer(),
+                    const Spacer(),
                     Checkbox(
                       activeColor: Theme.of(context).primaryColor,
                       value: setSalary,
@@ -151,7 +151,7 @@ class _IntroductionPageState extends State<IntroductionPage> {
           padding: const EdgeInsets.all(40.0),
           child: Text(
             translate(setSalary ? 'Almost done' : 'Final Step'),
-            style: TextStyle(
+            style: const TextStyle(
               fontSize: 30,
             ),
           ),
@@ -165,45 +165,46 @@ class _IntroductionPageState extends State<IntroductionPage> {
                 children: <Widget>[
                   Text(
                     translate('Percentage of saving'),
-                    style: TextStyle(fontSize: 18),
+                    style: const TextStyle(fontSize: 18),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     width: 30,
                   ),
                   SizedBox(
                     width: 50,
                     child: TextFormField(
                       textAlign: TextAlign.center,
-                      decoration: InputDecoration(
+                      decoration: const InputDecoration(
                           errorMaxLines: 2, errorStyle: TextStyle(fontSize: 8)),
                       initialValue:
                           appState.percentageOfSaving.toStringAsFixed(0),
                       maxLength: 3,
                       strutStyle:
-                          StrutStyle(forceStrutHeight: true, height: 2.3),
+                          const StrutStyle(forceStrutHeight: true, height: 2.3),
                       autovalidate: true,
                       validator: (v) {
                         if (double.tryParse(v) == null) return 'enter number';
                         return null;
                       },
                       onChanged: (v) {
-                        if (double.tryParse(v) != null)
+                        if (double.tryParse(v) != null) {
                           appState.changePercentageOfSaving(double.parse(v));
+                        }
                         return;
                       },
                       keyboardType: TextInputType.number,
                     ),
                   ),
-                  Text(
+                  const Text(
                     '%',
                     style: TextStyle(fontSize: 25),
                   ),
-                  SizedBox(width: 20),
+                  const SizedBox(width: 20),
                 ],
               ),
             ),
             Text(
-              ('${translate('NOTE: This will cut')} ${appState.percentageOfSaving.toStringAsFixed(0)}% ${translate("from every new deposit and add it to your savings")}'),
+              '${translate("NOTE: This will cut")} ${appState.percentageOfSaving.toStringAsFixed(0)}% ${translate("from every new deposit and add it to your savings")}',
               style: TextStyle(color: Theme.of(context).accentColor),
             ),
           ],
@@ -217,7 +218,7 @@ class _IntroductionPageState extends State<IntroductionPage> {
                 bottom: SizeConfig.isPortrait ? 50 : 10),
             child: Text(
               translate('Final Step'),
-              style: TextStyle(
+              style: const TextStyle(
                 fontSize: 30,
               ),
             ),
@@ -230,7 +231,7 @@ class _IntroductionPageState extends State<IntroductionPage> {
                 children: <Widget>[
                   Text(
                     translate('Set static Income'),
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontSize: 19,
                     ),
                   ),
@@ -252,7 +253,7 @@ class _IntroductionPageState extends State<IntroductionPage> {
                               amountController: _amountController,
                             )),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         width: 80,
                       ),
                       DropdownButton<BillType>(
@@ -293,9 +294,6 @@ class _IntroductionPageState extends State<IntroductionPage> {
                     width: SizeConfig.widthMultiplier * 75,
                     child: RaisedButton(
                       color: Theme.of(context).primaryColor,
-                      child: _startingDate.day == DateTime.now().day
-                          ? Text(translate('Today'))
-                          : Text('${DateFormat.yMd().format(_startingDate)}'),
                       onPressed: () {
                         showDatePicker(
                                 initialDate: _startingDate,
@@ -304,7 +302,7 @@ class _IntroductionPageState extends State<IntroductionPage> {
                                 context: context)
                             .then(
                           (newDate) {
-                            if (newDate == null) newDate = DateTime.now();
+                            newDate ??= DateTime.now();
                             setState(
                               () {
                                 _startingDate = newDate;
@@ -313,9 +311,12 @@ class _IntroductionPageState extends State<IntroductionPage> {
                           },
                         );
                       },
+                      child: _startingDate.day == DateTime.now().day
+                          ? Text(translate('Today'))
+                          : Text('${DateFormat.yMd().format(_startingDate)}'),
                     ),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 10,
                   ),
                   Text(
@@ -356,7 +357,7 @@ class _IntroductionPageState extends State<IntroductionPage> {
       }
 
       final _salaryRT = FutureTransaction(
-        id: Uuid().v4(),
+        id: Uuid().v4().toString(),
         isDeposit: true,
         isrecurring: true,
         costumeBill: Bill(
