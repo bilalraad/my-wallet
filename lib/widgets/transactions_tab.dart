@@ -161,7 +161,7 @@ class UserTransactionsTab extends StatelessWidget {
                                 ),
                                 Text(
                                   transactions['outFlow'].toString(),
-                                  style: TextStyle(color: Colors.red),
+                                  style: const TextStyle(color: Colors.red),
                                 ),
                               ],
                             ),
