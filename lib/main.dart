@@ -14,6 +14,7 @@ import './Helpers/app_localizations.dart';
 import './Screens/user_transactions_overview.dart';
 
 Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   await SystemChrome.setPreferredOrientations(<DeviceOrientation>[
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown
