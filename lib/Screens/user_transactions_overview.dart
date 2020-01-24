@@ -30,9 +30,9 @@ class UserTransactionsOverView extends StatelessWidget {
     final currentMonthIndex = DateTime.now().month + 3;
 
     final translate = AppLocalizations.of(context).translate;
-    return WatchBoxBuilder(
-        box: Hive.box(H.transactions.box()),
-        builder: (context, transBox) {
+    return ValueListenableBuilder(
+        valueListenable: Hive.box(H.transactions.box()).listenable(),
+        builder: (context, transBox, _) {
           final transactions =
               transBox.get(H.transactions.str()) as Transactions;
 
@@ -53,7 +53,8 @@ class UserTransactionsOverView extends StatelessWidget {
                   tabs: <Widget>[
                     for (final i in index)
                       Tab(
-                        text: translate(_monthlyGroubedTransValues[i]['month'].toString()),
+                        text: translate(
+                            _monthlyGroubedTransValues[i]['month'].toString()),
                       ),
                     Tab(
                       text: translate('FUTURE'),

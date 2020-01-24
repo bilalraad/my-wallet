@@ -17,39 +17,41 @@ enum H {
 extension HiveBoxes on H {
   String str() {
     return this.toString().substring(2);
-    //It will convert for ex. 'H.appSate' to 'appSate' and so on
+    //It will convert 'H.appSate' to 'appSate' and so on
   }
 
   String box() {
     return '${this.toString().substring(2)}Box';
-    //It will convert for ex. 'H.appSate' to 'appSateBox' and so on
+    //It will convert 'H.appSate' to 'appSateBox' and so on
   }
 }
 
 Future<void> initHive() async {
   final appDocumentDir = await syspath.getApplicationDocumentsDirectory();
   Hive.init(appDocumentDir.path);
-  Hive.registerAdapter(BillAdapter(), 8);
-  Hive.registerAdapter(TransAdapter(), 2);
-  Hive.registerAdapter(BillsAdapter(), 7);
-  Hive.registerAdapter(CategoryAdapter(), 4);
-  Hive.registerAdapter(AppStateAdapter(), 0);
-  Hive.registerAdapter(BillTypeAdapter(), 6);
-  Hive.registerAdapter(CategoriesAdapter(), 5);
-  Hive.registerAdapter(PopMenuItemAdapter(), 9);
-  Hive.registerAdapter(TransactionsAdapter(), 1);
-  Hive.registerAdapter(FutureTransactionAdapter(), 3);
+  Hive.registerAdapter(BillAdapter());
+  Hive.registerAdapter(TransAdapter());
+  Hive.registerAdapter(BillsAdapter());
+  Hive.registerAdapter(CategoryAdapter());
+  Hive.registerAdapter(AppStateAdapter());
+  Hive.registerAdapter(BillTypeAdapter());
+  Hive.registerAdapter(CategoriesAdapter());
+  Hive.registerAdapter(PopMenuItemAdapter());
+  Hive.registerAdapter(TransactionsAdapter());
+  Hive.registerAdapter(FutureTransactionAdapter());
+
+
 
   final billsBox = await Hive.openBox(H.bills.box());
   final appModeBox = await Hive.openBox(H.appState.box());
   final categoriesBox = await Hive.openBox(H.categories.box());
   final transactionsBox = await Hive.openBox(H.transactions.box());
+    // transactionsBox.put(H.transactions.str(), Transactions());
 
   if (appModeBox.get(H.appState.str()) == null) {
     appModeBox.put(H.appState.str(), AppState());
   }
-    appModeBox.put(H.appState.str(), AppState());
-
+    // appModeBox.put(H.appState.str(), AppState());
   if (transactionsBox.get(H.transactions.str()) == null) {
     transactionsBox.put(H.transactions.str(), Transactions());
   } else {
@@ -62,7 +64,7 @@ Future<void> initHive() async {
     // if we need the timer to proceed we have to do it in the cloud (not localy)
     if (futureTransList != null && futureTransList.isNotEmpty) {
       for (int i = 0; i < futureTransList.length; i++) {
-        timersList.add(
+          timersList.add(
           MyTimerClass(
             id: futureTransList[i].id,
             timer: setTimer(
@@ -71,11 +73,13 @@ Future<void> initHive() async {
             ),
           ),
         );
+        
       }
     }
     if (recurringTransList != null && recurringTransList.isNotEmpty) {
       for (int i = 0; i < recurringTransList.length; i++) {
-        timersList.add(
+         
+           timersList.add(
           MyTimerClass(
             id: recurringTransList[i].id,
             timer: setTimer(
@@ -84,7 +88,8 @@ Future<void> initHive() async {
             ),
           ),
         );
-      }
+         }
+      
     }
   }
 
@@ -95,7 +100,7 @@ Future<void> initHive() async {
     final bills = billsBox.get(H.bills.str()) as Bills;
 
     for (int i = 0; i < bills.bills.length; i++) {
-      timersList.add(
+         timersList.add(
         MyTimerClass(
           id: bills.bills[i].id,
           timer: setTimer(
@@ -104,9 +109,10 @@ Future<void> initHive() async {
           ),
         ),
       );
+       
     }
   }
-    categoriesBox.put(H.categories.str(), Categories());
+    // categoriesBox.put(H.categories.str(), Categories());
 
   if (categoriesBox.get(H.categories.str()) == null) {
     categoriesBox.put(H.categories.str(), Categories());

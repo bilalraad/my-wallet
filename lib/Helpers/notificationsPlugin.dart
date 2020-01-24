@@ -38,7 +38,7 @@ class NotificationsPlugin {
       'your channel id',
       'your channel name',
       'your channel description',
-      importance: Importance.Max,
+      importance: Importance.High,
       priority: Priority.High,
       style: AndroidNotificationStyle.Inbox,
       ongoing: true,

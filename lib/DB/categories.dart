@@ -6,7 +6,7 @@ import './initialize_HiveDB.dart';
 part 'categories.g.dart';
 
 // category model
-@HiveType()
+@HiveType(typeId: 5)
 class Category {
   @HiveField(0)
   final String id;
@@ -24,7 +24,7 @@ class Category {
 
 final  _categories = Hive.box(H.categories.box()).get(H.categories.str()) as Categories;
 
-@HiveType()
+@HiveType(typeId: 6)
 class Categories extends HiveObject {
   @HiveField(0)
   List<Category> incomeList = [

@@ -63,7 +63,7 @@ class _AddBillState extends State<AddBill> {
     );
   }
 
-  void _submit() {
+  Future<void> _submit() async {
     final _bills = Hive.box(H.bills.box()).get(H.bills.str()) as Bills;
 
     if (!_form.currentState.validate()) return;

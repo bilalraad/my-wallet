@@ -21,9 +21,9 @@ class BillsPage extends StatelessWidget {
     );
 
     final translate = AppLocalizations.of(context).translate;
-    return WatchBoxBuilder(
-      box: Hive.box(H.bills.box()),
-      builder: (context, billsBox) {
+    return ValueListenableBuilder(
+      valueListenable: Hive.box(H.bills.box()).listenable(),
+      builder: (context, billsBox, _) {
         final bills = billsBox.get(H.bills.str()) as Bills;
 
         return Scaffold(

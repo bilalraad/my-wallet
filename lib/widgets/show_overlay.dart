@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import '../Helpers/size_config.dart';
 import '../Helpers/app_localizations.dart';
 
-showOverlay({BuildContext context, @required String text}) async {
+Future<void> showOverlay({BuildContext context, @required String text})  async {
   final OverlayState overlayState = Overlay.of(context);
   final OverlayEntry overlayEntry = OverlayEntry(
     builder: (context) => Positioned(

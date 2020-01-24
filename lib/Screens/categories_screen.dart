@@ -12,7 +12,6 @@ import '../Helpers/remove_dialog.dart';
 import '../Helpers/app_localizations.dart';
 
 class CategoriesScreen extends StatelessWidget {
-
   @override
   Widget build(BuildContext context) {
     final translate = AppLocalizations.of(context).translate;
@@ -20,9 +19,9 @@ class CategoriesScreen extends StatelessWidget {
       appBar: AppBar(
         title: Text(translate('Categories')),
       ),
-      body: WatchBoxBuilder(
-          box: Hive.box(H.categories.box()),
-          builder: (contex, catbox) {
+      body: ValueListenableBuilder(
+          valueListenable: Hive.box(H.categories.box()).listenable(),
+          builder: (contex, catbox, _) {
             final categories = catbox.get(H.categories.str()) as Categories;
             final incomeList = categories.incomeList;
             final expenseList = categories.expenseList;

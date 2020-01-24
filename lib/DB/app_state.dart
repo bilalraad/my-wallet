@@ -8,7 +8,7 @@ part 'app_state.g.dart';
 // Probably it's more convenient to use shared_prefs for
 // this kind of data(I mean "isDark" and the filter ) but i didn't 🙂
 
-@HiveType()
+@HiveType(typeId: 0)
 enum PopMenuItem {
   @HiveField(0)
   ByCat,
@@ -18,7 +18,7 @@ enum PopMenuItem {
 
 final _appState = Hive.box(H.appState.box()).get(H.appState.str()) as AppState;
 
-@HiveType()
+@HiveType(typeId: 1)
 class AppState extends HiveObject {
   @HiveField(0)
   bool _isDark = false;

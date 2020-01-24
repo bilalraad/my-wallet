@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -12,7 +13,11 @@ import './DB/initialize_HiveDB.dart';
 import './Helpers/app_localizations.dart';
 import './Screens/user_transactions_overview.dart';
 
-void main() {
+Future<void> main() async {
+  await SystemChrome.setPreferredOrientations(<DeviceOrientation>[
+    DeviceOrientation.portraitUp,
+    DeviceOrientation.portraitDown
+  ]);
   runApp(MyWallet());
 }
 
@@ -23,6 +28,12 @@ class MyWallet extends StatefulWidget {
 
 class _MyWalletState extends State<MyWallet> {
   bool isLoading = true;
+
+  @override
+  void dispose() {
+    Hive.close();
+    super.dispose();
+  }
 
   @override
   void initState() {
@@ -36,12 +47,6 @@ class _MyWalletState extends State<MyWallet> {
   }
 
   @override
-  void dispose() {
-    Hive.close();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (context, constraints) {
@@ -50,9 +55,9 @@ class _MyWalletState extends State<MyWallet> {
             SizeConfig().init(constraints, orientation);
             return isLoading
                 ? LoadingScreen()
-                : WatchBoxBuilder(
-                    box: Hive.box(H.appState.box()),
-                    builder: (context, appStateBox) {
+                : ValueListenableBuilder(
+                    valueListenable: Hive.box(H.appState.box()).listenable(),
+                    builder: (context, appStateBox, _) {
                       final appMode =
                           appStateBox.get(H.appState.str()) as AppState;
 
@@ -65,8 +70,8 @@ class _MyWalletState extends State<MyWallet> {
 
                           // List all of the app's supported locales here
                           supportedLocales: const [
-                             Locale('en', 'US'),
-                             Locale('ar'),
+                            Locale('en', 'US'),
+                            Locale('ar'),
                           ],
                           // These delegates make sure that the localization data for the proper language is loaded
                           localizationsDelegates: [
@@ -116,9 +121,9 @@ class LoadingScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return const MaterialApp(
       debugShowCheckedModeBanner: false,
-      home:  Scaffold(
-        body:  Center(
-          child:  CircularProgressIndicator(),
+      home: Scaffold(
+        body: Center(
+          child: CircularProgressIndicator(),
         ),
       ),
     );
@@ -126,16 +131,16 @@ class LoadingScreen extends StatelessWidget {
 }
 
 class RestartWidget extends StatefulWidget {
- const RestartWidget({this.child});
+  const RestartWidget({this.child});
 
   final Widget child;
+
+  @override
+  _RestartWidgetState createState() => _RestartWidgetState();
 
   static void restartApp(BuildContext context) {
     context.findAncestorStateOfType<_RestartWidgetState>().restartApp();
   }
-
-  @override
-  _RestartWidgetState createState() => _RestartWidgetState();
 }
 
 class _RestartWidgetState extends State<RestartWidget> {

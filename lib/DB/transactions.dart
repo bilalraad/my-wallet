@@ -8,7 +8,7 @@ import '../Helpers/my_timer_class.dart';
 part 'transactions.g.dart';
 
 // Transaction model
-@HiveType()
+@HiveType(typeId: 7)
 class Trans {
   @HiveField(0)
   final String id;
@@ -34,7 +34,7 @@ class Trans {
 }
 
 // Future Transaction model
-@HiveType()
+@HiveType(typeId: 8)
 class FutureTransaction {
   @HiveField(0)
   final String id;
@@ -56,7 +56,7 @@ class FutureTransaction {
 final _transactions =
     Hive.box(H.transactions.box()).get(H.transactions.str()) as Transactions;
 
-@HiveType()
+@HiveType(typeId: 9)
 class Transactions with HiveObject {
   @HiveField(0)
   double total = 0.0;

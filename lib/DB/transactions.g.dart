@@ -8,6 +8,9 @@ part of 'transactions.dart';
 
 class TransAdapter extends TypeAdapter<Trans> {
   @override
+  final typeId = 7;
+
+  @override
   Trans read(BinaryReader reader) {
     var numOfFields = reader.readByte();
     var fields = <int, dynamic>{
@@ -44,6 +47,9 @@ class TransAdapter extends TypeAdapter<Trans> {
 
 class FutureTransactionAdapter extends TypeAdapter<FutureTransaction> {
   @override
+  final typeId = 8;
+
+  @override
   FutureTransaction read(BinaryReader reader) {
     var numOfFields = reader.readByte();
     var fields = <int, dynamic>{
@@ -73,6 +79,9 @@ class FutureTransactionAdapter extends TypeAdapter<FutureTransaction> {
 }
 
 class TransactionsAdapter extends TypeAdapter<Transactions> {
+  @override
+  final typeId = 9;
+
   @override
   Transactions read(BinaryReader reader) {
     var numOfFields = reader.readByte();

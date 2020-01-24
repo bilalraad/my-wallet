@@ -78,9 +78,9 @@ class _AddCategoryState extends State<AddCategory> {
                       _isvalidate ? null : translate('please enter name'),
                   labelStyle: TextStyle(color: Theme.of(context).primaryColor),
                   focusedErrorBorder: inputBorder.copyWith(
-                      borderSide: BorderSide(color: Colors.red)),
+                      borderSide:const BorderSide(color: Colors.red)),
                   errorBorder: inputBorder.copyWith(
-                      borderSide: BorderSide(color: Colors.red)),
+                      borderSide:const BorderSide(color: Colors.red)),
                   enabledBorder: inputBorder,
                   focusedBorder: inputBorder.copyWith(
                       borderSide:

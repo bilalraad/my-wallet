@@ -8,6 +8,9 @@ part of 'app_state.dart';
 
 class PopMenuItemAdapter extends TypeAdapter<PopMenuItem> {
   @override
+  final typeId = 0;
+
+  @override
   PopMenuItem read(BinaryReader reader) {
     switch (reader.readByte()) {
       case 0:
@@ -33,6 +36,9 @@ class PopMenuItemAdapter extends TypeAdapter<PopMenuItem> {
 }
 
 class AppStateAdapter extends TypeAdapter<AppState> {
+  @override
+  final typeId = 1;
+
   @override
   AppState read(BinaryReader reader) {
     var numOfFields = reader.readByte();

@@ -17,9 +17,9 @@ class RecurringTransactions extends StatelessWidget {
   Widget build(BuildContext context) {
     final translate = AppLocalizations.of(context).translate;
 
-    return WatchBoxBuilder(
-      box: Hive.box(H.transactions.box()),
-      builder: (context, transactionsBox) {
+    return ValueListenableBuilder(
+      valueListenable: Hive.box(H.transactions.box()).listenable(),
+      builder: (context, transactionsBox, _) {
         final _transactions =
             transactionsBox.get(H.transactions.str()) as Transactions;
         final rTList = _transactions.recurringTransList;

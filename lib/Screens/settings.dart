@@ -198,12 +198,12 @@ class SelectLanguage extends StatelessWidget {
             onTap: () {
               onSelectedLang('en');
             },
-            child: ListTile(
+            child:const ListTile(
               leading: CircleAvatar(
                 backgroundColor: Colors.red,
-                child: const Text('EN'),
+                child:  Text('EN'),
               ),
-              title: const Text('English'),
+              title: Text('English'),
             ),
           ),
         ],

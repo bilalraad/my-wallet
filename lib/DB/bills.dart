@@ -6,7 +6,7 @@ import 'initialize_HiveDB.dart';
 
 part 'bills.g.dart';
 
-@HiveType()
+@HiveType(typeId: 2)
 enum BillType {
   @HiveField(0)
   Monthly,
@@ -21,7 +21,7 @@ enum BillType {
 }
 
 //bill model
-@HiveType()
+@HiveType(typeId: 3)
 class Bill {
   @HiveField(0)
   final String id;
@@ -57,7 +57,7 @@ class Bill {
 
 final _bills = Hive.box(H.bills.box()).get(H.bills.str()) as Bills;
 
-@HiveType()
+@HiveType(typeId: 4)
 class Bills extends HiveObject {
   @HiveField(0)
   List<Bill> bills = [];

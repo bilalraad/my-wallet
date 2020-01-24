@@ -47,9 +47,9 @@ class AppDrawer extends StatelessWidget {
             ),
             const Divider(),
             DayNightSwitchWidget(),
-            WatchBoxBuilder(
-                box: Hive.box(H.appState.box()),
-                builder: (_, sBox) {
+            ValueListenableBuilder(
+                valueListenable: Hive.box(H.appState.box()).listenable(),
+                builder: (_, sBox, __) {
                   final totalSaving =
                       sBox.get(H.appState.str()).totalSavingAmount as double;
                   return Padding(

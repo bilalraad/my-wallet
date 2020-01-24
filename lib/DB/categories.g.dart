@@ -8,6 +8,9 @@ part of 'categories.dart';
 
 class CategoryAdapter extends TypeAdapter<Category> {
   @override
+  final typeId = 5;
+
+  @override
   Category read(BinaryReader reader) {
     var numOfFields = reader.readByte();
     var fields = <int, dynamic>{
@@ -34,6 +37,9 @@ class CategoryAdapter extends TypeAdapter<Category> {
 }
 
 class CategoriesAdapter extends TypeAdapter<Categories> {
+  @override
+  final typeId = 6;
+
   @override
   Categories read(BinaryReader reader) {
     var numOfFields = reader.readByte();

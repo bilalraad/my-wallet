@@ -30,7 +30,7 @@ class FutureTransactionsTap extends StatelessWidget {
       builder: (ctx) {
         return Container(
           height: SizeConfig.heightMultiplier * 25,
-          decoration:const BoxDecoration(
+          decoration: const BoxDecoration(
             color: Colors.amber,
             borderRadius: BorderRadius.only(
               topLeft: Radius.circular(20),
@@ -128,10 +128,10 @@ class FutureTransactionsTap extends StatelessWidget {
 }
 
 Widget buildRecurringTransWidget() {
-  return WatchBoxBuilder(
-    box: Hive.box(H.transactions.box()),
-    builder: (context, transBox) {
-      final  _transactions = transBox.get(H.transactions.str()) as Transactions;
+  return ValueListenableBuilder(
+    valueListenable: Hive.box(H.transactions.box()).listenable(),
+    builder: (context, transBox, _) {
+      final _transactions = transBox.get(H.transactions.str()) as Transactions;
       final rTList = _transactions.recurringTransList;
       return rTList == null || rTList.isEmpty
           ? Container()
@@ -203,10 +203,10 @@ Widget buildRecurringTransWidget() {
 }
 
 Widget buildFutureTransWidget() {
-  return WatchBoxBuilder(
-    box: Hive.box(H.transactions.box()),
-    builder: (context, transBox) {
-      final  _transactions = transBox.get(H.transactions.str()) as Transactions;
+  return ValueListenableBuilder(
+    valueListenable: Hive.box(H.transactions.box()).listenable(),
+    builder: (context, transBox, _) {
+      final _transactions = transBox.get(H.transactions.str()) as Transactions;
       final fTList = _transactions.futureTransList;
       return fTList == null || fTList.isEmpty
           ? Container()
@@ -277,11 +277,11 @@ Widget buildFutureTransWidget() {
 }
 
 Widget buildBillsWidget() {
-  return WatchBoxBuilder(
-    box: Hive.box(H.bills.box()),
-    builder: (context, billsBox) {
+  return ValueListenableBuilder(
+                        valueListenable: Hive.box(H.bills.box()).listenable(),
+    builder: (context, billsBox,_) {
       final translate = AppLocalizations.of(context).translate;
-      final  bills = billsBox.get(H.bills.str()) as Bills;
+      final bills = billsBox.get(H.bills.str()) as Bills;
       final bList = bills.bills;
       return bList == null || bList.isEmpty
           ? Container()
@@ -417,7 +417,7 @@ class ListTileItem extends StatelessWidget {
           Icons.delete,
           color: Colors.red,
         ),
-        onPressed:()=> function(),
+        onPressed: () => function(),
       ),
     );
   }

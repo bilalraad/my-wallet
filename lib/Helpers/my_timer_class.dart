@@ -10,10 +10,10 @@ import '../DB/transactions.dart';
 import '../DB/app_state.dart';
 
 class MyTimerClass {
-  final Timer timer;
-  final String id;
-
   MyTimerClass({this.timer, this.id});
+
+  final String id;
+  final Timer timer;
 }
 
 List<MyTimerClass> timersList = [];
@@ -32,6 +32,7 @@ Timer setTimer({
   Bill bill,
   FutureTransaction futureTrans, // this can be null
 }) {
+//------------------------------
   bool isDeposit = true;
   int _remainingDays = bill.remainingDays;
   //These idexes below are necessary to update the remaning days of the bill
@@ -40,20 +41,21 @@ Timer setTimer({
 
   if (futureTrans != null) {
     if (futureTrans.isrecurring) {
-      rTIndex = _tx.recurringTransList
-              .indexWhere((rt) => rt.id == futureTrans.id)
-              .abs() -
-          1;
+      rTIndex =
+          _tx.recurringTransList.indexWhere((rt) => rt.id == futureTrans.id);
+      if (rTIndex < 0) rTIndex += 1;
     }
   } else {
-    bIndex = _bills.bills.indexWhere((b) => b.id == bill.id).abs() - 1;
+    bIndex = _bills.bills.indexWhere((b) => b.id == bill.id) ;
+    if (bIndex < 0) bIndex += 1;
   }
   return Timer.periodic(
-    const Duration(days: 1),
+    const Duration(seconds: 17),
     (t) async {
-      if (bill.startingDate.isAfter(DateTime.now())) {
-        //DO Nothing
-      } else if (bill.billType == BillType.FutureTrans) {
+      // if (bill.startingDate.isAfter(DateTime.now())) {
+      //   //DO Nothing
+      // } else
+      if (bill.billType == BillType.FutureTrans) {
         // this is special bill type this means it is only one time bill(or one time transaction)
         // its not a recurring transaction
         addNewTransAndNotify(
@@ -112,7 +114,7 @@ Future<void> addNewTransAndNotify({
   Bill bill,
   String transId,
   String type,
-})  async {
+}) async {
   final notifId = Random();
 
   final _notificationPlugin = NotificationsPlugin();
@@ -166,7 +168,7 @@ Future<void> updateRmainingdaysofBill(
   } else {
     _bills.bills[billIndex] =
         _bills.bills[billIndex].updateBill(remainingDays: rDays);
-    Hive.box(H.bills.box()).putAt(0, _bills.bills);
+    Hive.box(H.bills.box()).put(0, _bills.bills);
     _bills.save();
   }
 }

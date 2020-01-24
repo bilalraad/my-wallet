@@ -194,9 +194,9 @@ class UserTransactionsTab extends StatelessWidget {
                       const EdgeInsets.only(left: 20, right: 20, bottom: 60),
                   sliver: SliverLayoutBuilder(
                     builder: (context, constrains) {
-                      return WatchBoxBuilder(
-                        box: Hive.box(H.appState.box()),
-                        builder: (context, box) {
+                      return ValueListenableBuilder(
+                        valueListenable: Hive.box(H.appState.box()).listenable(),
+                        builder: (context, box,_) {
                           final appState =
                               box.get(H.appState.str()) as AppState;
                           if (appState.filter == PopMenuItem.ByTrans) {

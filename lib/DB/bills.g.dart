@@ -8,6 +8,9 @@ part of 'bills.dart';
 
 class BillTypeAdapter extends TypeAdapter<BillType> {
   @override
+  final typeId = 2;
+
+  @override
   BillType read(BinaryReader reader) {
     switch (reader.readByte()) {
       case 0:
@@ -48,6 +51,9 @@ class BillTypeAdapter extends TypeAdapter<BillType> {
 }
 
 class BillAdapter extends TypeAdapter<Bill> {
+  @override
+  final typeId = 3;
+
   @override
   Bill read(BinaryReader reader) {
     var numOfFields = reader.readByte();
@@ -93,6 +99,9 @@ class BillAdapter extends TypeAdapter<Bill> {
 }
 
 class BillsAdapter extends TypeAdapter<Bills> {
+  @override
+  final typeId = 4;
+
   @override
   Bills read(BinaryReader reader) {
     var numOfFields = reader.readByte();

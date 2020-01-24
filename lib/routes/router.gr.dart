@@ -23,19 +23,19 @@ import 'package:mywallet/Screens/add_category.dart';
 import 'package:mywallet/Screens/info_sceen.dart';
 
 class Router {
-  static const userTransactionsOverView = '/userTransactionsOverView';
-  static const addTransactions = '/addTransactions';
-  static const addBill = '/addBill';
-  static const addRecurringTransaction = '/addRecurringTransaction';
-  static const categoriesScreen = '/categoriesScreen';
-  static const recurringTransactions = '/recurringTransactions';
+  static const userTransactionsOverView = '/user-transactions-over-view';
+  static const addTransactions = '/add-transactions';
+  static const addBill = '/add-bill';
+  static const addRecurringTransaction = '/add-recurring-transaction';
+  static const categoriesScreen = '/categories-screen';
+  static const recurringTransactions = '/recurring-transactions';
   static const settings = '/settings';
-  static const billsPage = '/billsPage';
-  static const categorySelect = '/categorySelect';
-  static const detailsPage = '/detailsPage';
-  static const introductionScreen = '/introductionScreen';
-  static const addCategory = '/addCategory';
-  static const infoSceen = '/infoSceen';
+  static const billsPage = '/bills-page';
+  static const categorySelect = '/category-select';
+  static const detailsPage = '/details-page';
+  static const introductionScreen = '/introduction-screen';
+  static const addCategory = '/add-category';
+  static const infoSceen = '/info-sceen';
   static GlobalKey<NavigatorState> get navigatorKey =>
       getNavigatorKey<Router>();
   static NavigatorState get navigator => navigatorKey.currentState;
