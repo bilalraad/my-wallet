@@ -70,13 +70,14 @@ class BillAdapter extends TypeAdapter<Bill> {
       category: fields[5] as String,
       startingDate: fields[3] as DateTime,
       endingDate: fields[4] as DateTime,
+      excuteDate: fields[9] as DateTime,
     );
   }
 
   @override
   void write(BinaryWriter writer, Bill obj) {
     writer
-      ..writeByte(9)
+      ..writeByte(10)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -94,7 +95,9 @@ class BillAdapter extends TypeAdapter<Bill> {
       ..writeByte(7)
       ..write(obj.days)
       ..writeByte(8)
-      ..write(obj.remainingDays);
+      ..write(obj.remainingDays)
+      ..writeByte(9)
+      ..write(obj.excuteDate);
   }
 }
 

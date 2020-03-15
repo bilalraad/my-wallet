@@ -1,8 +1,11 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:workmanager/workmanager.dart';
 
 import './DB/app_state.dart';
 import './Helpers/styling.dart';
@@ -11,7 +14,21 @@ import './Helpers/size_config.dart';
 import './Screens/intro_screen.dart';
 import './DB/initialize_HiveDB.dart';
 import './Helpers/app_localizations.dart';
+import './Helpers/notificationsPlugin.dart';
 import './Screens/user_transactions_overview.dart';
+
+void callbackDispatcher() {
+  Workmanager.executeTask((task, inputData) async {
+    final notifId = Random();
+    final _notificationPlugin = NotificationsPlugin();
+    await _notificationPlugin.remindTheUserToOpenTheApp(
+      id: notifId.nextInt(notifId.nextInt(6)),
+      title: qoutes[6],
+      description: '',
+    );
+    return Future.value(true);
+  });
+}
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -19,7 +36,19 @@ Future<void> main() async {
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown
   ]);
-  runApp(MyWallet());
+  Workmanager.initialize(
+    callbackDispatcher, // The top level function, aka callbackDispatcher
+    // isInDebugMode: true // If enabled it will post a notification whenever the task is running. Handy for debugging tasks
+  );
+  Workmanager.registerPeriodicTask(
+    'weekly notification',
+    'notify the user to open the app each week',
+    frequency: const Duration(days: 7),
+    initialDelay: const Duration(days: 7),
+  );
+  runApp(
+    MyWallet(),
+  );
 }
 
 class MyWallet extends StatefulWidget {
@@ -59,13 +88,13 @@ class _MyWalletState extends State<MyWallet> {
                 : ValueListenableBuilder(
                     valueListenable: Hive.box(H.appState.box()).listenable(),
                     builder: (context, appStateBox, _) {
-                      final appMode =
+                      final appState =
                           appStateBox.get(H.appState.str()) as AppState;
 
                       return RestartWidget(
                         child: MaterialApp(
                           debugShowCheckedModeBanner: false,
-                          theme: appMode.isDark
+                          theme: appState.isDark
                               ? AppTheme.darkTheme
                               : AppTheme.lightTheme,
 
@@ -105,7 +134,7 @@ class _MyWalletState extends State<MyWallet> {
 
                           onGenerateRoute: Router.onGenerateRoute,
 
-                          navigatorKey: Router.navigatorKey,
+                          navigatorKey: Router.navigator.key,
                         ),
                       );
                     },

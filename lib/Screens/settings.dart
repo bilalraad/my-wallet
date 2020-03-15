@@ -5,8 +5,11 @@ import '../main.dart';
 import '../DB/app_state.dart';
 import '../Helpers/styling.dart';
 import '../widgets/app_drawer.dart';
+import '../Helpers/size_config.dart';
 import '../DB/initialize_HiveDB.dart';
 import '../Helpers/app_localizations.dart';
+
+final _textStyle = TextStyle(fontSize: SizeConfig.textMultiplier * 2);
 
 class Settings extends StatelessWidget {
   @override
@@ -47,7 +50,7 @@ class Settings extends StatelessWidget {
               children: <Widget>[
                 Text(
                   translate('Percentage of saving'),
-                  style: const TextStyle(fontSize: 20),
+                  style: _textStyle,
                 ),
                 const Spacer(),
                 SizedBox(
@@ -77,9 +80,9 @@ class Settings extends StatelessWidget {
                     keyboardType: TextInputType.number,
                   ),
                 ),
-                const Text(
+                Text(
                   '%',
-                  style: TextStyle(fontSize: 25),
+                  style: _textStyle,
                 ),
               ],
             ),
@@ -89,7 +92,7 @@ class Settings extends StatelessWidget {
             child: Text(
               translate(
                   '${translate('NOTE: This will cut')} ${appState.percentageOfSaving.toStringAsFixed(0)}% ${translate("from every new deposit and add it to your savings")}'),
-              style: const TextStyle(fontSize: 15, color: Colors.purple),
+              style: _textStyle.copyWith(color: Colors.purple),
             ),
           ),
           const Divider(
@@ -102,7 +105,7 @@ class Settings extends StatelessWidget {
               children: <Widget>[
                 Text(
                   '${translate("Total savings")}:   ${appState.totalSavingAmount.toStringAsFixed(1)}',
-                  style: const TextStyle(fontSize: 20),
+                  style: _textStyle,
                 ),
                 RaisedButton(
                   color: Theme.of(context).accentColor,
@@ -132,8 +135,7 @@ class Settings extends StatelessWidget {
                       padding: const EdgeInsets.all(8.0),
                       child: Text(
                         '${translate('Current language')}: ${translate(_currentLang())}',
-                        style: TextStyle(
-                            fontSize: 18, fontWeight: FontWeight.w500),
+                        style: _textStyle.copyWith(fontWeight: FontWeight.w500),
                       ),
                     ),
                   ],
@@ -152,7 +154,7 @@ class Settings extends StatelessWidget {
                   },
                   child: Text(
                     translate('Change'),
-                    style: TextStyle(fontSize: 15, fontWeight: FontWeight.w500),
+                    style: _textStyle.copyWith(fontWeight: FontWeight.w500),
                   ),
                 ),
               ],
@@ -171,7 +173,6 @@ class SelectLanguage extends StatelessWidget {
   final Function onSelectedLang;
 
   const SelectLanguage({@required this.onSelectedLang});
-
   @override
   Widget build(BuildContext context) {
     final translate = AppLocalizations.of(context).translate;
@@ -198,10 +199,10 @@ class SelectLanguage extends StatelessWidget {
             onTap: () {
               onSelectedLang('en');
             },
-            child:const ListTile(
+            child: const ListTile(
               leading: CircleAvatar(
                 backgroundColor: Colors.red,
-                child:  Text('EN'),
+                child: Text('EN'),
               ),
               title: Text('English'),
             ),

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 
-import '../Helpers/my_timer_class.dart';
 import 'initialize_HiveDB.dart';
 
 part 'bills.g.dart';
@@ -41,6 +40,8 @@ class Bill {
   final int days;
   @HiveField(8)
   final int remainingDays;
+  @HiveField(9)
+  final DateTime excuteDate;
 
   Bill({
     this.description,
@@ -52,6 +53,7 @@ class Bill {
     @required this.category,
     @required this.startingDate,
     @required this.endingDate,
+    @required this.excuteDate,
   });
 }
 
@@ -62,18 +64,9 @@ class Bills extends HiveObject {
   @HiveField(0)
   List<Bill> bills = [];
 
+
   void addBill(Bill newBill) {
     bills = _bills.bills;
-
-    timersList.add(
-      MyTimerClass(
-        id: newBill.id,
-        timer: setTimer(
-          bill: newBill,
-          futureTrans: null,
-        ),
-      ),
-    );
 
     bills.add(newBill);
     Hive.box(H.bills.box()).put(0, bills);
@@ -82,9 +75,7 @@ class Bills extends HiveObject {
 
   void deleteBill(String billid) {
     final bill = _bills.bills.firstWhere((b) => b.id == billid);
-    final timerObject = timersList.firstWhere((t) => t.id == billid);
 
-    timerObject.timer.cancel();
 
     bills.remove(bill);
     Hive.box(H.bills.box()).put(0, bills);
@@ -99,22 +90,23 @@ extension BillExtensions on Bill {
     String description,
     DateTime startingDate,
     DateTime endingDate,
+    DateTime excuteDate,
     String category,
     BillType billType,
     int days,
     int remainingDays,
   }) {
     final Bill updatedBill = Bill(
-      billType: billType ?? this.billType,
-      category: category ?? this.category,
-      amount: amount ?? this.amount,
-      id: id ?? this.id,
-      startingDate: startingDate ?? this.startingDate,
-      endingDate: endingDate ?? this.endingDate,
-      description: description ?? this.description,
-      days: days ?? this.days,
-      remainingDays: remainingDays ?? this.remainingDays,
-    );
+        billType: billType ?? this.billType,
+        category: category ?? this.category,
+        amount: amount ?? this.amount,
+        id: id ?? this.id,
+        startingDate: startingDate ?? this.startingDate,
+        endingDate: endingDate ?? this.endingDate,
+        description: description ?? this.description,
+        days: days ?? this.days,
+        remainingDays: remainingDays ?? this.remainingDays,
+        excuteDate: excuteDate ?? this.excuteDate);
     return updatedBill;
   }
 }

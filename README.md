@@ -1,6 +1,6 @@
 ﻿# mywallet
 
-This app was made as a task to 'code for Iraq' community
+This app was made as a progect to 'code for Iraq' community
 also this my very first real app so you might get confused with my strange flow. I also really want to get your feedback and comments ❤.
 
 This is a very simple app(at the moment) and it's all about self expenses and managing your money it's not for power users. you just can add or remove money from your wallet and you also can set Bills or Recurring transactions like if you have a salary, you also can set future transaction that happens only one time.
@@ -10,9 +10,7 @@ My accounts:
 
 Telegram & IG: @bilal_rad
 
-gmail: bilal52040@gmail.come
-
-CFI email: bilal.raad@codeforiraq.org
+gmail: bilal52040@gmail.com
 
 linkedIn: bilal raad
 
@@ -20,7 +18,7 @@ linkedIn: bilal raad
 
 1- I use Hive to store all the data Locally in the device for more information about Hive see: https://pub.dev/packages/hive .
 
-2 - For State management, I also Use Hive or in other words I used "WatchBoxBuilder" witch provided with Hive package.
+2 - For State management, I also Use Hive or in other words I used "ValueListenableBuilder" witch provided with Hive package.
 
 3 - I have problems with naming 😣, also if you're English enthusiast I don't really recommend that you see the code 🙂.
 

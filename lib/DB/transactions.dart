@@ -3,7 +3,6 @@ import 'package:hive/hive.dart';
 
 import './bills.dart';
 import './initialize_HiveDB.dart';
-import '../Helpers/my_timer_class.dart';
 
 part 'transactions.g.dart';
 
@@ -94,16 +93,6 @@ class Transactions with HiveObject {
     futureTransList = _transactions.futureTransList;
     recurringTransList = _transactions.recurringTransList;
 
-    timersList.add(
-      MyTimerClass(
-        id: newFT.id,
-        timer: setTimer(
-          bill: newFT.costumeBill,
-          futureTrans: newFT,
-        ),
-      ),
-    );
-
     if (newFT.isrecurring) {
       recurringTransList.add(newFT);
       Hive.box(H.transactions.box()).put(1, recurringTransList);
@@ -119,7 +108,6 @@ class Transactions with HiveObject {
     recurringTransList = _transactions.recurringTransList;
     futureTransList = _transactions.futureTransList;
 
-    timersList.firstWhere((t) => t.id == ft.id).timer.cancel();
 
     if (ft.isrecurring) {
       recurringTransList.remove(ft);

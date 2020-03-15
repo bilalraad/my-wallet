@@ -91,6 +91,7 @@ class _AddRecurringTransactionState extends State<AddRecurringTransaction> {
         days: _days,
         description: _descriptionController.text,
         remainingDays: _days,
+        excuteDate: _startingDate.add(Duration(days: _days)),
       ),
     );
     _transactions.addFutureTrans(_newFT);
@@ -136,6 +137,7 @@ class _AddRecurringTransactionState extends State<AddRecurringTransaction> {
                   onChanged: (String newValue) {
                     setState(() {
                       _dropdownValue = newValue;
+                      
                     });
                     if (newValue == 'Expense') {
                       _isDeposit = false;

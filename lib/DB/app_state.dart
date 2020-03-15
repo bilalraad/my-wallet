@@ -38,6 +38,9 @@ class AppState extends HiveObject {
   @HiveField(5)
   String myLocale = '';
 
+  @HiveField(6)
+  String currency = 'USD';
+
   void retrieveSaving() {
     final _tx = Hive.box(H.transactions.box()).get(H.transactions.str())
         as Transactions;
@@ -76,6 +79,12 @@ class AppState extends HiveObject {
   void changeLocale(String newLocale) {
     _appState.myLocale = newLocale;
     Hive.box(H.appState.box()).put(5, _appState.myLocale);
+    _appState.save();
+  }
+
+  void changeCurrency(String newCurrency) {
+    _appState.currency = newCurrency;
+    Hive.box(H.appState.box()).put(5, _appState.currency);
     _appState.save();
   }
 }

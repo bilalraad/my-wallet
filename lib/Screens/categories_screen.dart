@@ -60,6 +60,7 @@ class CategoriesScreen extends StatelessWidget {
           }),
       drawer: AppDrawer(),
       floatingActionButton: FloatingActionButton(
+        heroTag: 'Category_screen',
         onPressed: () {
           Router.navigator.pushNamed(Router.addCategory);
         },
@@ -81,6 +82,7 @@ class CategoryListWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final textStyle = TextStyle(fontSize: SizeConfig.textMultiplier * 3);
     final categories =
         Hive.box(H.categories.box()).get(H.categories.str()) as Categories;
     final translate = AppLocalizations.of(context).translate;
@@ -96,7 +98,7 @@ class CategoryListWidget extends StatelessWidget {
             InkWell(
               borderRadius: fifteenCBorder,
               onLongPress: () => removeDialog(
-                title: translate('Remove this Category?'),
+                title: 'Remove this Category?',
                 context: context,
               ).then(
                 (isAccepted) {
@@ -113,7 +115,7 @@ class CategoryListWidget extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 8),
                 child: Text(
                   '${translate(category.title)}',
-                  style: Theme.of(context).textTheme.title,
+                  style: textStyle,
                 ),
               ),
             ),
@@ -130,7 +132,7 @@ class CategoryListWidget extends StatelessWidget {
                         return InkWell(
                           borderRadius: fifteenCBorder,
                           onLongPress: () => removeDialog(
-                            title: translate('Remove this sub Category?'),
+                            title: 'Remove this sub Category?',
                             context: context,
                           ).then(
                             (isAccepted) {
@@ -145,10 +147,10 @@ class CategoryListWidget extends StatelessWidget {
                           ),
                           child: Padding(
                             padding: const EdgeInsets.symmetric(
-                                vertical: 6, horizontal: 5),
+                                vertical: 6, horizontal: 20),
                             child: Text(
-                              '${translate(sub)}',
-                              style: Theme.of(context).textTheme.subhead,
+                              '- ${translate(sub)}',
+                              style: textStyle,
                             ),
                           ),
                         );

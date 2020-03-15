@@ -13,9 +13,9 @@ import '../Screens/details_page.dart';
 import '../Helpers/remove_dialog.dart';
 import '../Helpers/app_localizations.dart';
 
-final _textStyle = TextStyle(
+const _textStyle = TextStyle(
   fontSize: 16,
-  color: Colors.yellow,
+  color: Colors.green,
 );
 
 class FutureTransactionsTap extends StatelessWidget {
@@ -108,17 +108,21 @@ class FutureTransactionsTap extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            buildBillsWidget(),
-            buildFutureTransWidget(),
-            buildRecurringTransWidget(),
-          ],
+        child: Padding(
+          padding: const EdgeInsets.only(bottom: 40.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              buildBillsWidget(),
+              buildFutureTransWidget(),
+              buildRecurringTransWidget(),
+            ],
+          ),
         ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: FloatingActionButton(
+        heroTag: 'FutureTrans_tab',
         backgroundColor: Colors.cyan,
         onPressed: () => _showModalBottomSheet(context),
         child: Icon(Icons.add),
@@ -148,12 +152,9 @@ Widget buildRecurringTransWidget() {
                 ),
                 Column(
                   children: rTList.map((rT) {
-                    final date = DateFormat('d/M/yy').format(
-                      DateTime.now().add(
-                        Duration(days: rT.costumeBill.remainingDays),
-                      ),
-                    );
-                    return InkWell(
+                    final date =
+                        DateFormat('d/M/yy').format(rT.costumeBill.excuteDate);
+                    return GestureDetector(
                       onTap: () {
                         Navigator.of(context).push(MaterialPageRoute(
                           fullscreenDialog: true,
@@ -176,22 +177,29 @@ Widget buildRecurringTransWidget() {
                           ),
                         ));
                       },
-                      child: ListTileItem(
-                        amount: rT.costumeBill.amount,
-                        date: date,
-                        description: rT.costumeBill.description,
-                        category: rT.costumeBill.category,
-                        isDeposit: rT.isDeposit,
-                        function: () {
-                          removeDialog(
-                            title: 'Remove this recurring transaction?',
-                            context: context,
-                          ).then((isAccepted) {
-                            if (isAccepted != null && isAccepted as bool) {
-                              _transactions.removeFutureTrans(rT);
-                            }
-                          });
-                        },
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Card(
+                          shape: RoundedRectangleBorder(
+                              borderRadius: fifteenCBorder),
+                          child: ListTileItem(
+                            amount: rT.costumeBill.amount,
+                            date: date,
+                            description: rT.costumeBill.description,
+                            category: rT.costumeBill.category,
+                            isDeposit: rT.isDeposit,
+                            function: () {
+                              removeDialog(
+                                title: 'Remove this recurring transaction?',
+                                context: context,
+                              ).then((isAccepted) {
+                                if (isAccepted != null && isAccepted as bool) {
+                                  _transactions.removeFutureTrans(rT);
+                                }
+                              });
+                            },
+                          ),
+                        ),
                       ),
                     );
                   }).toList(),
@@ -225,9 +233,9 @@ Widget buildFutureTransWidget() {
                   margin: const EdgeInsets.all(5),
                   child: Column(
                     children: fTList.map((fT) {
-                      final date = DateFormat('EEEE d/M/yy')
-                          .format(fT.costumeBill.startingDate);
-                      return InkWell(
+                      final date = DateFormat('d/M/yy')
+                          .format(fT.costumeBill.excuteDate);
+                      return GestureDetector(
                         onTap: () {
                           Navigator.of(context).push(MaterialPageRoute(
                             fullscreenDialog: true,
@@ -249,22 +257,30 @@ Widget buildFutureTransWidget() {
                             ),
                           ));
                         },
-                        child: ListTileItem(
-                          amount: fT.costumeBill.amount,
-                          date: date,
-                          description: fT.costumeBill.description,
-                          category: fT.costumeBill.category,
-                          isDeposit: fT.isDeposit,
-                          function: () {
-                            removeDialog(
-                              title: 'Remove this future transaction?',
-                              context: context,
-                            ).then((isAccepted) {
-                              if (isAccepted != null && isAccepted as bool) {
-                                _transactions.removeFutureTrans(fT);
-                              }
-                            });
-                          },
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Card(
+                            shape: RoundedRectangleBorder(
+                                borderRadius: fifteenCBorder),
+                            child: ListTileItem(
+                              amount: fT.costumeBill.amount,
+                              date: date,
+                              description: fT.costumeBill.description,
+                              category: fT.costumeBill.category,
+                              isDeposit: fT.isDeposit,
+                              function: () {
+                                removeDialog(
+                                  title: 'Remove this future transaction?',
+                                  context: context,
+                                ).then((isAccepted) {
+                                  if (isAccepted != null &&
+                                      isAccepted as bool) {
+                                    _transactions.removeFutureTrans(fT);
+                                  }
+                                });
+                              },
+                            ),
+                          ),
                         ),
                       );
                     }).toList(),
@@ -278,8 +294,8 @@ Widget buildFutureTransWidget() {
 
 Widget buildBillsWidget() {
   return ValueListenableBuilder(
-                        valueListenable: Hive.box(H.bills.box()).listenable(),
-    builder: (context, billsBox,_) {
+    valueListenable: Hive.box(H.bills.box()).listenable(),
+    builder: (context, billsBox, _) {
       final translate = AppLocalizations.of(context).translate;
       final bills = billsBox.get(H.bills.str()) as Bills;
       final bList = bills.bills;
@@ -297,12 +313,8 @@ Widget buildBillsWidget() {
                 ),
                 Column(
                   children: bList.map((bL) {
-                    final date = DateFormat('EEEE d/M/yy').format(
-                      DateTime.now().add(
-                        Duration(days: bL.remainingDays),
-                      ),
-                    );
-                    return InkWell(
+                    final date = DateFormat('d/M/yy').format(bL.excuteDate);
+                    return GestureDetector(
                       onTap: () {
                         Navigator.of(context).push(MaterialPageRoute(
                           fullscreenDialog: true,
@@ -325,22 +337,29 @@ Widget buildBillsWidget() {
                           ),
                         ));
                       },
-                      child: ListTileItem(
-                        amount: bL.amount,
-                        date: date,
-                        description: bL.description,
-                        category: bL.category,
-                        isDeposit: false,
-                        function: () {
-                          removeDialog(
-                            title: translate('Remove this Bill?'),
-                            context: context,
-                          ).then((isAccepted) {
-                            if (isAccepted != null && isAccepted as bool) {
-                              bills.deleteBill(bL.id);
-                            }
-                          });
-                        },
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Card(
+                          shape: RoundedRectangleBorder(
+                              borderRadius: fifteenCBorder),
+                          child: ListTileItem(
+                            amount: bL.amount,
+                            date: date,
+                            description: bL.description,
+                            category: bL.category,
+                            isDeposit: false,
+                            function: () {
+                              removeDialog(
+                                title: translate('Remove this bill?'),
+                                context: context,
+                              ).then((isAccepted) {
+                                if (isAccepted != null && isAccepted as bool) {
+                                  bills.deleteBill(bL.id);
+                                }
+                              });
+                            },
+                          ),
+                        ),
                       ),
                     );
                   }).toList(),
@@ -374,26 +393,30 @@ class ListTileItem extends StatelessWidget {
     return ListTile(
       contentPadding: const EdgeInsets.all(10),
       leading: Container(
-        width: 90,
+        width: 80,
         constraints: const BoxConstraints(
           maxWidth: 105,
         ),
         padding: const EdgeInsets.all(15),
         decoration: BoxDecoration(
-            borderRadius: fifteenCBorder,
+            borderRadius: BorderRadius.circular(30),
             border: Border.all(
+              width: 3,
               color: Theme.of(context).accentColor,
             )),
         child: Text(
-          translate(category),
+          amount.toString(),
+          style: TextStyle(
+            color: isDeposit ? Colors.green : Colors.red,
+          ),
           textAlign: TextAlign.center,
         ),
       ),
       title: Text(
-        amount.toString(),
+        translate(category),
         style: TextStyle(
-          color: isDeposit ? Colors.green : Colors.red,
-        ),
+            fontSize: SizeConfig.textMultiplier * 2.5,
+            fontWeight: FontWeight.bold),
       ),
       subtitle: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -404,12 +427,10 @@ class ListTileItem extends StatelessWidget {
               isDeposit
                   ? '${translate("This will add")} $amount ${translate("to your wallet at")} $date.'
                   : '${translate("This will cut")} $amount ${translate("from your wallet at")} $date.',
-              softWrap: true,
             ),
           ),
-          Text(description.isEmpty
-              ? ''
-              : '${translate("Description")}: $description'),
+          if (description.isNotEmpty)
+            Text('${translate("Description")}: $description'),
         ],
       ),
       trailing: IconButton(

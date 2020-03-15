@@ -114,6 +114,7 @@ class _AddTransactionsState extends State<AddTransactions> {
           days: null,
           id: null,
           remainingDays: 0,
+          excuteDate: _pickedDate,
         ),
       );
       transactions.addFutureTrans(_newFutureTrans);

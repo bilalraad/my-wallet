@@ -47,6 +47,10 @@ class CardItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final translate = AppLocalizations.of(context).translate;
+    final textStyle = Theme.of(context)
+        .textTheme
+        .title
+        .copyWith(fontSize: SizeConfig.textMultiplier * 2.0);
 
     return trans.isEmpty
         ? Container()
@@ -61,90 +65,90 @@ class CardItem extends StatelessWidget {
                   padding: const EdgeInsets.all(10.0),
                   child: Text(
                     translate(title),
-                    style: Theme.of(context).textTheme.title,
+                    style: textStyle,
                   ),
                 ),
                 const Divider(),
                 Column(
-                  children: trans.map(
-                    (t) {
-                      return InkWell(
-                        borderRadius: tenCBorder,
-                        onTap: () {
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                              fullscreenDialog: true,
-                              builder: (_) => DetailsPage(
-                                amount: t.amount,
-                                category: t.category,
-                                date: t.dateTime,
-                                deleteFunction: () => removeDialog(
-                                  title: 'Remove this Transaction?',
-                                  context: context,
-                                ).then((isAccepted) {
-                                  if (isAccepted != null && isAccepted as bool) {
-                                    Hive.box(H.transactions.box())
-                                        .get(H.transactions.str())
-                                        .deleteTrans(t.id);
-                                    Navigator.of(context).pop();
-                                  }
-                                }),
-                                descripstion: t.description,
-                                isDeposit: t.isDeposit,
+                  children: trans
+                      .map(
+                        (t) {
+                          return InkWell(
+                            borderRadius: tenCBorder,
+                            onTap: () {
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  fullscreenDialog: true,
+                                  builder: (_) => DetailsPage(
+                                    amount: t.amount,
+                                    category: t.category,
+                                    date: t.dateTime,
+                                    deleteFunction: () => removeDialog(
+                                      title: 'Remove this Transaction?',
+                                      context: context,
+                                    ).then((isAccepted) {
+                                      if (isAccepted != null &&
+                                          isAccepted as bool) {
+                                        Hive.box(H.transactions.box())
+                                            .get(H.transactions.str())
+                                            .deleteTrans(t.id);
+                                        Navigator.of(context).pop();
+                                      }
+                                    }),
+                                    descripstion: t.description,
+                                    isDeposit: t.isDeposit,
+                                  ),
+                                ),
+                              );
+                            },
+                            onLongPress: () => removeDialog(
+                              title: 'Remove this Transaction?',
+                              context: context,
+                            ).then((isAccepted) {
+                              if (isAccepted != null && isAccepted as bool) {
+                                Hive.box(H.transactions.box())
+                                    .get(H.transactions.str())
+                                    .deleteTrans(t.id);
+                              }
+                            }),
+                            child: Padding(
+                              padding: const EdgeInsets.all(20.0),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: <Widget>[
+                                  FittedBox(
+                                    child: Text(
+                                      translate(t.category),
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    width: SizeConfig.widthMultiplier * 25,
+                                    child: FittedBox(
+                                      child: Text(
+                                        DateFormat(
+                                          "d/MM  EEEE",
+                                        ).format(t.dateTime),
+                                      ),
+                                    ),
+                                  ),
+                                  Text(
+                                    t.amount.toString(),
+                                    style: textStyle.copyWith(
+                                      color: title == 'InFlow'
+                                          ? Colors.green
+                                          : Colors.red,
+                                    ),
+                                  )
+                                ],
                               ),
                             ),
                           );
                         },
-                        onLongPress: () => removeDialog(
-                          title: 'Remove this Transaction?',
-                          context: context,
-                        ).then((isAccepted) {
-                          if (isAccepted != null && isAccepted as bool) {
-                            Hive.box(H.transactions.box())
-                                .get(H.transactions.str())
-                                .deleteTrans(t.id);
-                          }
-                        }),
-                        child: Padding(
-                          padding: const EdgeInsets.all(20.0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: <Widget>[
-                              Container(
-                                width: 105,
-                                child: Text(
-                                  translate(t.category),
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .title
-                                      .copyWith(fontSize: 16),
-                                ),
-                              ),
-                              Text(
-                                DateFormat(
-                                  "hh:mm   d/M  EE",
-                                ).format(t.dateTime),
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .title
-                                    .copyWith(fontSize: 15),
-                              ),
-                              Text(
-                                t.amount.toString(),
-                                style:
-                                    Theme.of(context).textTheme.title.copyWith(
-                                          fontSize: 15,
-                                          color: title == 'InFlow'
-                                              ? Colors.green
-                                              : Colors.red,
-                                        ),
-                              )
-                            ],
-                          ),
-                        ),
-                      );
-                    },
-                  ).toList().reversed.toList(),
+                      )
+                      .toList()
+                      .reversed
+                      .toList(),
                 ),
               ],
             ),

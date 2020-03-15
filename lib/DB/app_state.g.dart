@@ -51,13 +51,14 @@ class AppStateAdapter extends TypeAdapter<AppState> {
       ..percentageOfSaving = fields[2] as double
       ..totalSavingAmount = fields[3] as double
       ..firstTime = fields[4] as bool
-      ..myLocale = fields[5] as String;
+      ..myLocale = fields[5] as String
+      ..currency = fields[6] as String;
   }
 
   @override
   void write(BinaryWriter writer, AppState obj) {
     writer
-      ..writeByte(6)
+      ..writeByte(7)
       ..writeByte(0)
       ..write(obj._isDark)
       ..writeByte(1)
@@ -69,6 +70,8 @@ class AppStateAdapter extends TypeAdapter<AppState> {
       ..writeByte(4)
       ..write(obj.firstTime)
       ..writeByte(5)
-      ..write(obj.myLocale);
+      ..write(obj.myLocale)
+      ..writeByte(6)
+      ..write(obj.currency);
   }
 }

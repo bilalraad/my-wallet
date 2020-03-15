@@ -41,6 +41,7 @@ class _AddBillState extends State<AddBill> {
     days: null,
     description: null,
     remainingDays: null,
+    excuteDate: null,
   );
 
   @override
@@ -93,6 +94,7 @@ class _AddBillState extends State<AddBill> {
       billType: _billType,
       days: _days,
       remainingDays: _days,
+      excuteDate: _startingDate.add(Duration(days: _days)),
     );
     _bills.addBill(_newBill);
     Navigator.pop(context);
@@ -151,7 +153,6 @@ class _AddBillState extends State<AddBill> {
                     BillType.Monthly,
                     BillType.Weekly,
                     BillType.Daily,
-                    BillType.Yearly,
                   ].map<DropdownMenuItem<BillType>>(
                     (BillType value) {
                       return DropdownMenuItem<BillType>(

@@ -18,11 +18,10 @@ class ByCategory extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final translate = AppLocalizations.of(context).translate;
-
+extractedTrans.sort((a, b) => a.category.compareTo(b.category));
     return Column(
       children: extractedTrans.map(
         (ex) {
-          extractedTrans.sort((a, b) => a.category.compareTo(b.category));
           return Padding(
             padding: const EdgeInsets.all(8.0),
             child: InkWell(
@@ -83,7 +82,7 @@ class ByCategory extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: <Widget>[
                           Text(
-                            '${DateFormat('D/M/y').format(ex.dateTime)}',
+                            '${DateFormat('dd/M/y').format(ex.dateTime)}',
                             style: Theme.of(context).textTheme.subhead,
                           ),
                           Text(

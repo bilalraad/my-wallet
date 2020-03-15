@@ -26,6 +26,10 @@ class UserTransactionsTab extends StatelessWidget {
     BuildContext context,
   ) {
     final translate = AppLocalizations.of(context).translate;
+    final textStyle = Theme.of(context)
+        .textTheme
+        .title
+        .copyWith(fontSize: SizeConfig.textMultiplier * 2.5);
     showModalBottomSheet(
       context: context,
       backgroundColor: Colors.transparent,
@@ -61,7 +65,10 @@ class UserTransactionsTab extends StatelessWidget {
                       size: 70,
                       color: Colors.red,
                     ),
-                    Text(translate('Withdrawal'))
+                    Text(
+                      translate('Withdrawal'),
+                      style: textStyle,
+                    )
                   ],
                 ),
               ),
@@ -84,7 +91,10 @@ class UserTransactionsTab extends StatelessWidget {
                       size: 70,
                       color: Colors.green,
                     ),
-                    Text(translate('Deposit')),
+                    Text(
+                      translate('Deposit'),
+                      style: textStyle,
+                    ),
                   ],
                 ),
               ),
@@ -98,6 +108,7 @@ class UserTransactionsTab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final translate = AppLocalizations.of(context).translate;
+    final textStyle = TextStyle(fontSize: SizeConfig.textMultiplier * 2.5);
 
     return Scaffold(
       body: _extractedTrans == null || _extractedTrans.isEmpty
@@ -113,23 +124,22 @@ class UserTransactionsTab extends StatelessWidget {
                   sliver: SliverAppBar(
                     shape: RoundedRectangleBorder(borderRadius: fifteenCBorder),
                     backgroundColor: const Color(0x0000ffff),
-                    expandedHeight: 148.0,
+                    expandedHeight: SizeConfig.heightMultiplier * 25,
 
                     ///Properties of the App Bar when it is expanded
                     flexibleSpace: FlexibleSpaceBar(
                       background: Card(
-                        margin: EdgeInsets.symmetric(
-                            horizontal: SizeConfig.isPortrait ? 0 : 100),
                         shape: RoundedRectangleBorder(borderRadius: tenCBorder),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.center,
                           children: <Widget>[
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
+                            SizedBox(
+                              height: SizeConfig.heightMultiplier * 5,
                               child: Text(
                                 translate('Overview'),
                                 style: TextStyle(
-                                    fontSize: SizeConfig.textMultiplier * 2.5),
+                                    fontSize: SizeConfig.textMultiplier * 4),
                               ),
                             ),
                             const Divider(
@@ -140,15 +150,11 @@ class UserTransactionsTab extends StatelessWidget {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: <Widget>[
-                                Text(
-                                  translate('InFlow'),
-                                  style: const TextStyle(
-                                    fontSize: 15,
-                                  ),
-                                ),
+                                Text(translate('InFlow'), style: textStyle),
                                 Text(
                                   transactions['inFlow'].toString(),
-                                  style: TextStyle(color: Colors.green),
+                                  style:
+                                      textStyle.copyWith(color: Colors.green),
                                 ),
                               ],
                             ),
@@ -157,11 +163,11 @@ class UserTransactionsTab extends StatelessWidget {
                               children: <Widget>[
                                 Text(
                                   translate('OutFlow'),
-                                  style: const TextStyle(fontSize: 15),
+                                  style: textStyle,
                                 ),
                                 Text(
                                   transactions['outFlow'].toString(),
-                                  style: const TextStyle(color: Colors.red),
+                                  style: textStyle.copyWith(color: Colors.red),
                                 ),
                               ],
                             ),
@@ -170,17 +176,21 @@ class UserTransactionsTab extends StatelessWidget {
                               indent: 20 * SizeConfig.widthMultiplier,
                               endIndent: 20 * SizeConfig.widthMultiplier,
                             ),
-                            Expanded(
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceEvenly,
-                                children: <Widget>[
-                                  Text(translate('Total')),
-                                  Text(
-                                    transactions['amount'].toString(),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: <Widget>[
+                                Text(
+                                  translate('Total'),
+                                  style: TextStyle(
+                                    fontSize: SizeConfig.textMultiplier * 2.5,
                                   ),
-                                ],
-                              ),
+                                ),
+                                Text(
+                                  double.parse(
+                                          transactions['amount'].toString())
+                                      .toStringAsFixed(1),
+                                ),
+                              ],
                             ),
                           ],
                         ),
@@ -195,8 +205,9 @@ class UserTransactionsTab extends StatelessWidget {
                   sliver: SliverLayoutBuilder(
                     builder: (context, constrains) {
                       return ValueListenableBuilder(
-                        valueListenable: Hive.box(H.appState.box()).listenable(),
-                        builder: (context, box,_) {
+                        valueListenable:
+                            Hive.box(H.appState.box()).listenable(),
+                        builder: (context, box, _) {
                           final appState =
                               box.get(H.appState.str()) as AppState;
                           if (appState.filter == PopMenuItem.ByTrans) {
@@ -216,8 +227,11 @@ class UserTransactionsTab extends StatelessWidget {
               ],
             ),
       floatingActionButton: FloatingActionButton(
+        heroTag: 'Transactions_tab ${transactions['amount']}',
         onPressed: () => _showModalBottomSheet(context),
-        child: Icon(Icons.add),
+        child: Icon(
+          Icons.add,
+        ),
       ),
     );
   }

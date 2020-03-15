@@ -5,6 +5,7 @@ import 'package:hive_flutter/hive_flutter.dart';
 import '../DB/app_state.dart';
 import '../DB/transactions.dart';
 import '../widgets/app_drawer.dart';
+import '../Helpers/size_config.dart';
 import '../DB/initialize_HiveDB.dart';
 import '../widgets/future_trans_tab.dart';
 import '../Helpers/get_monthly_data.dart';
@@ -24,10 +25,13 @@ List<int> getAvailableIndex() {
   return index;
 }
 
+final AppState _appState =
+    Hive.box(H.appState.box()).get(H.appState.str()) as AppState;
+
 class UserTransactionsOverView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final currentMonthIndex = DateTime.now().month + 3;
+    final currentMonthIndex = DateTime.now().month - 1; //0123....11
 
     final translate = AppLocalizations.of(context).translate;
     return ValueListenableBuilder(
@@ -39,78 +43,99 @@ class UserTransactionsOverView extends StatelessWidget {
           final List<Trans> _translist = transactions.transList;
 
           final _monthlyGroubedTransValues = getMonthlyData(_translist);
-          final index = getAvailableIndex().reversed.toList();
+          final index = getAvailableIndex().toList();
 
           return DefaultTabController(
-            initialIndex: currentMonthIndex,
-            length: currentMonthIndex + 2,
+            initialIndex: currentMonthIndex + 4,
+            length: index.length + 1,
             child: Scaffold(
-              appBar: AppBar(
-                bottom: TabBar(
-                  isScrollable: true,
-                  labelPadding:
-                      const EdgeInsets.symmetric(horizontal: 30, vertical: 3),
-                  tabs: <Widget>[
-                    for (final i in index)
+              appBar: PreferredSize(
+                preferredSize:
+                    Size.fromHeight(SizeConfig.heightMultiplier * 15),
+                child: AppBar(
+                  bottom: TabBar(
+                    isScrollable: true,
+                    labelPadding:
+                        const EdgeInsets.symmetric(horizontal: 30, vertical: 3),
+                    tabs: <Widget>[
+                      for (final i in index)
+                        if (i != (currentMonthIndex + 4))
+                          Tab(
+                            text: translate(_monthlyGroubedTransValues[i]
+                                    ['month']
+                                .toString()),
+                          ),
                       Tab(
                         text: translate(
-                            _monthlyGroubedTransValues[i]['month'].toString()),
+                            _monthlyGroubedTransValues[currentMonthIndex + 4]
+                                    ['month']
+                                .toString()),
                       ),
-                    Tab(
-                      text: translate('FUTURE'),
-                    ),
-                  ],
-                ),
-                centerTitle: true,
-                title: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Text(
-                      translate('Total'),
-                      style: const TextStyle(
-                        fontSize: 15,
-                      ),
-                      textAlign: TextAlign.start,
-                    ),
-                    Text(
-                      '${transactions.total.toStringAsFixed(1)}\$',
-                      style: const TextStyle(fontSize: 25),
-                    ),
-                  ],
-                ),
-                actions: <Widget>[
-                  PopupMenuButton(
-                    onSelected: (PopMenuItem selectedItem) {
-                      final appState = Hive.box(H.appState.box())
-                          .get(H.appState.str()) as AppState;
-                      appState.changeFilter(selectedItem);
-                    },
-                    icon: Icon(Icons.more_vert),
-                    itemBuilder: (_) => [
-                      PopupMenuItem(
-                        value: PopMenuItem.ByCat,
-                        child: Text(
-                          translate('View by category'),
-                          style: const TextStyle(fontSize: 16),
-                        ),
-                      ),
-                      PopupMenuItem(
-                        value: PopMenuItem.ByTrans,
-                        child: Text(
-                          translate('View by transaction'),
-                          style: const TextStyle(fontSize: 16),
-                        ),
+                      Tab(
+                        text: translate('FUTURE'),
                       ),
                     ],
-                  )
-                ],
+                    labelStyle:
+                        TextStyle(fontSize: SizeConfig.textMultiplier * 2),
+                  ),
+                  centerTitle: true,
+                  title: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Text(
+                        translate('Total'),
+                        style: TextStyle(
+                          fontSize: SizeConfig.textMultiplier * 2,
+                        ),
+                        textAlign: TextAlign.start,
+                      ),
+                      Text(
+                        '${transactions.total.toStringAsFixed(1)} ${translate(_appState.currency)}',
+                        style:
+                            TextStyle(fontSize: SizeConfig.textMultiplier * 3),
+                      ),
+                    ],
+                  ),
+                  actions: <Widget>[
+                    PopupMenuButton(
+                      onSelected: (PopMenuItem selectedItem) {
+                        final appState = Hive.box(H.appState.box())
+                            .get(H.appState.str()) as AppState;
+                        appState.changeFilter(selectedItem);
+                      },
+                      icon: Icon(Icons.more_vert),
+                      itemBuilder: (_) => [
+                        PopupMenuItem(
+                          value: PopMenuItem.ByCat,
+                          child: Text(
+                            translate('View by category'),
+                            style: TextStyle(
+                                fontSize: SizeConfig.textMultiplier * 2),
+                          ),
+                        ),
+                        PopupMenuItem(
+                          value: PopMenuItem.ByTrans,
+                          child: Text(
+                            translate('View by transaction'),
+                            style: TextStyle(
+                                fontSize: SizeConfig.textMultiplier * 2),
+                          ),
+                        ),
+                      ],
+                    )
+                  ],
+                ),
               ),
               body: TabBarView(
                 children: <Widget>[
                   for (final i in index)
-                    UserTransactionsTab(
-                      _monthlyGroubedTransValues[i],
-                    ),
+                    if (i != (currentMonthIndex + 4))
+                      UserTransactionsTab(
+                        _monthlyGroubedTransValues[i],
+                      ),
+                  UserTransactionsTab(
+                    _monthlyGroubedTransValues[currentMonthIndex+4],
+                  ),
                   FutureTransactionsTap(),
                 ],
               ),

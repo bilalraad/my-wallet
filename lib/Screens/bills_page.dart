@@ -5,19 +5,19 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 import '../DB/bills.dart';
-import './details_page.dart';
 import '../Helpers/styling.dart';
 import '../routes/router.gr.dart';
 import '../widgets/app_drawer.dart';
 import '../DB/initialize_HiveDB.dart';
 import '../Helpers/remove_dialog.dart';
+import '../Helpers/my_timer_class.dart';
 import '../Helpers/app_localizations.dart';
 
 class BillsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final _textStyle = GoogleFonts.poppins(
-      fontSize: 18,
+      fontSize: 15,
     );
 
     final translate = AppLocalizations.of(context).translate;
@@ -39,103 +39,128 @@ class BillsPage extends StatelessWidget {
                   child: ListView.builder(
                     itemCount: bills.bills.length,
                     itemBuilder: (BuildContext context, int i) {
-                      final endingDate = bills.bills[i].endingDate == null
+                      final excuteDate = bills.bills[i].endingDate == null
                           ? translate('Forever')
-                          : DateFormat.yMd().format(bills.bills[i].endingDate);
-                      return InkWell(
-                        onTap: () {
-                          Navigator.of(context).push(MaterialPageRoute(
-                            fullscreenDialog: true,
-                            builder: (_) => DetailsPage(
-                              amount: bills.bills[i].amount,
-                              category: bills.bills[i].category,
-                              date: bills.bills[i].startingDate,
-                              deleteFunction: () => removeDialog(
-                                title: translate('Remove this bill?'),
-                                context: context,
-                              ).then((isAccepted) {
-                                if (isAccepted != null && isAccepted as bool) {
-                                  bills.deleteBill(bills.bills[i].id);
+                          : DateFormat.yMd().format(bills.bills[i].excuteDate);
 
-                                  Navigator.of(context).pop();
-                                }
-                              }),
-                              descripstion: bills.bills[i].description,
-                              isDeposit: false,
-                            ),
-                          ));
-                        },
-                        onLongPress: () {
-                          removeDialog(
-                            title: translate('Remove this bill?'),
-                            context: context,
-                          ).then((isAccepted) {
-                            if (isAccepted != null && isAccepted as bool) {
-                              bills.deleteBill(bills.bills[i].id);
-                            }
-                          });
-                        },
-                        child: Card(
-                          shape:
-                              RoundedRectangleBorder(borderRadius: tenCBorder),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.center,
+                      final daysbeforExcution = DateTime.now()
+                              .difference(bills.bills[i].excuteDate)
+                              .inDays
+                              .abs() +
+                          1;
+                      return Card(
+                        shape: RoundedRectangleBorder(borderRadius: tenCBorder),
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: <Widget>[
-                              Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Text(
-                                  '${bills.bills[i].amount.toStringAsFixed(2)}\$',
-                                  style: _textStyle,
+                              Expanded(
+                                flex: 7,
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: <Widget>[
+                                    Row(
+                                      children: <Widget>[
+                                        Text(
+                                          '${translate("Category")}: ',
+                                          style: _textStyle.copyWith(
+                                              fontSize: 14, color: Colors.grey),
+                                        ),
+                                        Text(
+                                          '${translate(bills.bills[i].category).toUpperCase()}',
+                                          style: _textStyle,
+                                          textScaleFactor:
+                                              bills.bills[i].category.length >
+                                                      15
+                                                  ? 0.6
+                                                  : 0.8,
+                                        ),
+                                      ],
+                                    ),
+                                    Row(
+                                      children: <Widget>[
+                                        Text(
+                                          '${translate('Type')}: ',
+                                          style: _textStyle.copyWith(
+                                              fontSize: 14, color: Colors.grey),
+                                        ),
+                                        Text(
+                                          '${translate(bills.bills[i].billType.toString())}',
+                                          style: _textStyle,
+                                        ),
+                                      ],
+                                    ),
+                                    Text(
+                                      daysbeforExcution == 1
+                                          ? '${translate("Due in Tommorow")}'
+                                          : '${translate("Due in")} $daysbeforExcution ${translate("days")}',
+                                      style: _textStyle.copyWith(
+                                          color: Colors.red, fontSize: 12),
+                                    ),
+                                    Text(
+                                        '${translate("Repeat till")} $excuteDate')
+                                  ],
                                 ),
                               ),
-                              Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceEvenly,
+                              Expanded(
+                                flex: 6,
+                                child: Column(
                                   children: <Widget>[
                                     Text(
-                                      '${translate("Category")}: ${translate(bills.bills[i].category).toUpperCase()}',
+                                      '${bills.bills[i].amount.toStringAsFixed(2)}',
                                       style: _textStyle,
                                     ),
-                                    Text(
-                                      '|',
-                                      style: _textStyle.copyWith(fontSize: 15),
-                                    ),
-                                    Text(
-                                      '${translate('Type')}: ${translate(bills.bills[i].billType.toString())}',
-                                      style: _textStyle,
+                                    Row(
+                                      children: <Widget>[
+                                        IconButton(
+                                          color: Colors.red,
+                                          icon: Icon(Icons.delete),
+                                          onPressed: () {
+                                            removeDialog(
+                                              title: translate(
+                                                  'Remove this bill?'),
+                                              context: context,
+                                            ).then((isAccepted) {
+                                              if (isAccepted != null &&
+                                                  isAccepted as bool) {
+                                                bills.deleteBill(
+                                                    bills.bills[i].id);
+                                              }
+                                            });
+                                          },
+                                        ),
+                                        RaisedButton(
+                                          onPressed: () {
+                                            excuteBill(
+                                              futureTrans: null,
+                                              bill: bills.bills[i].updateBill(
+                                                  excuteDate: DateTime.now()),
+                                            );
+                                            Scaffold.of(context).showSnackBar(
+                                              SnackBar(
+                                                backgroundColor:
+                                                    Theme.of(context)
+                                                        .backgroundColor,
+                                                duration: const Duration(
+                                                    milliseconds: 1000),
+                                                content: Text(
+                                                    '${translate("Done")}'),
+                                              ),
+                                            );
+                                          },
+                                          color: Colors.green,
+                                          shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(20)),
+                                          child:
+                                              Text('${translate("Pay")}'),
+                                        ),
+                                      ],
                                     ),
                                   ],
                                 ),
                               ),
-                              Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: bills.bills[i].endingDate != null &&
-                                        bills.bills[i].endingDate.hour ==
-                                            DateTime.now().hour
-                                    ? Text(
-                                        translate('Expired'),
-                                        style: _textStyle,
-                                      )
-                                    : Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceEvenly,
-                                        children: <Widget>[
-                                          Text(
-                                            '${translate("From")}: ${DateFormat.yMd().format(bills.bills[i].startingDate)}',
-                                            style: _textStyle,
-                                          ),
-                                          const SizedBox(
-                                            width: 10,
-                                          ),
-                                          Text(
-                                            '${translate("To")}: $endingDate',
-                                            style: _textStyle,
-                                          ),
-                                        ],
-                                      ),
-                              )
                             ],
                           ),
                         ),
@@ -148,6 +173,7 @@ class BillsPage extends StatelessWidget {
             onPressed: () {
               Router.navigator.pushNamed(Router.addBill);
             },
+            heroTag: 'Bills_screen',
             child: Icon(Icons.add),
           ),
         );

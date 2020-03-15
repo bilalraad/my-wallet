@@ -15,7 +15,8 @@ import '../DB/initialize_HiveDB.dart';
 import '../Helpers/app_localizations.dart';
 import '../widgets/costume_text_form_field.dart';
 
-final AppState appState = Hive.box(H.appState.box()).get(H.appState.str()) as AppState;
+final AppState _appState =
+    Hive.box(H.appState.box()).get(H.appState.str()) as AppState;
 
 enum Worktype {
   Employ,
@@ -23,6 +24,16 @@ enum Worktype {
   DailyWorker,
   None,
 }
+
+List<Map<String, String>> currency = [
+  {'Symbol': 'USD', 'Name': 'US Dollar'},
+  {'Symbol': 'IQD', 'Name': 'Iraqi Dinar'},
+  {'Symbol': 'SAR', 'Name': 'Sauidi Real'},
+  {'Symbol': 'AED', 'Name': 'UAE Dirham'},
+  {'Symbol': 'EGP', 'Name': 'Egyptian Pound'},
+  {'Symbol': 'EUR', 'Name': 'European Euro'},
+  {'Symbol': 'KWD', 'Name': 'Kuwaiti Dinar'},
+];
 
 class IntroductionPage extends StatefulWidget {
   @override
@@ -36,6 +47,7 @@ class _IntroductionPageState extends State<IntroductionPage> {
   var _startingDate = DateTime.now();
   var _billType = BillType.Monthly;
   final GlobalKey<FormState> textFormFieldKey = GlobalKey<FormState>();
+  int currencyIndex = 0;
 
   List<PageViewModel> pages() {
     final translate = AppLocalizations.of(context).translate;
@@ -157,6 +169,7 @@ class _IntroductionPageState extends State<IntroductionPage> {
           ),
         ),
         bodyWidget: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             Padding(
               padding: const EdgeInsets.all(0.0),
@@ -177,7 +190,7 @@ class _IntroductionPageState extends State<IntroductionPage> {
                       decoration: const InputDecoration(
                           errorMaxLines: 2, errorStyle: TextStyle(fontSize: 8)),
                       initialValue:
-                          appState.percentageOfSaving.toStringAsFixed(0),
+                          _appState.percentageOfSaving.toStringAsFixed(0),
                       maxLength: 3,
                       strutStyle:
                           const StrutStyle(forceStrutHeight: true, height: 2.3),
@@ -188,7 +201,7 @@ class _IntroductionPageState extends State<IntroductionPage> {
                       },
                       onChanged: (v) {
                         if (double.tryParse(v) != null) {
-                          appState.changePercentageOfSaving(double.parse(v));
+                          _appState.changePercentageOfSaving(double.parse(v));
                         }
                         return;
                       },
@@ -204,7 +217,48 @@ class _IntroductionPageState extends State<IntroductionPage> {
               ),
             ),
             Text(
-              '${translate("NOTE: This will cut")} ${appState.percentageOfSaving.toStringAsFixed(0)}% ${translate("from every new deposit and add it to your savings")}',
+              '${translate("NOTE: This will cut")} ${_appState.percentageOfSaving.toStringAsFixed(0)}% ${translate("from every new deposit and add it to your savings")}',
+              style: TextStyle(color: Theme.of(context).accentColor),
+            ),
+            const SizedBox(
+              height: 40,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                const Text(
+                  'Choose your currency',
+                  style: TextStyle(fontSize: 18),
+                ),
+                DropdownButton<int>(
+                  isDense: true,
+                  value: currencyIndex,
+                  icon: Icon(Icons.arrow_drop_down),
+                  iconSize: 24,
+                  elevation: 16,
+                  style: TextStyle(color: Colors.deepPurple),
+                  onChanged: (index) {
+                    setState(() {
+                      currencyIndex = index;
+                      _appState
+                          .changeCurrency(currency[currencyIndex]['Symbol']);
+                    });
+                  },
+                  items: [0, 1, 2, 3, 4, 5, 6]
+                      .map<DropdownMenuItem<int>>((int index) {
+                    return DropdownMenuItem<int>(
+                      value: index,
+                      child: Text(translate(currency[index]['Name'])),
+                    );
+                  }).toList(),
+                ),
+              ],
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            Text(
+              '${translate("NOTE: You can\'t change the currency later")}',
               style: TextStyle(color: Theme.of(context).accentColor),
             ),
           ],
@@ -370,15 +424,16 @@ class _IntroductionPageState extends State<IntroductionPage> {
           days: _days,
           id: null,
           remainingDays: _days,
+          excuteDate: _startingDate.add(Duration(days: _days)),
         ),
       );
       _transactions.addFutureTrans(_salaryRT);
     }
     Router.navigator.pushReplacementNamed(Router.userTransactionsOverView);
 
-    appState.firstTime = false;
-    Hive.box(H.appState.box()).put(4, appState.firstTime);
-    appState.save();
+    _appState.firstTime = false;
+    Hive.box(H.appState.box()).put(4, _appState.firstTime);
+    _appState.save();
   }
 
   @override
@@ -387,7 +442,7 @@ class _IntroductionPageState extends State<IntroductionPage> {
       showNextButton: true,
       next: const Icon(Icons.navigate_next),
       globalBackgroundColor:
-          appState.isDark ? Colors.black : AppTheme.appBackgroundColor,
+          _appState.isDark ? Colors.black : AppTheme.appBackgroundColor,
       done: Text(AppLocalizations.of(context).translate('Done')),
       onDone: _oneDone,
       pages: pages(),

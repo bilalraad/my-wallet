@@ -1,46 +1,45 @@
 import 'package:auto_route/auto_route_annotations.dart';
-import 'package:auto_route/transitions_builders.dart';
-import 'package:mywallet/Screens/add_category.dart';
-import 'package:mywallet/Screens/info_sceen.dart';
 
 import '../Screens/add_bill.dart';
 import '../Screens/settings.dart';
 import '../Screens/add_trans.dart';
 import '../Screens/bills_page.dart';
+import '../Screens/info_sceen.dart';
 import '../Screens/details_page.dart';
+import '../Screens/add_category.dart';
 import '../Screens/intro_screen.dart';
+import '../Screens/report_screen.dart';
 import '../Screens/category_select.dart';
 import '../Screens/categories_screen.dart';
 import '../Screens/add_recurring_trans.dart';
 import '../Screens/recurring_tranactions.dart';
 import '../Screens/user_transactions_overview.dart';
 
-@autoRouter
+@CustomAutoRouter()
 class $Router {
-  @CupertinoRoute()
+  @CupertinoRoute(title: 'UserTransactionsOverView')
   @initial
   UserTransactionsOverView userTransactionsOverView;
   AddTransactions addTransactions;
   AddBill addBill;
   AddRecurringTransaction addRecurringTransaction;
-  @CupertinoRoute()
+  @CupertinoRoute(title: 'CategoriesScreen')
   CategoriesScreen categoriesScreen;
-  @CupertinoRoute()
+  @CupertinoRoute(title: 'RecurringTransactions')
   RecurringTransactions recurringTransactions;
-  @CupertinoRoute()
+  @CupertinoRoute(title: 'Settings')
   Settings settings;
-  @CupertinoRoute()
+  @CupertinoRoute(title: 'BillsPage')
   BillsPage billsPage;
-  @CustomRoute(
-    fullscreenDialog: true,
-    transitionsBuilder: TransitionsBuilders.slideBottom,
-    durationInMilliseconds: 500,
-  )
+  @MaterialRoute(fullscreenDialog: true)
   CategorySelect categorySelect;
+  @CupertinoRoute(title: 'DetailsPage')
   DetailsPage detailsPage;
-  @CupertinoRoute()
+  @CupertinoRoute(title: 'IntroductionPage')
   IntroductionPage introductionScreen;
   AddCategory addCategory;
-  @CupertinoRoute()
+  @CupertinoRoute(title: 'InfoSceen')
   InfoSceen infoSceen;
+  @CupertinoRoute(title: 'ReportScreen')
+  Report report;
 }

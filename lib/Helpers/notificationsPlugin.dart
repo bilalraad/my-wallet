@@ -29,11 +29,17 @@ class NotificationsPlugin {
 
   Future onSelectNotification(String payload) async {}
 
-  Future<void> showWhenTransAddedInBackrownd({
+  Future<void> remindTheUserToOpenTheApp({
     int id,
     String title,
     String description,
   }) async {
+     final List<String> lines = <String>[];
+    lines.add(description.substring(0,45));
+    lines.add(description.substring(45));
+
+    // lines.add(title);
+
     final androidPlatformChannelSpecifics = AndroidNotificationDetails(
       'your channel id',
       'your channel name',
@@ -41,9 +47,10 @@ class NotificationsPlugin {
       importance: Importance.High,
       priority: Priority.High,
       style: AndroidNotificationStyle.Inbox,
-      ongoing: true,
       playSound: true,
       visibility: NotificationVisibility.Public,
+      styleInformation: InboxStyleInformation(lines)
+
     );
     final iOSPlatformChannelSpecifics = IOSNotificationDetails();
     final platformChannelSpecifics = NotificationDetails(

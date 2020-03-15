@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
 import 'package:intl/intl.dart';
 
+import '../DB/app_state.dart';
 import '../Helpers/size_config.dart';
+import '../DB/initialize_HiveDB.dart';
 import '../Helpers/app_localizations.dart';
 
 
@@ -26,6 +29,8 @@ class DetailsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final translate = AppLocalizations.of(context).translate;
+    final AppState _appState =
+    Hive.box(H.appState.box()).get(H.appState.str()) as AppState;
 
     return Scaffold(
       appBar: AppBar(
@@ -68,13 +73,13 @@ class DetailsPage extends StatelessWidget {
             Row(
               children: <Widget>[
                 Icon(
-                  Icons.attach_money,
+                  Icons.account_balance_wallet,
                 ),
                 SizedBox(
                   width: SizeConfig.heightMultiplier * 5,
                 ),
                 Text(
-                  '${amount.toString()}\$',
+                  '${amount.toString()} ${translate(_appState.currency)}',
                   style: TextStyle(
                     color: isDeposit ? Colors.green : Colors.red,
                     fontWeight: FontWeight.w300,
@@ -95,7 +100,7 @@ class DetailsPage extends StatelessWidget {
                 Text(
                   date == DateTime.now()
                       ? translate('Today')
-                      : DateFormat('EEEE, dd/MM/y ').format(date),
+                      : DateFormat('dd/MM/y ').format(date),
                   style: const TextStyle(
                     fontSize: 18,
                   ),

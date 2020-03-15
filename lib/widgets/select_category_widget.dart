@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:mywallet/Helpers/app_localizations.dart';
 
 import '../Helpers/styling.dart';
 import '../routes/router.gr.dart';
 import '../Helpers/size_config.dart';
+import '../Helpers/app_localizations.dart';
 
 class SelectCategoryWidget extends StatelessWidget {
   const SelectCategoryWidget({
@@ -50,7 +50,7 @@ class SelectCategoryWidget extends StatelessWidget {
                   : categoryName,
             ),
             style: TextStyle(
-              fontSize: 4 * SizeConfig.textMultiplier,
+              fontSize: 3 * SizeConfig.textMultiplier,
               color: Theme.of(context).primaryColor,
             ),
           ),

@@ -18,7 +18,7 @@ class InfoSceen extends StatelessWidget {
             children: <Widget>[
               const SelectableText(
                 'Developer: Bilal R. Akobi'
-                '\nContact info : bilal.raad@codeforiraq.org'
+                '\nContact info : bilal52040@gmail.com'
                 '\nTask Supervisor: Sherin Ali & Muhammed Essa\n\n',
                 textAlign: TextAlign.center,
                 style: TextStyle(fontSize: 20),

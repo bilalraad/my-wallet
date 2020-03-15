@@ -4,22 +4,19 @@ import '../DB/transactions.dart';
 
 // this will put each transaction into its month
 List<Map<String, Object>> getMonthlyData(List<Trans> trans) {
-  
   //This will make sure to add the last 4 months of the last year
-  final  currentMonth = DateTime.now().month;
+  final currentMonth = DateTime.now().month;
   final length = currentMonth + 4;
   var countDouwn = 0;
 
   return List.generate(
     length,
     (index) {
-      // This check means when I finish the available months 
-      // in this year I can back to the last 4 months of the last year
-      final _month =
-          index >= currentMonth ? (12 - countDouwn++) : index + 1;
+      // This check will first give me the last 4 months of the last year 
+      // then it will jump to the current year
+      final _month = index >= 4 ? index - 3 : (9+ countDouwn++);
       final _currentYear = DateTime.now().year;
-      final _year =
-          index >= currentMonth ? _currentYear - 1 : _currentYear;
+      final _year = index >= 4 ? _currentYear : _currentYear - 1;
 
       final List<Trans> _transByMonth = [];
       var _totalSum = 0.0;

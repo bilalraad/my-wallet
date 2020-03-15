@@ -1,44 +1,45 @@
 import 'dart:async';
-import 'dart:math';
 
+import 'package:flutter/cupertino.dart';
 import 'package:hive/hive.dart';
 
-import './notificationsPlugin.dart';
+
 import '../DB/bills.dart';
 import '../DB/initialize_HiveDB.dart';
 import '../DB/transactions.dart';
 import '../DB/app_state.dart';
 
-class MyTimerClass {
-  MyTimerClass({this.timer, this.id});
-
-  final String id;
-  final Timer timer;
-}
-
-List<MyTimerClass> timersList = [];
-
 final _tx =
     Hive.box(H.transactions.box()).get(H.transactions.str()) as Transactions;
 final _bills = Hive.box(H.bills.box()).get(H.bills.str()) as Bills;
 
-// this is a very mind blowing function that I ever write
-// simply it will start a perodic timer that will run once every day
-// and it will decrese the remaning days of the bill until it reaches zero
-// so it will reset the remaining days(if the bill or the recurring trans is forever)
-// and it adds the new transaction and notify the user
-// Note: this func. will not do any think until starting date == datetime.now()
-Timer setTimer({
+// simply this func. will start a perodic timer that will run once every day
+Timer delay({
   Bill bill,
   FutureTransaction futureTrans, // this can be null
 }) {
-//------------------------------
-  bool isDeposit = true;
-  int _remainingDays = bill.remainingDays;
+  return Timer(const Duration(seconds: 1), () {
+    if (bill.excuteDate.day == DateTime.now().day) {
+      excuteBill(
+        bill: bill,
+        futureTrans: futureTrans,
+      );
+    }
+  });
+}
+
+// This func. will decrese the remaning days of the bill until it reaches zero
+// so it will reset the remaining days(if the bill or the recurring trans is forever)
+// and it adds the new transaction and notify the user
+// Note: this func. will not do any thing until starting date == datetime.now()
+Future<void> excuteBill({
+  @required FutureTransaction futureTrans,
+  @required Bill bill,
+}) async {
+  final bool isDeposit = checkIfIsDeposit(futureTrans);
   //These idexes below are necessary to update the remaning days of the bill
   int rTIndex;
   int bIndex;
-
   if (futureTrans != null) {
     if (futureTrans.isrecurring) {
       rTIndex =
@@ -46,79 +47,67 @@ Timer setTimer({
       if (rTIndex < 0) rTIndex += 1;
     }
   } else {
-    bIndex = _bills.bills.indexWhere((b) => b.id == bill.id) ;
+    bIndex = _bills.bills.indexWhere((b) => b.id == bill.id);
     if (bIndex < 0) bIndex += 1;
   }
-  return Timer.periodic(
-    const Duration(seconds: 17),
-    (t) async {
-      // if (bill.startingDate.isAfter(DateTime.now())) {
-      //   //DO Nothing
-      // } else
-      if (bill.billType == BillType.FutureTrans) {
-        // this is special bill type this means it is only one time bill(or one time transaction)
-        // its not a recurring transaction
-        addNewTransAndNotify(
-          bill: bill,
-          isDeposit: isDeposit,
-          transId: futureTrans.id,
-          type: 'Future Transaction',
+  //--------------------------------------
+  if (bill.billType == BillType.FutureTrans) {
+    // this is special bill type this means it is only one time bill(or one time transaction)
+    // its not a recurring transaction
+    addNewTrans(
+      bill: bill,
+      isDeposit: futureTrans.isDeposit,
+      transId: futureTrans.id,
+    );
+    // Here in this func. [removeFutureTrans] I mixed the removing of
+    // futureTrans an recurringTrans to reduce the amount of code
+    _tx.removeFutureTrans(futureTrans);
+  } else {
+    addNewTrans(
+      bill: bill,
+      isDeposit: isDeposit,
+      transId: bill.id ?? futureTrans.id,
+    );
+
+    if (bill.endingDate == null) {
+      updateExcuteDate(
+        billIndex: bIndex,
+        rTIndex: rTIndex,
+        nExcuteDate: DateTime.now().add(Duration(days: bill.days)),
+      );
+    } else {
+      final int _remainigDaysBeforEndingDate =
+          DateTime.now().difference(bill.endingDate).inDays;
+      final int _remainigDaysBeforExcuteDate =
+          _remainigDaysBeforEndingDate >= bill.days
+              ? bill.days
+              : _remainigDaysBeforEndingDate;
+
+      if (_remainigDaysBeforExcuteDate != 0) {
+        updateExcuteDate(
+          billIndex: bIndex,
+          rTIndex: rTIndex,
+          nExcuteDate: DateTime.now().add(Duration(
+            days: _remainigDaysBeforExcuteDate,
+          )),
         );
-        // Here in this func. below I mixed the removing of
-        // futureTrans an recurringTrans to reduce the amount of code
-        _tx.removeFutureTrans(futureTrans);
-        t.cancel();
       } else {
-        if (_remainingDays != 0) {
-          _remainingDays -= 1;
-          isDeposit = checkIfIsDeposit(futureTrans);
-        }
-
-        await updateRmainingdaysofBill(bIndex, rTIndex, _remainingDays);
-
-        if (_remainingDays == 0) {
-          addNewTransAndNotify(
-            bill: bill,
-            isDeposit: isDeposit,
-            transId: bill.id,
-            type: 'Bill',
-          );
-          _remainingDays = bill.days;
-
-          if (bill.endingDate == null) {
-            isDeposit = checkIfIsDeposit(futureTrans);
-          } else {
-            final int _remainigDaysBeforEndingDate =
-                DateTime.now().difference(bill.endingDate).inDays;
-
-            if (_remainigDaysBeforEndingDate >= bill.days) {
-              isDeposit = checkIfIsDeposit(futureTrans);
-            } else if (_remainigDaysBeforEndingDate <= bill.days) {
-              if (_remainigDaysBeforEndingDate == 0) {
-                t.cancel();
-              } else {
-                _remainingDays = _remainigDaysBeforEndingDate; //Note
-
-                isDeposit = checkIfIsDeposit(futureTrans);
-              }
-            }
-          }
-        }
+        futureTrans == null
+            ? _bills.deleteBill(bill.id)
+            : _tx.removeFutureTrans(futureTrans);
       }
-    },
-  );
+    }
+  }
 }
 
-Future<void> addNewTransAndNotify({
+
+
+Future<void> addNewTrans({
   bool isDeposit,
   Bill bill,
   String transId,
   String type,
 }) async {
-  final notifId = Random();
-
-  final _notificationPlugin = NotificationsPlugin();
-
   final valueOfSaving = bill.amount.getValueOfSaving();
   double _amount = bill.amount;
   if (isDeposit) {
@@ -131,43 +120,38 @@ Future<void> addNewTransAndNotify({
       amount: _amount,
       category: bill.category,
       id: transId,
-      dateTime: bill.startingDate,
+      dateTime: bill.excuteDate,
       isDeposit: isDeposit,
       description: bill.description,
     ),
   );
-  await _notificationPlugin.showWhenTransAddedInBackrownd(
-    id: notifId.nextInt(100),
-    title: 'New Transaction haas been added',
-    description: 'This added because you set a $type.',
-  );
 }
 
 bool checkIfIsDeposit(FutureTransaction ft) {
-  if (ft == null || !ft.isrecurring) {
+  if (ft == null) {
     return false;
   }
   return ft.isDeposit;
 }
 
-Future<void> updateRmainingdaysofBill(
+Future<void> updateExcuteDate({
   int billIndex,
-  int fTIndex,
-  int rDays,
-) async {
+  int rTIndex,
+  DateTime nExcuteDate,
+}) async {
   Bill nBill;
-  if (fTIndex != null) {
-    nBill = _tx.recurringTransList[fTIndex].costumeBill
-        .updateBill(remainingDays: rDays);
+  if (rTIndex != null) {
+    nBill = _tx.recurringTransList[rTIndex].costumeBill
+        .updateBill(excuteDate: nExcuteDate);
 
-    _tx.recurringTransList[fTIndex] = _tx.recurringTransList[fTIndex].update(
+    _tx.recurringTransList[rTIndex] = _tx.recurringTransList[rTIndex].update(
       costumeBill: nBill,
     );
     Hive.box(H.transactions.box()).put(1, _tx.futureTransList);
     _tx.save();
   } else {
     _bills.bills[billIndex] =
-        _bills.bills[billIndex].updateBill(remainingDays: rDays);
+        _bills.bills[billIndex].updateBill(excuteDate: nExcuteDate);
     Hive.box(H.bills.box()).put(0, _bills.bills);
     _bills.save();
   }
