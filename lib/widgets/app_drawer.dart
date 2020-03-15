@@ -1,11 +1,8 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:day_night_switch/day_night_switch.dart';
-import 'package:mywallet/Helpers/notificationsPlugin.dart';
-import 'package:mywallet/Helpers/styling.dart';
+
 
 import '../DB/app_state.dart';
 import '../routes/router.gr.dart';

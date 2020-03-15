@@ -123,7 +123,7 @@ class _AddCategoryState extends State<AddCategory> {
               padding: const EdgeInsets.all(8.0),
               child: Text(
                 '*${translate("Optional")}',
-                style: TextStyle(color: Colors.green),
+                style: const TextStyle(color: Colors.green),
               ),
             ),
             SelectCategoryWidget(
