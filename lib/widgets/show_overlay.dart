@@ -22,10 +22,11 @@ Future<void> showOverlay({BuildContext context, @required String text})  async {
         child: FittedBox(
           child: Text(
             AppLocalizations.of(context).translate(text),
-            style:const TextStyle(
-              decorationColor:  Color(0xFFFFFFFF),
+            style: TextStyle(
+              decorationColor:  const Color(0xFFFFFFFF).withOpacity(0),
               color: Colors.grey,
             ),
+
           ),
         ),
       ),

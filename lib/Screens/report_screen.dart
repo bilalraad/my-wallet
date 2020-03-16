@@ -192,6 +192,7 @@ class TransBarChartState extends State<TransBarChart> {
     showingBarGroups = items;
 
     maxY = getmaxY();
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
@@ -229,79 +230,91 @@ class TransBarChartState extends State<TransBarChart> {
                     child: Divider(thickness: 3),
                   ),
                   Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                      child: BarChart(
-                        BarChartData(
-                          axisTitleData: FlAxisTitleData(
-                            bottomTitle: AxisTitle(
-                                titleText: translate('Week'),
-                                showTitle: true,
-                                textStyle: const TextStyle(fontSize: 14)),
-                            leftTitle: const AxisTitle(
-                              titleText: '',
-                              showTitle: true,
-                            ),
-                            show: true,
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        SizedBox(
+                          width: 50,
+                          height: 200,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: <Widget>[
+                              Text(
+                                (maxY).toString(),
+                                maxLines: 1,
+                                textScaleFactor: 0.8,
+                              ),
+                              Text(
+                                (maxY ~/ 3 + maxY ~/ 2).toString(),
+                                maxLines: 1,
+                                textScaleFactor: 0.8,
+                              ),
+                              Text(
+                                (maxY / 2).round().toString(),
+                                maxLines: 1,
+                                textScaleFactor: 0.8,
+                              ),
+                              Text(
+                                (maxY / 3).round().toString(),
+                                maxLines: 1,
+                                textScaleFactor: 0.8,
+                              ),
+                              const Text('0'),
+                            ],
                           ),
-                          titlesData: FlTitlesData(
-                            show: true,
-                            bottomTitles: SideTitles(
-                              showTitles: true,
-                              textStyle: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 14),
-                              margin: 20,
-                              getTitles: (double value) {
-                                switch (value.toInt()) {
-                                  case 0:
-                                    return translate('First');
-                                  case 1:
-                                    return translate('Second');
-                                  case 2:
-                                    return translate('Third');
-                                  case 3:
-                                    return translate('Forth');
-                                  default:
-                                    return '';
-                                }
-                              },
-                            ),
-                            leftTitles: SideTitles(
-                              showTitles: true,
-                              textStyle: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 14),
-                              margin: 32,
-                              reservedSize: 14,
-                              getTitles: (value) {
-                                if (value == 0) {
-                                  return '0\$';
-                                } else if (value >= maxY) {
-                                  return '$value';
-                                } else if (value == (maxY ~/ 2)) {
-                                  return '$value';
-                                } else if (value == (maxY ~/ 3)) {
-                                  return '$value';
-                                } else if (value == (maxY ~/ 6)) {
-                                  return '$value';
-                                } else if (value == (maxY ~/ 3 + maxY ~/ 2)) {
-                                  return '$value';
-                                } else if (value == (maxY ~/ 6 + maxY ~/ 2)) {
-                                  return '$value';
-                                }
-                                return '';
-                              },
-                            ),
-                          ),
-                          borderData: FlBorderData(
-                            show: false,
-                          ),
-                          barGroups: showingBarGroups,
                         ),
-                      ),
+                        Expanded(
+                          child: Padding(
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 8.0),
+                            child: BarChart(
+                              BarChartData(
+                                axisTitleData: FlAxisTitleData(
+                                  bottomTitle: AxisTitle(
+                                      titleText: translate('Week'),
+                                      showTitle: true,
+                                      textStyle: const TextStyle(fontSize: 14)),
+                                  leftTitle: const AxisTitle(
+                                    titleText: '',
+                                    showTitle: true,
+                                  ),
+                                  show: true,
+                                ),
+                                titlesData: FlTitlesData(
+                                    show: true,
+                                    bottomTitles: SideTitles(
+                                      showTitles: true,
+                                      textStyle: TextStyle(
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 14),
+                                      margin: 20,
+                                      getTitles: (double value) {
+                                        switch (value.toInt()) {
+                                          case 0:
+                                            return translate('First');
+                                          case 1:
+                                            return translate('Second');
+                                          case 2:
+                                            return translate('Third');
+                                          case 3:
+                                            return translate('Forth');
+                                          default:
+                                            return '';
+                                        }
+                                      },
+                                    ),
+                                    leftTitles:
+                                        const SideTitles(showTitles: false)),
+                                borderData: FlBorderData(
+                                  show: false,
+                                ),
+                                barGroups: showingBarGroups,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                   const SizedBox(
