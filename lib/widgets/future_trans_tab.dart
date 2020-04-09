@@ -40,61 +40,68 @@ class FutureTransactionsTap extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: <Widget>[
-              RaisedButton(
-                color: Colors.amber,
-                elevation: 0,
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(100)),
-                onPressed: () {
-                  Router.navigator
-                      .pushNamed(Router.addBill)
-                      .then((_) => Navigator.of(context).pop());
-                },
-                child: Column(
-                  // direction: Axis.vertical,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Icon(
-                      Icons.receipt,
-                      size: 70,
-                      color: Colors.blue[800],
-                    ),
-                    SizedBox(
-                      height: 20,
-                      child: Text(
-                        translate('Add Bill'),
-                        maxLines: 2,
+              Container(
+                width: SizeConfig.widthMultiplier * 50,
+                child: RaisedButton(
+                  color: Colors.amber,
+                  elevation: 0,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(100)),
+                  onPressed: () {
+                    Router.navigator
+                        .pushNamed(Router.addBill)
+                        .then((_) => Navigator.of(context).pop());
+                  },
+                  child: Column(
+                    // direction: Axis.vertical,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Icon(
+                        Icons.receipt,
+                        size: 70,
+                        color: Colors.blue[800],
                       ),
-                    )
-                  ],
+                      SizedBox(
+                        height: 20,
+                        child: Text(
+                          translate('Add Bill'),
+                          maxLines: 2,
+                        ),
+                      )
+                    ],
+                  ),
                 ),
               ),
-              RaisedButton(
-                color: Colors.amber,
-                elevation: 0,
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(100)),
-                onPressed: () {
-                  Router.navigator
-                      .pushNamed(Router.addRecurringTransaction)
-                      .then((_) => Navigator.of(context).pop());
-                },
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Icon(
-                      Icons.refresh,
-                      size: 70,
-                      color: Colors.green[600],
-                    ),
-                    SizedBox(
-                      height: 20,
-                      child: Text(
-                        translate('Add recurring transaction'),
-                        softWrap: true,
+              Container(
+                width: SizeConfig.widthMultiplier * 50,
+                child: RaisedButton(
+                  color: Colors.amber,
+                  elevation: 0,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(100)),
+                  onPressed: () {
+                    Router.navigator
+                        .pushNamed(Router.addRecurringTransaction)
+                        .then((_) => Navigator.of(context).pop());
+                  },
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Icon(
+                        Icons.refresh,
+                        size: 70,
+                        color: Colors.green[600],
                       ),
-                    ),
-                  ],
+                      SizedBox(
+                        height: 20,
+                        child: FittedBox(
+                          child: Text(
+                            translate('Add recurring transaction'),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ],
@@ -404,12 +411,15 @@ class ListTileItem extends StatelessWidget {
               width: 3,
               color: Theme.of(context).accentColor,
             )),
-        child: Text(
-          amount.toString(),
-          style: TextStyle(
-            color: isDeposit ? Colors.green : Colors.red,
+        child: FittedBox(
+          child: Text(
+            amount.toString(),
+            style: TextStyle(
+              color: isDeposit ? Colors.green : Colors.red,
+            ),
+            maxLines: 1,
+            textAlign: TextAlign.center,
           ),
-          textAlign: TextAlign.center,
         ),
       ),
       title: Text(

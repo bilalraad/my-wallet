@@ -195,7 +195,7 @@ class _AddBillState extends State<AddBill> {
                           ),
                         ),
                         Text(
-                          translate(getnNameOfBillType(_billType)),
+                          translate(getNameOfBillType(_billType)),
                           style: const TextStyle(fontSize: 15),
                         )
                       ],

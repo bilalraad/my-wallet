@@ -55,8 +55,7 @@ class CardItem extends StatelessWidget {
     return trans.isEmpty
         ? Container()
         : Card(
-            margin: EdgeInsets.symmetric(
-                horizontal: SizeConfig.isPortrait ? 8 : 100),
+
             shape: RoundedRectangleBorder(borderRadius: tenCBorder),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -116,20 +115,21 @@ class CardItem extends StatelessWidget {
                               child: Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
+                                    crossAxisAlignment: CrossAxisAlignment.center,
                                 children: <Widget>[
-                                  FittedBox(
+                                  SizedBox(
+                                    width: SizeConfig.widthMultiplier *27,
                                     child: Text(
                                       translate(t.category),
+                                      textAlign: TextAlign.center,
                                     ),
                                   ),
                                   SizedBox(
                                     width: SizeConfig.widthMultiplier * 25,
-                                    child: FittedBox(
-                                      child: Text(
-                                        DateFormat(
-                                          "d/MM  EEEE",
-                                        ).format(t.dateTime),
-                                      ),
+                                    child: Text(
+                                      DateFormat(
+                                        " d  EEEE",
+                                      ).format(t.dateTime),
                                     ),
                                   ),
                                   Text(

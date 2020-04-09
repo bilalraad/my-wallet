@@ -20,8 +20,11 @@ class $Router {
   @CupertinoRoute(title: 'UserTransactionsOverView')
   @initial
   UserTransactionsOverView userTransactionsOverView;
+  @materialRoute
   AddTransactions addTransactions;
+  @materialRoute
   AddBill addBill;
+  @materialRoute
   AddRecurringTransaction addRecurringTransaction;
   @CupertinoRoute(title: 'CategoriesScreen')
   CategoriesScreen categoriesScreen;

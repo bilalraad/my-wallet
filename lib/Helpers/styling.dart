@@ -13,21 +13,16 @@ final InputBorder inputBorder = OutlineInputBorder(
 List<String> qoutes = [
   '“Balancing your money is the key to having   enough.”',
   '“Salary is not what you earn, Salary is what you save.”',
-  '“You got loans to pay off, and I got deposits to make.”',
+  '“They got loans to pay off, and you got deposits to make.”',
   '“Beware of little expenses. A small leak will sink a great ship.”',
   '“Money is a terrible master but an excellent servant.”',
   '“Never spend your money before you have      earned it.”',
   '“Money, like emotions, is something you must control to keep your life on the right track.”',
   '“If you don\'t take care of your money your    money won\'t take care of you.”',
   '“It’s not your salary that makes your rich;  it’s your spending habits.”',
-  '“Watch your finances like a hawk.”',
-  '“”',
-
-
-
 ];
 
-String getnNameOfBillType(BillType type) {
+String getNameOfBillType(BillType type) {
   switch (type) {
     case BillType.Daily:
       return 'day';
@@ -53,6 +48,7 @@ class AppTheme {
   static const Color subTitleTextColor = Color(0xFF9F988F);
   static const Color accentColor = Colors.purple;
   static const Color primaryColor = Colors.amber;
+
 
   static final ThemeData lightTheme = ThemeData(
     scaffoldBackgroundColor: AppTheme.appBackgroundColor,

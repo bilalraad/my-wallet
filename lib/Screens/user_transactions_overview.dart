@@ -29,8 +29,10 @@ final AppState _appState =
     Hive.box(H.appState.box()).get(H.appState.str()) as AppState;
 
 class UserTransactionsOverView extends StatelessWidget {
+  
   @override
   Widget build(BuildContext context) {
+
     final currentMonthIndex = DateTime.now().month - 1; //0123....11
 
     final translate = AppLocalizations.of(context).translate;
@@ -39,6 +41,8 @@ class UserTransactionsOverView extends StatelessWidget {
         builder: (context, transBox, _) {
           final transactions =
               transBox.get(H.transactions.str()) as Transactions;
+
+          // checkIfTherseNewTrans();
 
           final List<Trans> _translist = transactions.transList;
 
@@ -80,7 +84,7 @@ class UserTransactionsOverView extends StatelessWidget {
                   ),
                   centerTitle: true,
                   title: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: <Widget>[
                       Text(
                         translate('Total'),
@@ -89,10 +93,14 @@ class UserTransactionsOverView extends StatelessWidget {
                         ),
                         textAlign: TextAlign.start,
                       ),
-                      Text(
-                        '${transactions.total.toStringAsFixed(1)} ${translate(_appState.currency)}',
-                        style:
-                            TextStyle(fontSize: SizeConfig.textMultiplier * 3),
+                      SizedBox(
+                        width: SizeConfig.widthMultiplier * 50,
+                        child: Text(
+                          '${transactions.total.toStringAsFixed(1)} ${translate(_appState.currency)}',
+                          style: TextStyle(
+                              fontSize: SizeConfig.textMultiplier * 3),
+                          textAlign: TextAlign.center,
+                        ),
                       ),
                     ],
                   ),
@@ -134,7 +142,7 @@ class UserTransactionsOverView extends StatelessWidget {
                         _monthlyGroubedTransValues[i],
                       ),
                   UserTransactionsTab(
-                    _monthlyGroubedTransValues[currentMonthIndex+4],
+                    _monthlyGroubedTransValues[currentMonthIndex + 4],
                   ),
                   FutureTransactionsTap(),
                 ],
@@ -145,3 +153,5 @@ class UserTransactionsOverView extends StatelessWidget {
         });
   }
 }
+
+

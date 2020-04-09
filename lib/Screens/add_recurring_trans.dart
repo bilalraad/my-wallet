@@ -229,7 +229,7 @@ class _AddRecurringTransactionState extends State<AddRecurringTransaction> {
                           ),
                         ),
                         Text(
-                          translate(getnNameOfBillType(_billType)),
+                          translate(getNameOfBillType(_billType)),
                           style: const TextStyle(fontSize: 15),
                         )
                       ],

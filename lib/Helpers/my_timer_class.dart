@@ -1,13 +1,13 @@
 import 'dart:async';
 
-import 'package:flutter/cupertino.dart';
-import 'package:hive/hive.dart';
-
-
 import '../DB/bills.dart';
-import '../DB/initialize_HiveDB.dart';
-import '../DB/transactions.dart';
 import '../DB/app_state.dart';
+import 'package:hive/hive.dart';
+import '../DB/transactions.dart';
+import '../DB/initialize_HiveDB.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:bot_toast/bot_toast.dart';
 
 final _tx =
     Hive.box(H.transactions.box()).get(H.transactions.str()) as Transactions;
@@ -18,12 +18,14 @@ Timer delay({
   Bill bill,
   FutureTransaction futureTrans, // this can be null
 }) {
-  return Timer(const Duration(seconds: 1), () {
+  return Timer(const Duration(seconds: 1), () async {
     if (bill.excuteDate.day == DateTime.now().day) {
-      excuteBill(
-        bill: bill,
-        futureTrans: futureTrans,
-      );
+      for (int i = 0; i < numberOfTimesThisBillHasToDue(bill); i++) {
+        await excuteBill(
+          bill: bill,
+          futureTrans: futureTrans,
+        );
+      }
     }
   });
 }
@@ -52,13 +54,21 @@ Future<void> excuteBill({
   }
   //--------------------------------------
   if (bill.billType == BillType.FutureTrans) {
-    // this is special bill type this means it is only one time bill(or one time transaction)
+    // this is special bill type[BillType.FutureTrans] this means it is only one time bill(or one time transaction)
     // its not a recurring transaction
     addNewTrans(
       bill: bill,
       isDeposit: futureTrans.isDeposit,
       transId: futureTrans.id,
     );
+    BotToast.showSimpleNotification(
+      title: 'New Transaction has been added',
+      subTitle: 'Because you set a Future Transaction ',
+      enableSlideOff: true,
+      duration: const Duration(seconds: 1),
+      hideCloseButton: true,
+    );
+
     // Here in this func. [removeFutureTrans] I mixed the removing of
     // futureTrans an recurringTrans to reduce the amount of code
     _tx.removeFutureTrans(futureTrans);
@@ -67,6 +77,13 @@ Future<void> excuteBill({
       bill: bill,
       isDeposit: isDeposit,
       transId: bill.id ?? futureTrans.id,
+    );
+    BotToast.showSimpleNotification(
+      title: 'New Transaction has been added',
+      subTitle: 'Because you set a Bill Or recurring Transaction ',
+      enableSlideOff: true,
+      duration: const Duration(seconds: 1),
+      hideCloseButton: true,
     );
 
     if (bill.endingDate == null) {
@@ -99,8 +116,6 @@ Future<void> excuteBill({
     }
   }
 }
-
-
 
 Future<void> addNewTrans({
   bool isDeposit,
@@ -137,7 +152,7 @@ bool checkIfIsDeposit(FutureTransaction ft) {
 Future<void> updateExcuteDate({
   int billIndex,
   int rTIndex,
-  DateTime nExcuteDate,
+  DateTime nExcuteDate,//n= new
 }) async {
   Bill nBill;
   if (rTIndex != null) {
@@ -155,4 +170,38 @@ Future<void> updateExcuteDate({
     Hive.box(H.bills.box()).put(0, _bills.bills);
     _bills.save();
   }
+}
+
+
+//if you have a daily bill and you forget to oben the app
+//for like a week this ffunc. will calculate how many times
+//you missed to pay which in this case is 7
+int numberOfTimesThisBillHasToDue(Bill b) {
+  final dateTime = DateTime.now();
+  int numberOfExcutions = 1;
+
+  if (b.excuteDate.day > dateTime.day) {
+    if (b.billType == BillType.Daily) {
+      numberOfExcutions = dateTime.day - b.excuteDate.day;
+    } else if (b.billType == BillType.Weekly) {
+      numberOfExcutions = b.excuteDate.day + 7 < dateTime.day
+          ? (dateTime.day - b.excuteDate.day) ~/ 7
+          : 1;
+    } else if (b.billType == BillType.Monthly) {
+      numberOfExcutions = b.excuteDate.month < dateTime.month &&
+              b.excuteDate.year == dateTime.year
+          ? dateTime.month - b.excuteDate.month
+          : 1;
+
+      if (b.excuteDate.day >= dateTime.day) numberOfExcutions++;
+    } else if (b.billType == BillType.Yearly) {
+      numberOfExcutions = b.excuteDate.year < dateTime.year
+          ? dateTime.year - b.excuteDate.year
+          : 1;
+
+      if (b.excuteDate.month >= dateTime.month &&
+          b.excuteDate.day >= dateTime.day) numberOfExcutions++;
+    }
+  }
+  return numberOfExcutions;
 }

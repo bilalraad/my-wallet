@@ -3,7 +3,6 @@ import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:day_night_switch/day_night_switch.dart';
 
-
 import '../DB/app_state.dart';
 import '../routes/router.gr.dart';
 import '../Helpers/size_config.dart';
@@ -183,8 +182,12 @@ class DrawerBotton extends StatelessWidget {
         borderRadius: borderRadius,
         highlightColor: Colors.amber,
         onTap: () {
-          Router.navigator.pushReplacementNamed(routeName);
-          _selectedIndex = index;
+          if (_selectedIndex != index) {
+            Router.navigator.pushReplacementNamed(routeName);
+            _selectedIndex = index;
+          } else {
+            Navigator.of(context).pop();
+          }
         },
         child: Container(
           decoration: BoxDecoration(

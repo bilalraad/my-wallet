@@ -46,56 +46,62 @@ class UserTransactionsTab extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: <Widget>[
-              RaisedButton(
-                color: Colors.amber,
-                elevation: 0,
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(100)),
-                onPressed: () {
-                  Router.navigator
-                      .pushNamed(Router.addTransactions,
-                          arguments: false /*IsNotDeposit*/)
-                      .then((_) => Navigator.of(context).pop());
-                },
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: <Widget>[
-                    Icon(
-                      Icons.arrow_downward,
-                      size: 70,
-                      color: Colors.red,
-                    ),
-                    Text(
-                      translate('Withdrawal'),
-                      style: textStyle,
-                    )
-                  ],
+              Container(
+                width: SizeConfig.widthMultiplier * 50,
+                child: RaisedButton(
+                  color: Colors.amber,
+                  elevation: 0,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(100)),
+                  onPressed: () {
+                    Router.navigator
+                        .pushNamed(Router.addTransactions,
+                            arguments: false /*IsNotDeposit*/)
+                        .then((_) => Navigator.of(context).pop());
+                  },
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: <Widget>[
+                      Icon(
+                        Icons.arrow_downward,
+                        size: 70,
+                        color: Colors.red,
+                      ),
+                      Text(
+                        translate('Withdrawal'),
+                        style: textStyle,
+                      )
+                    ],
+                  ),
                 ),
               ),
-              RaisedButton(
-                color: Colors.amber,
-                elevation: 0,
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(100)),
-                onPressed: () {
-                  Router.navigator
-                      .pushNamed(Router.addTransactions,
-                          arguments: true /*IsDeposit*/)
-                      .then((_) => Navigator.of(context).pop());
-                },
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: <Widget>[
-                    Icon(
-                      Icons.arrow_upward,
-                      size: 70,
-                      color: Colors.green,
-                    ),
-                    Text(
-                      translate('Deposit'),
-                      style: textStyle,
-                    ),
-                  ],
+              Container(
+                width: SizeConfig.widthMultiplier * 50,
+                child: RaisedButton(
+                  color: Colors.amber,
+                  elevation: 0,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(100)),
+                  onPressed: () {
+                    Router.navigator
+                        .pushNamed(Router.addTransactions,
+                            arguments: true /*IsDeposit*/)
+                        .then((_) => Navigator.of(context).pop());
+                  },
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: <Widget>[
+                      Icon(
+                        Icons.arrow_upward,
+                        size: 70,
+                        color: Colors.green,
+                      ),
+                      Text(
+                        translate('Deposit'),
+                        style: textStyle,
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ],

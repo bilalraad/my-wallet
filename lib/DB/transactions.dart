@@ -131,7 +131,7 @@ class Transactions with HiveObject {
           ? total += _trans.amount
           : total = _transactions.total + _trans.amount;
     }
-    Hive.box(H.transactions.box()).putAt(1, total);
+    Hive.box(H.transactions.box()).put(1, total);
     transList.remove(_trans);
     Hive.box(H.transactions.box()).put(2, transList);
     _transactions.save();

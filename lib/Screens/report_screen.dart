@@ -35,12 +35,11 @@ class _ReportState extends State<Report> {
       appBar: AppBar(
         title: Text(translate('Report')),
       ),
-      body: Column(
+      body: ListView(
         children: <Widget>[
           Container(
-            margin: const EdgeInsets.only(top: 10),
+            margin: const EdgeInsets.only(top: 10, left: 80, right: 80),
             padding: const EdgeInsets.all(10),
-            width: SizeConfig.widthMultiplier * 50,
             decoration: BoxDecoration(
                 border:
                     Border.all(color: Theme.of(context).primaryColor, width: 3),
@@ -127,8 +126,8 @@ class TransBarChartState extends State<TransBarChart> {
       if (maxy < getTheInflowOfTheWeek(i)) {
         maxy = getTheInflowOfTheWeek(i);
       }
-      if (maxy < getTheOutOfTheWeek(i)) {
-        maxy = getTheOutOfTheWeek(i);
+      if (maxy < getTheOutflowOfTheWeek(i)) {
+        maxy = getTheOutflowOfTheWeek(i);
       }
     }
 
@@ -156,7 +155,7 @@ class TransBarChartState extends State<TransBarChart> {
     return inflow;
   }
 
-  double getTheOutOfTheWeek(int weeknumber) {
+  double getTheOutflowOfTheWeek(int weeknumber) {
     final int week = weeknumber * 7; //firstweek = 7,second = 14 ...
     double outflow = 0;
     for (var i in widget.transData) {
@@ -174,13 +173,13 @@ class TransBarChartState extends State<TransBarChart> {
     final translate = AppLocalizations.of(context).translate;
 
     final barGroup1 =
-        makeGroupData(0, getTheInflowOfTheWeek(1), getTheOutOfTheWeek(1));
+        makeGroupData(0, getTheInflowOfTheWeek(1), getTheOutflowOfTheWeek(1));
     final barGroup2 =
-        makeGroupData(1, getTheInflowOfTheWeek(2), getTheOutOfTheWeek(2));
+        makeGroupData(1, getTheInflowOfTheWeek(2), getTheOutflowOfTheWeek(2));
     final barGroup3 =
-        makeGroupData(2, getTheInflowOfTheWeek(3), getTheOutOfTheWeek(3));
+        makeGroupData(2, getTheInflowOfTheWeek(3), getTheOutflowOfTheWeek(3));
     final barGroup4 =
-        makeGroupData(3, getTheInflowOfTheWeek(4), getTheOutOfTheWeek(4));
+        makeGroupData(3, getTheInflowOfTheWeek(4), getTheOutflowOfTheWeek(4));
 
     final items = [
       barGroup1,
@@ -196,8 +195,8 @@ class TransBarChartState extends State<TransBarChart> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        AspectRatio(
-          aspectRatio: 1,
+        SizedBox(
+          height: 380,
           child: Card(
             elevation: 10,
             shape:
@@ -239,25 +238,29 @@ class TransBarChartState extends State<TransBarChart> {
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: <Widget>[
-                              Text(
-                                (maxY).toString(),
-                                maxLines: 1,
-                                textScaleFactor: 0.8,
+                              FittedBox(
+                                child: Text(
+                                  (maxY).toString(),
+                                  maxLines: 1,
+                                ),
                               ),
-                              Text(
-                                (maxY ~/ 3 + maxY ~/ 2).toString(),
-                                maxLines: 1,
-                                textScaleFactor: 0.8,
+                              FittedBox(
+                                child: Text(
+                                  (maxY ~/ 3 + maxY ~/ 2).toString(),
+                                  maxLines: 1,
+                                ),
                               ),
-                              Text(
-                                (maxY / 2).round().toString(),
-                                maxLines: 1,
-                                textScaleFactor: 0.8,
+                              FittedBox(
+                                child: Text(
+                                  (maxY / 2).round().toString(),
+                                  maxLines: 1,
+                                ),
                               ),
-                              Text(
-                                (maxY / 3).round().toString(),
-                                maxLines: 1,
-                                textScaleFactor: 0.8,
+                              FittedBox(
+                                child: Text(
+                                  (maxY / 3).round().toString(),
+                                  maxLines: 1,
+                                ),
                               ),
                               const Text('0'),
                             ],

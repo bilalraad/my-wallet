@@ -53,20 +53,18 @@ class Router {
           return misTypedArgsRoute<bool>(args);
         }
         final typedArgs = args as bool;
-        return PageRouteBuilder<dynamic>(
-          pageBuilder: (ctx, animation, secondaryAnimation) =>
-              AddTransactions(isDeposit: typedArgs),
+        return MaterialPageRoute<dynamic>(
+          builder: (_) => AddTransactions(isDeposit: typedArgs),
           settings: settings,
         );
       case Router.addBill:
-        return PageRouteBuilder<dynamic>(
-          pageBuilder: (ctx, animation, secondaryAnimation) => AddBill(),
+        return MaterialPageRoute<dynamic>(
+          builder: (_) => AddBill(),
           settings: settings,
         );
       case Router.addRecurringTransaction:
-        return PageRouteBuilder<dynamic>(
-          pageBuilder: (ctx, animation, secondaryAnimation) =>
-              AddRecurringTransaction(),
+        return MaterialPageRoute<dynamic>(
+          builder: (_) => AddRecurringTransaction(),
           settings: settings,
         );
       case Router.categoriesScreen:

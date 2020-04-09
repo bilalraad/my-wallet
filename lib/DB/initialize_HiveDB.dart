@@ -44,55 +44,58 @@ Future<void> initHive() async {
   final appModeBox = await Hive.openBox(H.appState.box());
   final categoriesBox = await Hive.openBox(H.categories.box());
   final transactionsBox = await Hive.openBox(H.transactions.box());
-  // transactionsBox.put(H.transactions.str(), Transactions());
 
   if (appModeBox.get(H.appState.str()) == null) {
     appModeBox.put(H.appState.str(), AppState());
   }
-  // appModeBox.put(H.appState.str(), AppState());
   if (transactionsBox.get(H.transactions.str()) == null) {
     transactionsBox.put(H.transactions.str(), Transactions());
-  } else {
-    final trans = transactionsBox.get(H.transactions.str()) as Transactions;
-    final futureTransList = trans.futureTransList;
-    final recurringTransList = trans.recurringTransList;
-
-    // This check is nessesary to reset the timer because if
-    // the app was killed in the backround the timer will Stop
-    // if we need the timer to proceed we have to do it in the cloud (not localy)
-    if (futureTransList != null && futureTransList.isNotEmpty) {
-      for (int i = 0; i < futureTransList.length; i++) {
-        delay(
-          bill: futureTransList[i].costumeBill,
-          futureTrans: futureTransList[i],
-        );
-      }
-    }
-    if (recurringTransList != null && recurringTransList.isNotEmpty) {
-      for (int i = 0; i < recurringTransList.length; i++) {
-        delay(
-          bill: recurringTransList[i].costumeBill,
-          futureTrans: recurringTransList[i],
-        );
-      }
-    }
-  }
+  } else {}
 
   if (billsBox.get(H.bills.str()) == null) {
     billsBox.put(H.bills.str(), Bills());
-  } else {
-    final bills = billsBox.get(H.bills.str()) as Bills;
-
-    for (int i = 0; i < bills.bills.length; i++) {
-      delay(
-        bill: bills.bills[i],
-        futureTrans: null,
-      );
-    }
   }
-  // categoriesBox.put(H.categories.str(), Categories());
 
   if (categoriesBox.get(H.categories.str()) == null) {
     categoriesBox.put(H.categories.str(), Categories());
+  }
+}
+
+
+
+//This function will check every bill or recurring trans.
+//and excute it if it's due
+Future<void> checkBillsAndFutureTransactionsList() async {
+  final bills = Hive.box(H.bills.box()).get(H.bills.str()) as Bills;
+  final trans =
+      Hive.box(H.transactions.box()).get(H.transactions.str()) as Transactions;
+  final futureTransList = trans.futureTransList;
+  final recurringTransList = trans.recurringTransList;
+
+  for (var bill in bills.bills) {
+    delay(
+      bill: bill,
+      futureTrans: null,
+    );
+    await Future.delayed(const Duration(seconds: 3));
+  }
+
+  if (futureTransList != null && futureTransList.isNotEmpty) {
+    for (var ft in futureTransList) {
+      delay(
+        bill: ft.costumeBill,
+        futureTrans: ft,
+      );
+      await Future.delayed(const Duration(seconds: 3));
+    }
+  }
+  if (recurringTransList != null && recurringTransList.isNotEmpty) {
+    for (var rt in recurringTransList) {
+      delay(
+        bill: rt.costumeBill,
+        futureTrans: rt,
+      );
+      await Future.delayed(const Duration(seconds: 3));
+    }
   }
 }

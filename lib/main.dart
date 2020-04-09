@@ -1,5 +1,7 @@
 import 'dart:math';
 
+import 'package:bot_toast/bot_toast.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hive/hive.dart';
@@ -22,8 +24,8 @@ void callbackDispatcher() {
     final notifId = Random();
     final _notificationPlugin = NotificationsPlugin();
     await _notificationPlugin.remindTheUserToOpenTheApp(
-      id: notifId.nextInt(notifId.nextInt(6)),
-      title: qoutes[6],
+      id: notifId.nextInt(100),
+      title: qoutes[notifId.nextInt(6)],
       description: '',
     );
     return Future.value(true);
@@ -37,14 +39,16 @@ Future<void> main() async {
     DeviceOrientation.portraitDown
   ]);
   Workmanager.initialize(
-    callbackDispatcher, // The top level function, aka callbackDispatcher
-    // isInDebugMode: true // If enabled it will post a notification whenever the task is running. Handy for debugging tasks
-  );
+      callbackDispatcher, // The top level function, aka callbackDispatcher
+      // isInDebugMode:
+      //     true // If enabled it will post a notification whenever the task is running. Handy for debugging tasks
+      );
+
   Workmanager.registerPeriodicTask(
     'weekly notification',
     'notify the user to open the app each week',
     frequency: const Duration(days: 7),
-    initialDelay: const Duration(days: 7),
+    initialDelay: const Duration(days: 2),
   );
   runApp(
     MyWallet(),
@@ -78,70 +82,74 @@ class _MyWalletState extends State<MyWallet> {
 
   @override
   Widget build(BuildContext context) {
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        return OrientationBuilder(
-          builder: (context, orientation) {
-            SizeConfig().init(constraints, orientation);
-            return isLoading
-                ? LoadingScreen()
-                : ValueListenableBuilder(
-                    valueListenable: Hive.box(H.appState.box()).listenable(),
-                    builder: (context, appStateBox, _) {
-                      final appState =
-                          appStateBox.get(H.appState.str()) as AppState;
+    return BotToastInit(
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          if (isLoading == false) checkBillsAndFutureTransactionsList();
+          return OrientationBuilder(
+            builder: (context, orientation) {
+              SizeConfig().init(constraints, orientation);
+              return isLoading
+                  ? LoadingScreen()
+                  : ValueListenableBuilder(
+                      valueListenable: Hive.box(H.appState.box()).listenable(),
+                      builder: (context, appStateBox, _) {
+                        final appState =
+                            appStateBox.get(H.appState.str()) as AppState;
 
-                      return RestartWidget(
-                        child: MaterialApp(
-                          debugShowCheckedModeBanner: false,
-                          theme: appState.isDark
-                              ? AppTheme.darkTheme
-                              : AppTheme.lightTheme,
-
-                          // List all of the app's supported locales here
-                          supportedLocales: const [
-                            Locale('en', 'US'),
-                            Locale('ar'),
-                          ],
-                          // These delegates make sure that the localization data for the proper language is loaded
-                          localizationsDelegates: [
-                            // A class which loads the translations from JSON files
-                            AppLocalizations.delegate,
-                            // Built-in localization of basic text for Material widgets
-                            GlobalMaterialLocalizations.delegate,
-                            // Built-in localization for text direction LTR/RTL
-                            GlobalWidgetsLocalizations.delegate,
-                          ],
-                          // Returns a locale which will be used by the app
-                          localeResolutionCallback: (locale, supportedLocales) {
-                            final Locale theLocale = appState.myLocale.isEmpty
-                                ? locale
-                                : Locale(appState.myLocale);
-                            // Check if the current device locale is supported
-                            for (var supportedLocale in supportedLocales) {
-                              if (supportedLocale.languageCode ==
-                                  locale.languageCode) {
-                                return theLocale;
+                        return RestartWidget(
+                          child: MaterialApp(
+                            debugShowCheckedModeBanner: false,
+                            theme: appState.isDark
+                                ? AppTheme.darkTheme
+                                : AppTheme.lightTheme,
+                            navigatorObservers: [BotToastNavigatorObserver()],
+                            // List all of the app's supported locales here
+                            supportedLocales: const [
+                              Locale('en', 'US'),
+                              Locale('ar'),
+                            ],
+                            // These delegates make sure that the localization data for the proper language is loaded
+                            localizationsDelegates: [
+                              // A class which loads the translations from JSON files
+                              AppLocalizations.delegate,
+                              // Built-in localization of basic text for Material widgets
+                              GlobalMaterialLocalizations.delegate,
+                              // Built-in localization for text direction LTR/RTL
+                              GlobalWidgetsLocalizations.delegate,
+                            ],
+                            // Returns a locale which will be used by the app
+                            localeResolutionCallback:
+                                (locale, supportedLocales) {
+                              final Locale theLocale = appState.myLocale.isEmpty
+                                  ? locale
+                                  : Locale(appState.myLocale);
+                              // Check if the current device locale is supported
+                              for (var supportedLocale in supportedLocales) {
+                                if (supportedLocale.languageCode ==
+                                    locale.languageCode) {
+                                  return theLocale;
+                                }
                               }
-                            }
-                            // If the locale of the device is not supported, use the first one
-                            // from the list (English, in this case).
-                            return supportedLocales.first;
-                          },
-                          home: appState.firstTime
-                              ? IntroductionPage()
-                              : UserTransactionsOverView(),
+                              // If the locale of the device is not supported, use the first one
+                              // from the list (English, in this case).
+                              return supportedLocales.first;
+                            },
+                            home: appState.firstTime
+                                ? IntroductionPage()
+                                : UserTransactionsOverView(),
 
-                          onGenerateRoute: Router.onGenerateRoute,
+                            onGenerateRoute: Router.onGenerateRoute,
 
-                          navigatorKey: Router.navigator.key,
-                        ),
-                      );
-                    },
-                  );
-          },
-        );
-      },
+                            navigatorKey: Router.navigator.key,
+                          ),
+                        );
+                      },
+                    );
+            },
+          );
+        },
+      ),
     );
   }
 }

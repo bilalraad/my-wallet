@@ -35,10 +35,8 @@ class NotificationsPlugin {
     String description,
   }) async {
      final List<String> lines = <String>[];
-    lines.add(description.substring(0,45));
-    lines.add(description.substring(45));
-
-    // lines.add(title);
+    lines.add(title.substring(0,45));
+    lines.add(title.substring(45));
 
     final androidPlatformChannelSpecifics = AndroidNotificationDetails(
       'your channel id',
@@ -59,7 +57,7 @@ class NotificationsPlugin {
     );
     await _flutterLocalNotificationsPlugin.show(
       id,
-      title,
+      'Don\'t forget to check your wallet',
       description,
       platformChannelSpecifics,
     );
