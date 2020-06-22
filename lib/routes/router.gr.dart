@@ -22,8 +22,8 @@ import 'package:mywallet/Screens/add_category.dart';
 import 'package:mywallet/Screens/info_sceen.dart';
 import 'package:mywallet/Screens/report_screen.dart';
 
-class Router {
-  static const userTransactionsOverView = '/user-transactions-over-view';
+abstract class Routes {
+  static const userTransactionsOverView = '/';
   static const addTransactions = '/add-transactions';
   static const addBill = '/add-bill';
   static const addRecurringTransaction = '/add-recurring-transaction';
@@ -37,82 +37,107 @@ class Router {
   static const addCategory = '/add-category';
   static const infoSceen = '/info-sceen';
   static const report = '/report';
-  static const _guardedRoutes = const {};
-  static final navigator = ExtendedNavigator();
-  static Route<dynamic> onGenerateRoute(RouteSettings settings) {
+  static const all = {
+    userTransactionsOverView,
+    addTransactions,
+    addBill,
+    addRecurringTransaction,
+    categoriesScreen,
+    recurringTransactions,
+    settings,
+    billsPage,
+    categorySelect,
+    detailsPage,
+    introductionScreen,
+    addCategory,
+    infoSceen,
+    report,
+  };
+}
+
+class Router extends RouterBase {
+  @override
+  Set<String> get allRoutes => Routes.all;
+
+  @Deprecated('call ExtendedNavigator.ofRouter<Router>() directly')
+  static ExtendedNavigatorState get navigator =>
+      ExtendedNavigator.ofRouter<Router>();
+
+  @override
+  Route<dynamic> onGenerateRoute(RouteSettings settings) {
     final args = settings.arguments;
     switch (settings.name) {
-      case Router.userTransactionsOverView:
-        return CupertinoPageRoute<dynamic>(
-          builder: (_) => UserTransactionsOverView(),
+      case Routes.userTransactionsOverView:
+        return PageRouteBuilder<dynamic>(
+          pageBuilder: (context, animation, secondaryAnimation) =>
+              UserTransactionsOverView(),
           settings: settings,
-          title: 'UserTransactionsOverView',
         );
-      case Router.addTransactions:
-        if (hasInvalidArgs<bool>(args, isRequired: true)) {
-          return misTypedArgsRoute<bool>(args);
+      case Routes.addTransactions:
+        if (hasInvalidArgs<AddTransactionsArguments>(args, isRequired: true)) {
+          return misTypedArgsRoute<AddTransactionsArguments>(args);
         }
-        final typedArgs = args as bool;
+        final typedArgs = args as AddTransactionsArguments;
         return MaterialPageRoute<dynamic>(
-          builder: (_) => AddTransactions(isDeposit: typedArgs),
+          builder: (context) => AddTransactions(isDeposit: typedArgs.isDeposit),
           settings: settings,
         );
-      case Router.addBill:
+      case Routes.addBill:
         return MaterialPageRoute<dynamic>(
-          builder: (_) => AddBill(),
+          builder: (context) => AddBill(),
           settings: settings,
         );
-      case Router.addRecurringTransaction:
+      case Routes.addRecurringTransaction:
         return MaterialPageRoute<dynamic>(
-          builder: (_) => AddRecurringTransaction(),
+          builder: (context) => AddRecurringTransaction(),
           settings: settings,
         );
-      case Router.categoriesScreen:
+      case Routes.categoriesScreen:
         return CupertinoPageRoute<dynamic>(
-          builder: (_) => CategoriesScreen(),
+          builder: (context) => CategoriesScreen(),
           settings: settings,
           title: 'CategoriesScreen',
         );
-      case Router.recurringTransactions:
+      case Routes.recurringTransactions:
         return CupertinoPageRoute<dynamic>(
-          builder: (_) => RecurringTransactions(),
+          builder: (context) => RecurringTransactions(),
           settings: settings,
           title: 'RecurringTransactions',
         );
-      case Router.settings:
+      case Routes.settings:
         return CupertinoPageRoute<dynamic>(
-          builder: (_) => Settings(),
+          builder: (context) => Settings(),
           settings: settings,
           title: 'Settings',
         );
-      case Router.billsPage:
+      case Routes.billsPage:
         return CupertinoPageRoute<dynamic>(
-          builder: (_) => BillsPage(),
+          builder: (context) => BillsPage(),
           settings: settings,
           title: 'BillsPage',
         );
-      case Router.categorySelect:
+      case Routes.categorySelect:
         if (hasInvalidArgs<CategorySelectArguments>(args)) {
           return misTypedArgsRoute<CategorySelectArguments>(args);
         }
         final typedArgs =
             args as CategorySelectArguments ?? CategorySelectArguments();
         return MaterialPageRoute<dynamic>(
-          builder: (_) => CategorySelect(
+          builder: (context) => CategorySelect(
               onSelectedCategory: typedArgs.onSelectedCategory,
               isDeposit: typedArgs.isDeposit,
               isComingFromAddCat: typedArgs.isComingFromAddCat),
           settings: settings,
           fullscreenDialog: true,
         );
-      case Router.detailsPage:
+      case Routes.detailsPage:
         if (hasInvalidArgs<DetailsPageArguments>(args)) {
           return misTypedArgsRoute<DetailsPageArguments>(args);
         }
         final typedArgs =
             args as DetailsPageArguments ?? DetailsPageArguments();
         return CupertinoPageRoute<dynamic>(
-          builder: (_) => DetailsPage(
+          builder: (context) => DetailsPage(
               isDeposit: typedArgs.isDeposit,
               amount: typedArgs.amount,
               descripstion: typedArgs.descripstion,
@@ -122,26 +147,27 @@ class Router {
           settings: settings,
           title: 'DetailsPage',
         );
-      case Router.introductionScreen:
+      case Routes.introductionScreen:
         return CupertinoPageRoute<dynamic>(
-          builder: (_) => IntroductionPage(),
+          builder: (context) => IntroductionPage(),
           settings: settings,
           title: 'IntroductionPage',
         );
-      case Router.addCategory:
+      case Routes.addCategory:
         return PageRouteBuilder<dynamic>(
-          pageBuilder: (ctx, animation, secondaryAnimation) => AddCategory(),
+          pageBuilder: (context, animation, secondaryAnimation) =>
+              AddCategory(),
           settings: settings,
         );
-      case Router.infoSceen:
+      case Routes.infoSceen:
         return CupertinoPageRoute<dynamic>(
-          builder: (_) => InfoSceen(),
+          builder: (context) => InfoSceen(),
           settings: settings,
           title: 'InfoSceen',
         );
-      case Router.report:
+      case Routes.report:
         return CupertinoPageRoute<dynamic>(
-          builder: (_) => Report(),
+          builder: (context) => Report(),
           settings: settings,
           title: 'ReportScreen',
         );
@@ -151,9 +177,15 @@ class Router {
   }
 }
 
-//**************************************************************************
+// *************************************************************************
 // Arguments holder classes
-//***************************************************************************
+// **************************************************************************
+
+//AddTransactions arguments holder class
+class AddTransactionsArguments {
+  final bool isDeposit;
+  AddTransactionsArguments({@required this.isDeposit});
+}
 
 //CategorySelect arguments holder class
 class CategorySelectArguments {

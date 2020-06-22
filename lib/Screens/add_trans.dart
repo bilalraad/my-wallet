@@ -65,8 +65,8 @@ class _AddTransactionsState extends State<AddTransactions> {
             content: Text(translate('Do you want to proceed')),
             title: Text(
               translate(_total == 0
-                  ? 'There\'s no money in your wallet'
-                  : 'There\'s no enough money in your wallet'),
+                  ? "There's no money in your wallet"
+                  : "There's no enough money in your wallet"),
             ),
             actions: <Widget>[
               FlatButton(

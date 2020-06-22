@@ -1,3 +1,4 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -28,7 +29,7 @@ class UserTransactionsTab extends StatelessWidget {
     final translate = AppLocalizations.of(context).translate;
     final textStyle = Theme.of(context)
         .textTheme
-        .title
+        .headline6
         .copyWith(fontSize: SizeConfig.textMultiplier * 2.5);
     showModalBottomSheet(
       context: context,
@@ -54,9 +55,9 @@ class UserTransactionsTab extends StatelessWidget {
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(100)),
                   onPressed: () {
-                    Router.navigator
-                        .pushNamed(Router.addTransactions,
-                            arguments: false /*IsNotDeposit*/)
+                    ExtendedNavigator.of(context)
+                        .pushNamed(Routes.addTransactions,
+                            arguments: AddTransactionsArguments(isDeposit: false) /*IsNotDeposit*/)
                         .then((_) => Navigator.of(context).pop());
                   },
                   child: Column(
@@ -83,9 +84,9 @@ class UserTransactionsTab extends StatelessWidget {
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(100)),
                   onPressed: () {
-                    Router.navigator
-                        .pushNamed(Router.addTransactions,
-                            arguments: true /*IsDeposit*/)
+                    ExtendedNavigator.of(context)
+                        .pushNamed(Routes.addTransactions,
+                            arguments: AddTransactionsArguments(isDeposit: true) /*IsDeposit*/)
                         .then((_) => Navigator.of(context).pop());
                   },
                   child: Column(

@@ -1,3 +1,4 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:intl/intl.dart';
@@ -32,7 +33,7 @@ class BillsPage extends StatelessWidget {
           ),
           body: bills == null || bills.bills.isEmpty
               ? Center(
-                  child: Text(translate('You didn\'t set any bills')),
+                  child: Text(translate("You didn't set any bills")),
                 )
               : Padding(
                   padding: const EdgeInsets.all(12.0),
@@ -68,7 +69,7 @@ class BillsPage extends StatelessWidget {
                                               fontSize: 14, color: Colors.grey),
                                         ),
                                         Text(
-                                          '${translate(bills.bills[i].category).toUpperCase()}',
+                                          translate(bills.bills[i].category).toUpperCase(),
                                           style: _textStyle,
                                           textScaleFactor:
                                               bills.bills[i].category.length >
@@ -86,14 +87,14 @@ class BillsPage extends StatelessWidget {
                                               fontSize: 14, color: Colors.grey),
                                         ),
                                         Text(
-                                          '${translate(bills.bills[i].billType.toString())}',
+                                          translate(bills.bills[i].billType.toString()),
                                           style: _textStyle,
                                         ),
                                       ],
                                     ),
                                     Text(
                                       daysbeforExcution == 1
-                                          ? '${translate("Due in Tommorow")}'
+                                          ? translate("Due in Tommorow")
                                           : '${translate("Due in")} $daysbeforExcution ${translate("days")}',
                                       style: _textStyle.copyWith(
                                           color: Colors.red, fontSize: 12),
@@ -108,7 +109,7 @@ class BillsPage extends StatelessWidget {
                                 child: Column(
                                   children: <Widget>[
                                     Text(
-                                      '${bills.bills[i].amount.toStringAsFixed(2)}',
+                                      bills.bills[i].amount.toStringAsFixed(2),
                                       style: _textStyle,
                                     ),
                                     Row(
@@ -145,7 +146,7 @@ class BillsPage extends StatelessWidget {
                                                 duration: const Duration(
                                                     milliseconds: 1000),
                                                 content: Text(
-                                                    '${translate("Done")}'),
+                                                    translate("Done")),
                                               ),
                                             );
                                           },
@@ -154,7 +155,7 @@ class BillsPage extends StatelessWidget {
                                               borderRadius:
                                                   BorderRadius.circular(20)),
                                           child:
-                                              Text('${translate("Pay")}'),
+                                              Text(translate("Pay")),
                                         ),
                                       ],
                                     ),
@@ -171,7 +172,7 @@ class BillsPage extends StatelessWidget {
           drawer: AppDrawer(),
           floatingActionButton: FloatingActionButton(
             onPressed: () {
-              Router.navigator.pushNamed(Router.addBill);
+              ExtendedNavigator.of(context).pushNamed(Routes.addBill);
             },
             heroTag: 'Bills_screen',
             child: Icon(Icons.add),

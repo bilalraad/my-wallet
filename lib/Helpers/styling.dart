@@ -18,7 +18,7 @@ List<String> qoutes = [
   '“Money is a terrible master but an excellent servant.”',
   '“Never spend your money before you have      earned it.”',
   '“Money, like emotions, is something you must control to keep your life on the right track.”',
-  '“If you don\'t take care of your money your    money won\'t take care of you.”',
+  "“If you don't take care of your money your    money won't take care of you.”",
   '“It’s not your salary that makes your rich;  it’s your spending habits.”',
 ];
 
@@ -67,25 +67,25 @@ class AppTheme {
   );
 
   static final TextTheme lightTextTheme = TextTheme(
-    title: _titleLight,
-    subtitle: _subTitleLight,
+    headline6:  _titleLight,
+    subtitle2:  _subTitleLight,
     button: _buttonLight,
-    display1: _greetingLight,
-    display2: _searchLight,
-    body1: _selectedTabLight,
-    body2: _unSelectedTabLight,
-    subhead: _subHeadLight,
+    headline4: _greetingLight,
+    headline3: _searchLight,
+    bodyText2: _selectedTabLight,
+    bodyText1: _unSelectedTabLight,
+    subtitle1: _subHeadLight,
   );
 
   static final TextTheme darkTextTheme = TextTheme(
-    title: _titleDark,
-    subtitle: _subTitleDark,
+    headline6: _titleDark,
+    subtitle2: _subTitleDark,
     button: _buttonDark,
-    display1: _greetingDark,
-    display2: _searchDark,
-    body1: _selectedTabDark,
-    body2: _unSelectedTabDark,
-    subhead: _subHeadDark,
+    headline4: _greetingDark,
+    headline3: _searchDark,
+    bodyText2: _selectedTabDark,
+    bodyText1: _unSelectedTabDark,
+    subtitle1: _subHeadDark,
   );
 
   static final TextStyle _titleLight = TextStyle(

@@ -109,7 +109,6 @@ class Categories extends HiveObject {
       final newCategory = Category(
         id: DateTime.now().toString(),
         title: categoryName,
-        subCats: null,
       );
       if (isIncome) {
         incomeList.add(newCategory);

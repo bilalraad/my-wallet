@@ -1,3 +1,4 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -32,31 +33,31 @@ class AppDrawer extends StatelessWidget {
               DrawerBotton(
                 lable: 'Home',
                 icon: Icons.home,
-                routeName: Router.userTransactionsOverView,
+                routeName: Routes.userTransactionsOverView,
                 index: 1,
               ),
               DrawerBotton(
                 lable: 'Categories',
                 icon: Icons.category,
-                routeName: Router.categoriesScreen,
+                routeName: Routes.categoriesScreen,
                 index: 2,
               ),
               DrawerBotton(
                 lable: 'Bills',
                 icon: Icons.receipt,
-                routeName: Router.billsPage,
+                routeName: Routes.billsPage,
                 index: 3,
               ),
               DrawerBotton(
                 lable: 'Recurring Transactions',
                 icon: Icons.refresh,
-                routeName: Router.recurringTransactions,
+                routeName: Routes.recurringTransactions,
                 index: 4,
               ),
               DrawerBotton(
                 lable: 'Report',
                 icon: Icons.insert_chart,
-                routeName: Router.report,
+                routeName: Routes.report,
                 index: 5,
               ),
               const Divider(),
@@ -90,13 +91,13 @@ class AppDrawer extends StatelessWidget {
               DrawerBotton(
                 lable: 'Settings',
                 icon: Icons.settings,
-                routeName: Router.settings,
+                routeName: Routes.settings,
                 index: 6,
               ),
               DrawerBotton(
                 lable: 'Info',
                 icon: Icons.info_outline,
-                routeName: Router.infoSceen,
+                routeName: Routes.infoSceen,
                 index: 7,
               ),
               const SizedBox(
@@ -164,7 +165,7 @@ class DrawerBotton extends StatelessWidget {
   Widget build(BuildContext context) {
     final textStyle = Theme.of(context)
         .textTheme
-        .title
+        .headline6
         .copyWith(fontSize: SizeConfig.textMultiplier * 2.5);
 
     final isRTL = AppLocalizations.of(context).currentLang() == 'ar';
@@ -183,7 +184,7 @@ class DrawerBotton extends StatelessWidget {
         highlightColor: Colors.amber,
         onTap: () {
           if (_selectedIndex != index) {
-            Router.navigator.pushReplacementNamed(routeName);
+            ExtendedNavigator.of(context).pushReplacementNamed(routeName);
             _selectedIndex = index;
           } else {
             Navigator.of(context).pop();

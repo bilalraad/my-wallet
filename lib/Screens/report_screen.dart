@@ -277,7 +277,7 @@ class TransBarChartState extends State<TransBarChart> {
                                       titleText: translate('Week'),
                                       showTitle: true,
                                       textStyle: const TextStyle(fontSize: 14)),
-                                  leftTitle: const AxisTitle(
+                                  leftTitle: AxisTitle(
                                     titleText: '',
                                     showTitle: true,
                                   ),
@@ -307,8 +307,7 @@ class TransBarChartState extends State<TransBarChart> {
                                         }
                                       },
                                     ),
-                                    leftTitles:
-                                        const SideTitles(showTitles: false)),
+                                    leftTitles: SideTitles(showTitles: false)),
                                 borderData: FlBorderData(
                                   show: false,
                                 ),

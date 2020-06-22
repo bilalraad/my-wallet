@@ -49,7 +49,7 @@ class CardItem extends StatelessWidget {
     final translate = AppLocalizations.of(context).translate;
     final textStyle = Theme.of(context)
         .textTheme
-        .title
+        .headline6
         .copyWith(fontSize: SizeConfig.textMultiplier * 2.0);
 
     return trans.isEmpty

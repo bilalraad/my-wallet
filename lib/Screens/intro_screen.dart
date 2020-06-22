@@ -1,3 +1,4 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:intl/intl.dart';
@@ -78,7 +79,7 @@ class _IntroductionPageState extends State<IntroductionPage> {
         titleWidget: Padding(
           padding: EdgeInsets.only(top: SizeConfig.isPortrait ? 0.0 : 70.0),
           child: Text(
-            translate('Let\'s set your App'),
+            translate("Let's set your App"),
             style: const TextStyle(
               fontSize: 30,
             ),
@@ -139,7 +140,7 @@ class _IntroductionPageState extends State<IntroductionPage> {
                 child: Row(
                   children: <Widget>[
                     Text(
-                      translate('Do you wan\'t to set static income?'),
+                      translate("Do you wan't to set static income?"),
                       style: const TextStyle(fontSize: 16),
                     ),
                     const Spacer(),
@@ -258,7 +259,7 @@ class _IntroductionPageState extends State<IntroductionPage> {
               height: 10,
             ),
             Text(
-              '${translate("NOTE: You can\'t change the currency later")}',
+              translate("NOTE: You can't change the currency later"),
               style: TextStyle(color: Theme.of(context).accentColor),
             ),
           ],
@@ -367,7 +368,7 @@ class _IntroductionPageState extends State<IntroductionPage> {
                       },
                       child: _startingDate.day == DateTime.now().day
                           ? Text(translate('Today'))
-                          : Text('${DateFormat.yMd().format(_startingDate)}'),
+                          : Text(DateFormat.yMd().format(_startingDate)),
                     ),
                   ),
                   const SizedBox(
@@ -429,7 +430,7 @@ class _IntroductionPageState extends State<IntroductionPage> {
       );
       _transactions.addFutureTrans(_salaryRT);
     }
-    Router.navigator.pushReplacementNamed(Router.userTransactionsOverView);
+    ExtendedNavigator.of(context).pushReplacementNamed(Routes.userTransactionsOverView);
 
     _appState.firstTime = false;
     Hive.box(H.appState.box()).put(4, _appState.firstTime);

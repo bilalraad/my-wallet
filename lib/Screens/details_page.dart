@@ -59,7 +59,7 @@ class DetailsPage extends StatelessWidget {
                   width: SizeConfig.heightMultiplier * 5,
                 ),
                 Text(
-                  '${translate(category)}',
+                  translate(category),
                   style: TextStyle(
                     fontSize: 26,
                     fontWeight: FontWeight.w300,

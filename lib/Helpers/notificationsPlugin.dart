@@ -57,7 +57,7 @@ class NotificationsPlugin {
     );
     await _flutterLocalNotificationsPlugin.show(
       id,
-      'Don\'t forget to check your wallet',
+      "Don't forget to check your wallet",
       description,
       platformChannelSpecifics,
     );

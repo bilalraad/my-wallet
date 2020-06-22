@@ -36,7 +36,7 @@ class DateTimePicker extends StatelessWidget {
                 ? translate('Forever')
                 : date.day == DateTime.now().day
                     ? translate('Today')
-                    : '${DateFormat.yMd().format(date)}',
+                    : DateFormat.yMd().format(date),
           ),
           color: Theme.of(context).accentColor,
           onPressed: () {

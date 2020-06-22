@@ -17,8 +17,7 @@ import '../Screens/user_transactions_overview.dart';
 
 @CustomAutoRouter()
 class $Router {
-  @CupertinoRoute(title: 'UserTransactionsOverView')
-  @initial
+  @CupertinoRoute(title: 'UserTransactionsOverView',initial: true)
   UserTransactionsOverView userTransactionsOverView;
   @materialRoute
   AddTransactions addTransactions;

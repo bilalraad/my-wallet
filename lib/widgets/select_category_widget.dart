@@ -1,3 +1,4 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 
 import '../Helpers/styling.dart';
@@ -26,8 +27,8 @@ class SelectCategoryWidget extends StatelessWidget {
       decoration: const BoxDecoration(),
       height: 8 * SizeConfig.heightMultiplier,
       child: InkWell(
-        onTap: () => Router.navigator.pushNamed(
-          Router.categorySelect,
+        onTap: () => ExtendedNavigator.of(context).pushNamed(
+          Routes.categorySelect,
           arguments: CategorySelectArguments(
             isDeposit: isIncome,
             isComingFromAddCat: isComingFromAddcategory,

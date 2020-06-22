@@ -1,3 +1,4 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:intl/intl.dart';
@@ -48,8 +49,8 @@ class FutureTransactionsTap extends StatelessWidget {
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(100)),
                   onPressed: () {
-                    Router.navigator
-                        .pushNamed(Router.addBill)
+                    ExtendedNavigator.of(context)
+                        .pushNamed(Routes.addBill)
                         .then((_) => Navigator.of(context).pop());
                   },
                   child: Column(
@@ -80,8 +81,8 @@ class FutureTransactionsTap extends StatelessWidget {
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(100)),
                   onPressed: () {
-                    Router.navigator
-                        .pushNamed(Router.addRecurringTransaction)
+                    ExtendedNavigator.of(context)
+                        .pushNamed(Routes.addRecurringTransaction)
                         .then((_) => Navigator.of(context).pop());
                   },
                   child: Column(
@@ -180,7 +181,6 @@ Widget buildRecurringTransWidget() {
                               }
                             }),
                             descripstion: rT.costumeBill.description,
-                            isDeposit: false,
                           ),
                         ));
                       },
@@ -340,7 +340,6 @@ Widget buildBillsWidget() {
                               }
                             }),
                             descripstion: bL.description,
-                            isDeposit: false,
                           ),
                         ));
                       },

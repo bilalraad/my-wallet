@@ -25,7 +25,8 @@ class AppLocalizations {
     // Load the language JSON file from the "lang" folder
     final String jsonString =
         await rootBundle.loadString('lang/${locale.languageCode}.json');
-    final Map<String, dynamic> jsonMap = json.decode(jsonString) as Map<String, dynamic>;
+    final Map<String, dynamic> jsonMap =
+        json.decode(jsonString) as Map<String, dynamic>;
 
     _localizedStrings = jsonMap.map((key, value) {
       return MapEntry(key, value.toString());
@@ -39,7 +40,7 @@ class AppLocalizations {
   // This method will be called from every widget which needs a localized text
   String translate(String key) {
     if (_localizedStrings[key] == null) {
-      return '$key';
+      return key;
     } else {
       return _localizedStrings[key];
     }

@@ -70,8 +70,8 @@ extractedTrans.sort((a, b) => a.category.compareTo(b.category));
                       padding:
                           EdgeInsets.all(2 * SizeConfig.heightMultiplier),
                       child: Text(
-                        '${translate(ex.category)}',
-                        style: Theme.of(context).textTheme.title,
+                        translate(ex.category),
+                        style: Theme.of(context).textTheme.headline6,
                       ),
                     ),
                     const Divider(),
@@ -82,8 +82,8 @@ extractedTrans.sort((a, b) => a.category.compareTo(b.category));
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: <Widget>[
                           Text(
-                            '${DateFormat('dd/M/y').format(ex.dateTime)}',
-                            style: Theme.of(context).textTheme.subhead,
+                            DateFormat('dd/M/y').format(ex.dateTime),
+                            style: Theme.of(context).textTheme.subtitle1,
                           ),
                           Text(
                             '${ex.amount} \$',

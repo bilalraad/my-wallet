@@ -39,7 +39,6 @@ class _AddBillState extends State<AddBill> {
     startingDate: null,
     amount: null,
     days: null,
-    description: null,
     remainingDays: null,
     excuteDate: null,
   );

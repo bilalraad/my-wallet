@@ -1,3 +1,4 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hive/hive.dart';
@@ -35,7 +36,7 @@ class RecurringTransactions extends StatelessWidget {
           body: rTList == null || rTList.isEmpty
               ? Center(
                   child: Text(
-                      translate('You didn\'t set any Recurring transactions')),
+                      translate("You didn't set any Recurring transactions")),
                 )
               : Padding(
                   padding: const EdgeInsets.all(12.0),
@@ -63,7 +64,7 @@ class RecurringTransactions extends StatelessWidget {
                             children: <Widget>[
                               Expanded(
                                 flex: 7,
-                                                              child: Column(
+                                child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: <Widget>[
                                     Row(
@@ -74,7 +75,10 @@ class RecurringTransactions extends StatelessWidget {
                                               fontSize: 14, color: Colors.grey),
                                         ),
                                         Text(
-                                          '${translate(translate(rTList[i].costumeBill.category).toUpperCase())}',
+                                          translate(translate(rTList[i]
+                                                  .costumeBill
+                                                  .category)
+                                              .toUpperCase()),
                                           style: _textStyle,
                                           textScaleFactor: rTList[i]
                                                       .costumeBill
@@ -94,14 +98,17 @@ class RecurringTransactions extends StatelessWidget {
                                               fontSize: 14, color: Colors.grey),
                                         ),
                                         Text(
-                                          '${translate(rTList[i].costumeBill.billType.toString())}',
+                                          translate(rTList[i]
+                                              .costumeBill
+                                              .billType
+                                              .toString()),
                                           style: _textStyle,
                                         ),
                                       ],
                                     ),
                                     Text(
                                       daysbeforExcution == 1
-                                          ? '${translate("Due in Tommorow")}'
+                                          ? translate("Due in Tommorow")
                                           : '${translate("Due in")} $daysbeforExcution ${translate("days")}',
                                       style: _textStyle.copyWith(
                                           color: Colors.red, fontSize: 12),
@@ -113,12 +120,15 @@ class RecurringTransactions extends StatelessWidget {
                               ),
                               Expanded(
                                 flex: 6,
-                                                              child: Column(
+                                child: Column(
                                   children: <Widget>[
                                     Padding(
                                       padding: const EdgeInsets.all(8.0),
                                       child: Text(
-                                        '${rTList[i].costumeBill.amount.toStringAsFixed(2)}',
+                                        rTList[i]
+                                            .costumeBill
+                                            .amount
+                                            .toStringAsFixed(2),
                                         style: _textStyle,
                                       ),
                                     ),
@@ -135,8 +145,8 @@ class RecurringTransactions extends StatelessWidget {
                                             ).then((isAccepted) {
                                               if (isAccepted != null &&
                                                   isAccepted as bool) {
-                                                _transactions
-                                                    .removeFutureTrans(rTList[i]);
+                                                _transactions.removeFutureTrans(
+                                                    rTList[i]);
                                               }
                                             });
                                           },
@@ -153,12 +163,13 @@ class RecurringTransactions extends StatelessWidget {
                                             );
                                             Scaffold.of(context).showSnackBar(
                                               SnackBar(
-                                                backgroundColor: Theme.of(context)
-                                                    .backgroundColor,
+                                                backgroundColor:
+                                                    Theme.of(context)
+                                                        .backgroundColor,
                                                 duration: const Duration(
                                                     milliseconds: 1000),
-                                                content:
-                                                    Text('${translate("Done")}'),
+                                                content: Text(
+                                                    translate("Done")),
                                               ),
                                             );
                                           },
@@ -166,7 +177,7 @@ class RecurringTransactions extends StatelessWidget {
                                           shape: RoundedRectangleBorder(
                                               borderRadius:
                                                   BorderRadius.circular(20)),
-                                          child: Text('${translate("Pay")}'),
+                                          child: Text(translate("Pay")),
                                         ),
                                       ],
                                     ),
@@ -183,8 +194,8 @@ class RecurringTransactions extends StatelessWidget {
           drawer: AppDrawer(),
           floatingActionButton: FloatingActionButton(
             heroTag: 'Recurring_Trans_screen',
-            onPressed: () =>
-                Router.navigator.pushNamed(Router.addRecurringTransaction),
+            onPressed: () => ExtendedNavigator.of(context)
+                .pushNamed(Routes.addRecurringTransaction),
             child: Icon(Icons.add),
           ),
         );

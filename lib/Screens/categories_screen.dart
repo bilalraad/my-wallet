@@ -1,3 +1,4 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -62,7 +63,7 @@ class CategoriesScreen extends StatelessWidget {
       floatingActionButton: FloatingActionButton(
         heroTag: 'Category_screen',
         onPressed: () {
-          Router.navigator.pushNamed(Router.addCategory);
+          ExtendedNavigator.of(context).pushNamed(Routes.addCategory);
         },
         backgroundColor: Theme.of(context).accentColor,
         child: Icon(Icons.add),
@@ -105,7 +106,6 @@ class CategoryListWidget extends StatelessWidget {
                   if (isAccepted != null && isAccepted as bool) {
                     categories.deleteCategory(
                       categoryName: category.title,
-                      parentCategoryName: '',
                       isIncome: isIncome,
                     );
                   }
@@ -114,7 +114,7 @@ class CategoryListWidget extends StatelessWidget {
               child: Padding(
                 padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 8),
                 child: Text(
-                  '${translate(category.title)}',
+                  translate(category.title),
                   style: textStyle,
                 ),
               ),

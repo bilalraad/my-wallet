@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:auto_route/auto_route.dart';
 import 'package:bot_toast/bot_toast.dart';
 
 import 'package:flutter/material.dart';
@@ -138,10 +139,9 @@ class _MyWalletState extends State<MyWallet> {
                             home: appState.firstTime
                                 ? IntroductionPage()
                                 : UserTransactionsOverView(),
+                                builder: ExtendedNavigator<Router>(router: Router())
 
-                            onGenerateRoute: Router.onGenerateRoute,
-
-                            navigatorKey: Router.navigator.key,
+                            // navigatorKey: ,
                           ),
                         );
                       },
