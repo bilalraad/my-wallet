@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:mywallet/Screens/user_transactions_overview.dart';
+import 'package:mywallet/main.dart';
 import 'package:mywallet/Screens/add_trans.dart';
 import 'package:mywallet/Screens/add_bill.dart';
 import 'package:mywallet/Screens/add_recurring_trans.dart';
@@ -23,7 +24,8 @@ import 'package:mywallet/Screens/info_sceen.dart';
 import 'package:mywallet/Screens/report_screen.dart';
 
 abstract class Routes {
-  static const userTransactionsOverView = '/';
+  static const userTransactionsOverView = '/user-transactions-over-view';
+  static const wrapper = '/';
   static const addTransactions = '/add-transactions';
   static const addBill = '/add-bill';
   static const addRecurringTransaction = '/add-recurring-transaction';
@@ -39,6 +41,7 @@ abstract class Routes {
   static const report = '/report';
   static const all = {
     userTransactionsOverView,
+    wrapper,
     addTransactions,
     addBill,
     addRecurringTransaction,
@@ -68,9 +71,19 @@ class Router extends RouterBase {
     final args = settings.arguments;
     switch (settings.name) {
       case Routes.userTransactionsOverView:
+        return CupertinoPageRoute<dynamic>(
+          builder: (context) => UserTransactionsOverView(),
+          settings: settings,
+          title: 'UserTransactionsOverView',
+        );
+      case Routes.wrapper:
+        if (hasInvalidArgs<WrapperArguments>(args)) {
+          return misTypedArgsRoute<WrapperArguments>(args);
+        }
+        final typedArgs = args as WrapperArguments ?? WrapperArguments();
         return PageRouteBuilder<dynamic>(
           pageBuilder: (context, animation, secondaryAnimation) =>
-              UserTransactionsOverView(),
+              Wrapper(key: typedArgs.key),
           settings: settings,
         );
       case Routes.addTransactions:
@@ -180,6 +193,12 @@ class Router extends RouterBase {
 // *************************************************************************
 // Arguments holder classes
 // **************************************************************************
+
+//Wrapper arguments holder class
+class WrapperArguments {
+  final Key key;
+  WrapperArguments({this.key});
+}
 
 //AddTransactions arguments holder class
 class AddTransactionsArguments {

@@ -24,7 +24,7 @@ dependencies:
   day_night_switch: ^0.0.2+1
   hive: ^1.4.1+1
   hive_flutter: ^0.3.0+1
-  introduction_screen: ^1.0.7
+  introduction_screen: ^1.0.8
   uuid: ^1.0.3
   google_fonts: ^0.2.0
   flutter_local_notifications: ^0.9.1

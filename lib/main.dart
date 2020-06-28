@@ -40,10 +40,10 @@ Future<void> main() async {
     DeviceOrientation.portraitDown
   ]);
   Workmanager.initialize(
-      callbackDispatcher, // The top level function, aka callbackDispatcher
-      // isInDebugMode:
-      //     true // If enabled it will post a notification whenever the task is running. Handy for debugging tasks
-      );
+    callbackDispatcher, // The top level function, aka callbackDispatcher
+    // isInDebugMode:
+    //     true // If enabled it will post a notification whenever the task is running. Handy for debugging tasks
+  );
 
   Workmanager.registerPeriodicTask(
     'weekly notification',
@@ -100,49 +100,49 @@ class _MyWalletState extends State<MyWallet> {
 
                         return RestartWidget(
                           child: MaterialApp(
-                            debugShowCheckedModeBanner: false,
-                            theme: appState.isDark
-                                ? AppTheme.darkTheme
-                                : AppTheme.lightTheme,
-                            navigatorObservers: [BotToastNavigatorObserver()],
-                            // List all of the app's supported locales here
-                            supportedLocales: const [
-                              Locale('en', 'US'),
-                              Locale('ar'),
-                            ],
-                            // These delegates make sure that the localization data for the proper language is loaded
-                            localizationsDelegates: [
-                              // A class which loads the translations from JSON files
-                              AppLocalizations.delegate,
-                              // Built-in localization of basic text for Material widgets
-                              GlobalMaterialLocalizations.delegate,
-                              // Built-in localization for text direction LTR/RTL
-                              GlobalWidgetsLocalizations.delegate,
-                            ],
-                            // Returns a locale which will be used by the app
-                            localeResolutionCallback:
-                                (locale, supportedLocales) {
-                              final Locale theLocale = appState.myLocale.isEmpty
-                                  ? locale
-                                  : Locale(appState.myLocale);
-                              // Check if the current device locale is supported
-                              for (var supportedLocale in supportedLocales) {
-                                if (supportedLocale.languageCode ==
-                                    locale.languageCode) {
-                                  return theLocale;
+                              debugShowCheckedModeBanner: false,
+                              theme: appState.isDark
+                                  ? AppTheme.darkTheme
+                                  : AppTheme.lightTheme,
+                              navigatorObservers: [BotToastNavigatorObserver()],
+                              // List all of the app's supported locales here
+                              supportedLocales: const [
+                                Locale('en', 'US'),
+                                Locale('ar'),
+                              ],
+                              // These delegates make sure that the localization data for the proper language is loaded
+                              localizationsDelegates: [
+                                // A class which loads the translations from JSON files
+                                AppLocalizations.delegate,
+                                // Built-in localization of basic text for Material widgets
+                                GlobalMaterialLocalizations.delegate,
+                                // Built-in localization for text direction LTR/RTL
+                                GlobalWidgetsLocalizations.delegate,
+                              ],
+                              // Returns a locale which will be used by the app
+                              localeResolutionCallback:
+                                  (locale, supportedLocales) {
+                                final Locale theLocale =
+                                    appState.myLocale.isEmpty
+                                        ? locale
+                                        : Locale(appState.myLocale);
+                                // Check if the current device locale is supported
+                                for (var supportedLocale in supportedLocales) {
+                                  if (supportedLocale.languageCode ==
+                                      locale.languageCode) {
+                                    return theLocale;
+                                  }
                                 }
-                              }
-                              // If the locale of the device is not supported, use the first one
-                              // from the list (English, in this case).
-                              return supportedLocales.first;
-                            },
-                            home: appState.firstTime
-                                ? IntroductionPage()
-                                : UserTransactionsOverView(),
-                                builder: ExtendedNavigator<Router>(router: Router())
+                                // If the locale of the device is not supported, use the first one
+                                // from the list (English, in this case).
+                                return supportedLocales.first;
+                              },
+                              home: const Wrapper(),
+                              builder:
+                                  ExtendedNavigator<Router>(router: Router())
 
-                            // navigatorKey: ,
-                          ),
+                              // navigatorKey: ,
+                              ),
                         );
                       },
                     );
@@ -165,6 +165,23 @@ class LoadingScreen extends StatelessWidget {
         ),
       ),
     );
+  }
+}
+
+class Wrapper extends StatelessWidget {
+  const Wrapper({Key key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return ValueListenableBuilder(
+        valueListenable: Hive.box(H.appState.box()).listenable(),
+        builder: (context, appStateBox, _) {
+          final appState = appStateBox.get(H.appState.str()) as AppState;
+
+          return appState.firstTime
+              ? IntroductionPage()
+              : UserTransactionsOverView();
+        });
   }
 }
 

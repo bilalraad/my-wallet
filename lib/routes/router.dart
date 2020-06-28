@@ -1,4 +1,5 @@
 import 'package:auto_route/auto_route_annotations.dart';
+import 'package:mywallet/main.dart';
 
 import '../Screens/add_bill.dart';
 import '../Screens/settings.dart';
@@ -17,8 +18,10 @@ import '../Screens/user_transactions_overview.dart';
 
 @CustomAutoRouter()
 class $Router {
-  @CupertinoRoute(title: 'UserTransactionsOverView',initial: true)
+  @CupertinoRoute(title: 'UserTransactionsOverView')
   UserTransactionsOverView userTransactionsOverView;
+  @CupertinoRoute(title: 'Wrapper', initial: true)
+  Wrapper wrapper;
   @materialRoute
   AddTransactions addTransactions;
   @materialRoute
